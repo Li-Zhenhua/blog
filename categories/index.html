@@ -34,6 +34,16 @@
 
 
 
+   <style>
+    body{
+       background-image: url(https://i0.hdslb.com/bfs/article/3d7ed86d9e1f524cfe6f8c8f705e710fcd1d58af.jpg@942w_1331h_progressive.webp);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
 
 <body>
     <header class="navbar-fixed">
@@ -313,6 +323,7 @@
                 <span id="sitetime"> Loading ...</span>
                 <script>
                     var calcSiteTime = function () {
+						window.setTimeout("calcSiteTime()", 1000);
                         var seconds = 1000;
                         var minutes = seconds * 60;
                         var hours = minutes * 60;
@@ -406,8 +417,8 @@
     $(document).ready(function () {
 
         var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-        var pvcountOffset = 80000;  // 初始化首次数据
-        var uvcountOffset = 20000;
+        var pvcountOffset = 5649;  // 初始化首次数据
+        var uvcountOffset = 1564;
 
         function fixCount() {
             if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
@@ -421,6 +432,7 @@
         }
     });
 </script>
+
 
 <div class="progress-bar"></div>
 
