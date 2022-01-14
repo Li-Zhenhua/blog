@@ -4,11 +4,9 @@
 
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-    <meta name="keywords" content="双亲委派机制, Hyouda">
-    <meta name="description" content="类加载器从Java虚拟机的角度上讲，其实只存在两种不同的类加载器，一是启动类加载器（Bootstrap ClassLoader），其为虚拟机的一部分，二是其他所有的类加载器。
-但是从开发人员的角度上说，类加载器可以分得更为细致。
-
-一般认为">
+    <meta name="keywords" content="分布式事务, Hyouda">
+    <meta name="description" content="一个复杂的系统往往都是从一个小而简的系统发展衍化而来，为了满足日益增长的业务需求，不断的增加系统的复杂度，从单体架构逐步发展为分布式架构，而分布式系统架构的设计主要关注：高性能，高可用，高拓展
+分布式事务高可用是指系统无中断的执行功能的能了">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>双亲委派机制 | Hyouda</title>
+    <title>分布式事务 | Hyouda</title>
     <link rel="icon" type="image/png" href="/blog-article/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/blog-article/libs/awesome/css/all.min.css">
@@ -215,12 +213,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/blog-article/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/blog-article/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">双亲委派机制</h1>
+                    <h1 class="description center-align post-title">分布式事务</h1>
                 </div>
             </div>
         </div>
@@ -336,16 +334,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
-                                <span class="chip bg-color">双亲委派机制</span>
-                            </a>
-                        
-                            <a href="/blog-article/tags/JVM/">
-                                <span class="chip bg-color">JVM</span>
-                            </a>
-                        
-                            <a href="/blog-article/tags/ClassLoader/">
-                                <span class="chip bg-color">ClassLoader</span>
+                            <a href="/blog-article/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
+                                <span class="chip bg-color">分布式事务</span>
                             </a>
                         
                     </div>
@@ -356,8 +346,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/blog-article/categories/Java/" class="post-category">
-                                Java
+                            <a href="/blog-article/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
+                                分布式
                             </a>
                         
                     </div>
@@ -369,7 +359,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-01-09
+                    2022-01-14
                 </div>
                 
 
@@ -378,14 +368,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.9k
+                    6.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    7 分
+                    20 分
                 </div>
                 
 
@@ -403,162 +393,222 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>从Java虚拟机的角度上讲，其实只存在两种不同的类加载器，一是启动类加载器（<code>Bootstrap ClassLoader</code>），其为虚拟机的一部分，二是其他所有的类加载器。</p>
-<p>但是从开发人员的角度上说，类加载器可以分得更为细致。</p>
-<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/image-20220109200810277.png"></p>
-<p>一般认为上一层加载器是下一层加载器的父加载器，因而，除了<code>BootstrapClassLoader</code>之外，所有的加载器都是有父加载器的。</p>
-<h3 id="启动类加载器（引导类加载器，Bootstrap-ClassLoader）"><a href="#启动类加载器（引导类加载器，Bootstrap-ClassLoader）" class="headerlink" title="启动类加载器（引导类加载器，Bootstrap ClassLoader）"></a><strong>启动类加载器（引导类加载器，Bootstrap ClassLoader）</strong></h3><ul>
-<li><p>这个类加载使用C/C++语言实现的，嵌套在JVM内部。</p>
+                <p>一个复杂的系统往往都是从一个小而简的系统发展衍化而来，为了满足日益增长的业务需求，不断的增加系统的复杂度，从单体架构逐步发展为分布式架构，而分布式系统架构的设计主要关注：高性能，高可用，高拓展</p>
+<h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><p>高可用是指系统无中断的执行功能的能了，代表了系统的可用程度，是进行系统设计时必须要遵守的准则之一。</p>
+<p>而高可用的实现方案，无外乎就是冗余，就存储的高可用而言，问题不在于如何进行数据备份，而在于如何规避数据不一致对业务造成的影响</p>
+<p>对于分布式系统而言，要保证分布式系统中的数据一致性就需要一种方案，可以保证数据在子系统中始终保持一致，避免业务出现问题，这种实现方案就叫做分布式事务，要么一起成功，要么一起失败，必须是一个整体性的事务</p>
+<p><strong>举个栗子：</strong></p>
+<p> 在电商网站中，用户对商品进行下单，需要在订单表中创建一条订单数据，同时需要在库存表中修改当前商品的剩余库存数量，两步操作一个添加，一个修改，我们一定要保证这两步操作一定同时操作成功或失败，否则业务就会出现问题</p>
+<p><strong>建立时：</strong></p>
+<p> 业务量不大，用户少，系统只是一个单体架构，订单表与库存表都在一个数据库中，这时可以使用mysql的本地事务保证数据一致性</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84.png"></p>
+<p><strong>发展期：</strong></p>
+<p> 业务发展迅速，用户量变多，单数据已经出现了性能瓶颈，按照业务纬度进行分库，分为订单库和库存库，由于跨库跨机器，mysql的本地事务不能再保证订单库和库存库的数据一致性，这时候就需要分布式事务来保证</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E5%88%86%E5%BA%93.png"></p>
+<p><strong>成熟期：</strong></p>
+<p> 业务拓展，单体架构已经满足不了需求，进而衍化成了分布式系统，这时的订单和库存已经拆分为了两个子系统提供服务，子系统间使用rpc进行通信，但是无论系统发展成什么样，我们都要保证业务不出问题，保证订单和库存的数据一致，这时候要思考下在服务之间我们应如何保证数据一致</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E6%9C%8D%E5%8A%A1%E6%8B%86%E5%88%86.png"></p>
+<h2 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h2><p> 在讲解具体方案之前，有必要了解一下分布式中数据设计需要遵循的理论基础，CAP理论和BASE理论，为后面的实践铺平道路</p>
+<h3 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h3><p>CAP：Consistency Availability Partition tolerance 的简写</p>
+<ul>
+<li><p><strong>Consistency</strong>：一致性</p>
+<p>对某个客户端来说，读操作能够返回最新的写操作结果</p>
 </li>
-<li><p>它用来加载<strong>Java的核心库</strong>（JAVA_HOME/jre/lib/rt.jar、resources.jar或sun.boot.class.path路径下的内容），用于提供JVM自身需要的类</p>
+<li><p><strong>Availability</strong>：可用性</p>
+<p>非故障节点在合理的时间内返回合理的响应</p>
 </li>
-<li><p>并不继承自ava.lang.ClassLoader，没有父加载器。</p>
-</li>
-<li><p>加载扩展类和应用程序类加载器，并指定为他们的父类加载器。</p>
-</li>
-<li><p>出于安全考虑，Bootstrap启动类加载器只加载包名为<strong>java、javax、sun</strong>等开头的类</p>
-</li>
-</ul>
-<h3 id="扩展类加载器（Extension-ClassLoader）"><a href="#扩展类加载器（Extension-ClassLoader）" class="headerlink" title="扩展类加载器（Extension ClassLoader）"></a><strong>扩展类加载器（Extension ClassLoader）</strong></h3><ul>
-<li><p>Java语言编写，由sun.misc.Launcher$ExtClassLoader实现。</p>
-</li>
-<li><p>派生于ClassLoader类</p>
-</li>
-<li><p>父类加载器为启动类加载器</p>
-</li>
-<li><p>从<strong>java.ext.dirs</strong>系统属性所指定的目录中加载类库，或从JDK的安装目录的<strong>jre/1ib/ext</strong>子目录（扩展目录）下加载类库。如果用户创建的JAR放在此目录下，也会自动由扩展类加载器加载。</p>
-</li>
-</ul>
-<h3 id="应用程序类加载器（系统类加载器，AppClassLoader）"><a href="#应用程序类加载器（系统类加载器，AppClassLoader）" class="headerlink" title="应用程序类加载器（系统类加载器，AppClassLoader）"></a><strong>应用程序类加载器（系统类加载器，AppClassLoader）</strong></h3><ul>
-<li><p>java语言编写，由sun.misc.LaunchersAppClassLoader实现</p>
-</li>
-<li><p>派生于ClassLoader类</p>
-</li>
-<li><p>父类加载器为扩展类加载器</p>
-</li>
-<li><p>它负责加载<strong>环境变量classpath或系统属性java.class.path指定路径下的类库</strong></p>
-</li>
-<li><p>该类加载是程序中默认的类加载器，一般来说，Java应用的类都是由它来完成加载</p>
-</li>
-<li><p>通过ClassLoader#getSystemclassLoader() 方法可以获取到该类加载器</p>
+<li><p><strong>Partition tolerance</strong>：分区容错性</p>
+<p>当出现网络分区后，系统能够继续提供服务 <em>你知道什么是网络分区吗 ~~</em></p>
 </li>
 </ul>
-<h3 id="用户自定义类加载器"><a href="#用户自定义类加载器" class="headerlink" title="用户自定义类加载器"></a>用户自定义类加载器</h3><p>主要用途：隔离加载类、修改类加载的方式、扩展加载源、防止源码泄漏</p>
-<blockquote>
-<p>补充：<strong>获取ClassLoader的途径</strong></p>
+<p>因为分布式系统中系统肯定部署在多台机器上，无法保证网络做到100%的可靠，所以网络分区一定存在，即<strong>P一定存在</strong>；</p>
+<p>在出现网络分区后，就出现了可用性和一致性的问题，我们必须要在这两者之间进行取舍，因此就有了两种架构：CP架构，AP架构（zookeeper就是CP架构）</p>
+<h4 id="CP架构"><a href="#CP架构" class="headerlink" title="CP架构"></a>CP架构</h4><p>当网络分区出现后，为了保证一致性，就必须拒接请求，否则无法保证一致性</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/CP.png"></p>
 <ol>
-<li><p>获取当前ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">clazz<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li><p>获取当前线程上下文的ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li><p>获取系统的ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ClassLoader</span><span class="token punctuation">.</span><span class="token function">getSystemClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li><p>获取调用者的ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getCallerClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>当没有出网络分区时，系统A与系统B的数据一致，X=1</li>
+<li>将系统A的X修改为2，X=2</li>
+<li>当出现网络分区后，系统A与系统B之间的数据同步数据失败，系统B的X=1</li>
+<li>当客户端请求系统B时，为了保证一致性，此时系统B应拒绝服务请求，返回错误码或错误信息</li>
 </ol>
-</blockquote>
-<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><blockquote>
-<p>定义：</p>
-<p><strong>当一个类加载器收到了类加载的请求的时候，他不会直接去加载指定的类，而是把这个请求委托给自己的父加载器去加载。只有父加载器无法加载这个类的时候，才会由当前这个加载器来负责类的加载。</strong></p>
-</blockquote>
-<p><strong>好处</strong>：</p>
-<p>1、因为类加载器之间有严格的层次关系，那么<strong>Java的类也随之具备了一种带优先级的层次关系</strong>。</p>
-<p>2、<strong>通过双亲委派的方式，还保证了安全性</strong>（因为Bootstrap ClassLoader在加载的时候，只会加载JAVA_HOME中的jar包里面的类，如java.lang.Object，那么这个类是不会被随意替换的，可以避免有人自定义一个有破坏功能的java.lang.Object被加载，也就是<strong>沙箱安全机制</strong>）</p>
-<blockquote>
-<p><strong>“父子加载器”之间的关系是继承吗？</strong></p>
-<p>不是！！</p>
-<p>类加载器之间的父子关系一般<strong>不会以继承（Inheritance）的关系</strong>来实现，而是都使用<strong>组合（Composition）关系</strong>来复用父加载器的代码的</p>
-</blockquote>
-<h2 id="双亲委派是怎么实现的？"><a href="#双亲委派是怎么实现的？" class="headerlink" title="双亲委派是怎么实现的？"></a><strong>双亲委派是怎么实现的？</strong></h2><p>在java.lang.ClassLoader的loadClass()方法的短短数十行之中有很清晰地描述</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">protected</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> <span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token keyword">boolean</span> resolve<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span>
-        <span class="token punctuation">&#123;</span>
-
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token function">getClassLoadingLock</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                <span class="token comment">// First, check if the class has already been loaded</span>
-
-                <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> c <span class="token operator">=</span> <span class="token function">findLoadedClass</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
-
-                        <span class="token keyword">if</span> <span class="token punctuation">(</span>parent <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                            c <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-
-                            c <span class="token operator">=</span> <span class="token function">findBootstrapClassOrNull</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                        <span class="token punctuation">&#125;</span>
-
-                    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">ClassNotFoundException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                        <span class="token comment">// ClassNotFoundException thrown if class not found</span>
-
-                        <span class="token comment">// from the non-null parent class loader</span>
-
-                    <span class="token punctuation">&#125;</span>
-
-
-
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                        <span class="token comment">// If still not found, then invoke findClass in order</span>
-
-                        <span class="token comment">// to find the class.</span>
-
-                        c <span class="token operator">=</span> <span class="token function">findClass</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token punctuation">&#125;</span>
-
-                <span class="token punctuation">&#125;</span>
-
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>resolve<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                    <span class="token function">resolveClass</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                <span class="token punctuation">&#125;</span>
-
-                <span class="token keyword">return</span> c<span class="token punctuation">;</span>
-
-            <span class="token punctuation">&#125;</span>
-
-        <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>具体过程从代码不难看出：</p>
-<p>1、先检查类是否已经被加载过</p>
-<p>2、若没有加载则调用父加载器的<code>loadClass()</code>方法进行加载</p>
-<p>3、若父加载器为空则默认使用启动类加载器作为父加载器。</p>
-<p>4、如果父类加载失败，抛出ClassNotFoundException异常后，再调用自己的<code>findClass()</code>方法进行加载。</p>
-<h2 id="破坏双亲委派机制"><a href="#破坏双亲委派机制" class="headerlink" title="破坏双亲委派机制"></a>破坏双亲委派机制</h2><p>从上面可以看到，因为他的双亲委派过程都是在<code>loadClass()</code>方法中实现的，那么<strong>想要破坏这种机制，那么就自定义一个类加载器，重写其中的<code>loadClass()</code>方法，使其不进行双亲委派即可</strong></p>
-<blockquote>
-<p><strong>双亲委派被破坏的例子</strong>：</p>
-<p><strong>1、双亲委派出现之前。</strong></p>
-<p>由于双亲委派模型是在JDK1.2之后才被引入的，而在这之前已经有用户自定义类加载器在用了。所以，这些是没有遵守双亲委派原则的。</p>
-<p><strong>2、JNDI、JDBC等需要加载SPI接口实现类的情况。</strong></p>
-<p>这种情况是基础类型想要调用回用户的代码（而根据双亲委派机制，越基础的类由越上层的加载器进行加载） =&gt; 引入线程上下文类加载器（Thread Context ClassLoader）</p>
-<p><strong>3、为了实现热插拔热部署工具。</strong></p>
-<p>为了让代码动态生效而无需重启，实现方式时把模块连同类加载器一起换掉就实现了代码的热替换。</p>
-<p><strong>4、Tomcat等web容器的出现。</strong></p>
-<p><strong>5、OSGI、Jigsaw等模块化技术的应用。</strong></p>
-</blockquote>
-<p>下面以JNDI、JDBC、Tomcat展开解释为什么要破坏双亲委派机制</p>
-<h3 id="JNDI，JDBC破坏双亲委派"><a href="#JNDI，JDBC破坏双亲委派" class="headerlink" title="JNDI，JDBC破坏双亲委派"></a><strong>JNDI，JDBC破坏双亲委派</strong></h3><p>我们日常开发中，大多数时候会通过API的方式调用Java提供的那些基础类，这些基础类时被Bootstrap加载的。但是，调用方式除了API之外，还有一种<strong>SPI</strong>的方式。</p>
-<p>例如典型的JDBC，需要以以下的方式创建数据库链接：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Connection</span> conn <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"jdbc:mysql://localhost:3306/mysql"</span><span class="token punctuation">,</span> <span class="token string">"root"</span><span class="token punctuation">,</span> <span class="token string">"1234"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p><em>原生的JDBC中的类是放在rt.jar包的，是由<strong>启动类加载器</strong>进行类加载的（即上述的<code>DriverManager</code>类是被<code>Bootstrap ClassLoader</code>加载的），原生的JDBC中Driver驱动本身只是一个接口，并没有具体的实现，JDBC中的Driver类中需要<strong>动态去加载不同数据库类型的Driver类</strong></em>，如mysql的<em>mysql-connector-</em>.jar中的Driver类是用户自己写的代码，那启动类加载器肯定是不能进行加载的，既然是自己编写的代码，那就需要由应用程序启动类去进行类加载</p>
-<p>于是，就<strong>在JDBC中通过引入ThreadContextClassLoader（线程上下文加载器，默认情况下是AppClassLoader）的方式破坏了双亲委派原则。</strong></p>
-<h3 id="Tomcat破坏双亲委派"><a href="#Tomcat破坏双亲委派" class="headerlink" title="Tomcat破坏双亲委派"></a><strong>Tomcat破坏双亲委派</strong></h3><p>由于Tomcat是web容器，那么一个web容器可能需要部署多个应用程序，<strong>不同的应用程序可能会依赖同一个第三方类库的不同版本</strong>，但是不同版本的类库中某一个类的<strong>全路径名可能是一样</strong>的。因而，<strong>如果采用默认的双亲委派类加载机制，那么是无法加载多个相同的类。</strong></p>
-<blockquote>
-<p>所以，<strong>Tomcat破坏双亲委派原则，提供隔离的机制，为每个web容器单独提供一个WebAppClassLoader加载器。</strong></p>
-<p>所以，为了实现<strong>隔离性</strong>，每一个应用自己的类加载器——WebAppClassLoader负责加载<strong>本身的目录下的class文件</strong>，加载不到时再交给父类加载器加载，这和双亲委派刚好相反</p>
-</blockquote>
-<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ol>
-<li>《深入理解Java虚拟机》周志明</li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/343563937">我竟然被“双亲委派”给虐了 - 知乎</a></li>
+<p>上面这种方式就违背了可用性的要求，只满足一致性和分区容错，即CP</p>
+<p>CAP理论是忽略网络延迟，从系统A同步数据到系统B的网络延迟是忽略的</p>
+<p>CP架构保证了客户端在获取数据时一定是最近的写操作，或者获取到异常信息，绝不会出现数据不一致的情况</p>
+<h4 id="AP架构"><a href="#AP架构" class="headerlink" title="AP架构"></a>AP架构</h4><p>当网络分区出现后，为了保证可用性，系统B可以返回旧值，保证系统的可用性</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/AP.png"></p>
+<ol>
+<li>当没有出网络分区时，系统A与系统B的数据一致，X=1</li>
+<li>将系统A的X修改为2，X=2</li>
+<li>当出现网络分区后，系统A与系统B之间的数据同步数据失败，系统B的X=1</li>
+<li>当客户端请求系统B时，为了保证可用性，此时系统B应返回旧值，X=1</li>
 </ol>
+<p>上面这种方式就违背了一致性的要求，只满足可用性和分区容错，即AP</p>
+<p>CP架构保证了客户端在获取数据时无论返回的是最新值还是旧值，系统一定是可用的</p>
+<p><strong>CAP理论关注粒度是数据，而不是整体系统设计的策略</strong></p>
+<h3 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h3><p> BASE理论指的是<strong>基本可用 Basically Available</strong>，<strong>软状态 Soft State</strong>，<strong>最终一致性 Eventual Consistency</strong>，核心思想是即便无法做到强一致性，但应该可以有采用适合的方式保证最终一致性</p>
+<p>BASE：Basically Available Soft Stat Eventual Consistency的简写</p>
+<ul>
+<li><p>BA：Basically Available 基本可用</p>
+<p>分布式系统在出现故障的时候，允许损失部分可用性，即<strong>保证核心可用</strong></p>
+</li>
+<li><p>S：Soft State 软状态</p>
+<p>允许系统<strong>存在中间状态</strong>，而该中间状态不会影响系统整体可用性</p>
+</li>
+<li><p>E：Consistency 最终一致性</p>
+<p>系统中的所有数据副本经过一定时间后，<strong>最终能够达到一致的状态</strong></p>
+</li>
+</ul>
+<p>BASE理论本质上是对CAP理论的延伸</p>
+<h2 id="分布式事务协议"><a href="#分布式事务协议" class="headerlink" title="分布式事务协议"></a>分布式事务协议</h2><p> 前提：在单体架构中，事务的保证有mysql实现，不用我们实现，当单个数据库的性能出现瓶颈的时候，对数据库进行分表分库处理，按业务纬度将订单和库存的表分为两个库，订单库和库存库</p>
+<h3 id="X-Open-XA-协议"><a href="#X-Open-XA-协议" class="headerlink" title="X/Open XA 协议"></a>X/Open XA 协议</h3><p>XA是一个分布式事务协议，由Tuxedo提出。XA规范主要定义了（全局）事务管理器（Transaction Manager）和（局部）资源管理器（Resource Manager）之间的接口。XA接口是双向的系统接口，在事务管理器Transaction Manager）以及一个或多个资源管理器（Resource Manager）之间形成通信桥梁</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/XA.png"></p>
+<p>XA协议采用<strong>两阶段提交</strong>方式来管理分布式事务。XA接口提供资源管理器与事务管理器之间进行通信的标准接口</p>
+<h3 id="2PC-二阶段提交-协议"><a href="#2PC-二阶段提交-协议" class="headerlink" title="2PC 二阶段提交 协议"></a>2PC 二阶段提交 协议</h3><p> 二阶段提交（Two-phase Commit），是指为了使基于分布式系统架构下的所有节点在进行事务提交时保持一致性而设计的一种算法(Algorithm)。通常，二阶段提交也被称为是一种协议(Protocol)。在分布式系统中，每个节点虽然可以知晓自己的操作时成功或者失败，却无法知道其他节点的操作的成功或失败。当一个事务跨越多个节点时，为了保持事务的ACID特性，需要引入一个<strong>作为协调者的组件</strong>来统一掌控所有节点(称作<strong>参与者</strong>)的操作结果并最终指示这些节点是否要把操作结果进行真正的提交(比如将更新后的数据写入磁盘等等)。因此，二阶段提交的算法思路可以概括为： <strong>参与者将操作成败通知协调者，再由协调者根据所有参与者的反馈情报决定各参与者是否要提交操作还是中止操作</strong></p>
+<p>二阶段提交算法的成立基于以下假设：</p>
+<ol>
+<li>该分布式系统中，存在一个节点作为协调者(Coordinator)，其他节点作为参与者(Cohorts)。且节点之间可以进行网络通信。</li>
+<li>所有节点都采用预写式日志，且日志被写入后即被保持在可靠的存储设备上，即使节点损坏不会导致日志数据的消失。</li>
+<li>所有节点不会永久性损坏，即使损坏后仍然可以恢复</li>
+</ol>
+<p>二阶段提交分为两阶段：第一阶段：投票阶段，第二阶段：提交阶段</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/2pc.jpg"></p>
+<p><strong>投票阶段 Prepares</strong></p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/2pc-1.png"></p>
+<ol>
+<li>协调者向所有参与者询问是否可以执行提交操作，并开始等待各参与者的响应</li>
+<li>参与者执行事务操作，如果执行成功就返回Yes响应，如果执行失败就返回No响应</li>
+<li>如果协调者接受参与者响应超时，也会认为执行事务操作失败</li>
+</ol>
+<p><strong>提交阶段 commit</strong></p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/2pc-2.png"></p>
+<ol>
+<li>如果第一阶段中所有参与者都返回yes响应，协调者向所有参与者发出提交请求，所有参与者提交事务</li>
+<li>如果第一阶段中有一个或者多个参与者返回no响应，协调者向所有参与者发出回滚请求，所有参与者进行回滚操作</li>
+</ol>
+<p>二阶段提交优点：尽量保证了数据的强一致，但不是100%一致</p>
+<p>缺点：</p>
+<ul>
+<li><p><strong>单点故障</strong></p>
+<p>由于协调者的重要性，一旦协调者发生故障，参与者会一直阻塞，尤其时在第二阶段，协调者发生故障，那么所有的参与者都处于锁定事务资源的状态中，而无法继续完成事务操作</p>
+</li>
+<li><p><strong>同步阻塞</strong></p>
+<p>由于所有节点在执行操作时都是同步阻塞的，当参与者占有公共资源时，其他第三方节点访问公共资源不得不处于阻塞状态</p>
+</li>
+<li><p><strong>数据不一致</strong></p>
+<p>在第二阶段中，当协调者想参与者发送提交事务请求之后，发生了局部网络异常或者在发送提交事务请求过程中协调者发生了故障，这会导致只有一部分参与者接收到了提交事务请求。而在这部分参与者接到提交事务请求之后就会执行提交事务操作。但是其他部分未接收到提交事务请求的参与者则无法提交事务。从而导致分布式系统中的数据不一致</p>
+</li>
+</ul>
+<p><strong>二阶段提交的问题</strong></p>
+<p> 如果协调者在第二阶段<strong>发送提交请求之后挂掉</strong>，而<strong>唯一接受到这条消息的参与者执行之后也挂掉了</strong>，即使协调者通过选举协议产生了新的协调者并通知其他参与者进行提交或回滚操作的话，都可能会与这个已经执行的参与者执行的操作不一样，<strong>当这个挂掉的参与者恢复之后，就会产生数据不一致的问题</strong></p>
+<h3 id="3PC-三阶段提交-协议"><a href="#3PC-三阶段提交-协议" class="headerlink" title="3PC 三阶段提交 协议"></a>3PC 三阶段提交 协议</h3><p> 三阶段提交（Three-phase commit），三阶段提交是为解决两阶段提交协议|的缺点而设计的。 与两阶段提交不同的是，三阶段提交是<strong>“非阻塞”协议</strong>。三阶段提交在两阶段提交的第一阶段与第二阶段之间插入了一个准备阶段，使得原先在两阶段提交中，参与者在投票之后，由于协调者发生崩溃或错误，而导致参与者处于无法知晓是否提交或者中止的“不确定状态”所产生的可能相当长的延时的问题得以解决</p>
+<p>三阶段提交的三个阶段：CanCommit，PreCommit，DoCommit三个阶段</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/3pc.jpg"></p>
+<p><strong>询问阶段 CanCommit</strong></p>
+<p>协调者向参与者发送commit请求，参与者如果可以提交就返回Yes响应，否则返回No响应</p>
+<p><strong>准备阶段 PreCommit</strong></p>
+<p>协调者根据参与者在<strong>询问阶段</strong>的响应判断是否执行事务还是中断事务</p>
+<ul>
+<li>如果所有参与者都返回Yes，则执行事务</li>
+<li>如果参与者有一个或多个参与者返回No或者超时，则中断事务</li>
+</ul>
+<p>参与者执行完操作之后返回ACK响应，同时开始等待最终指令</p>
+<p><strong>提交阶段 DoCommit</strong></p>
+<p>协调者根据参与者在<strong>准备阶段</strong>的响应判断是否执行事务还是中断事务</p>
+<ul>
+<li>如果所有参与者都返回正确的ACK响应，则提交事务</li>
+<li>如果参与者有一个或多个参与者收到错误的ACK响应或者超时，则中断事务</li>
+<li>如果参与者无法及时接收到来自协调者的提交或者中断事务请求时，会在<strong>等待超时之后，会继续进行事务提交</strong></li>
+</ul>
+<p>协调者收到所有参与者的ACK响应，完成事务</p>
+<p><strong>解决二阶段提交时的问题</strong></p>
+<p> 在三阶段提交中，如果在第三阶段协调者发送提交请求之后挂掉，并且唯一的接受的参与者执行提交操作之后也挂掉了，这时协调者通过选举协议产生了新的协调者，在二阶段提交时存在的问题就是新的协调者不确定已经执行过事务的参与者是执行的提交事务还是中断事务，但是在三阶段提交时，肯定<strong>得到了第二阶段的再次确认，那么第二阶段必然是已经正确的执行了事务操作</strong>，只等待提交事务了，所以新的协调者可以从第二阶段中分析出应该执行的操作，进行提交或者中断事务操作，这样即使挂掉的参与者恢复过来，数据也是一致的。</p>
+<p> 所以，三阶段提交解决了二阶段提交中存在的由于协调者和参与者同时挂掉可能导致的数据一致性问题和单点故障问题，并减少阻塞，因为一旦参与者无法及时收到来自协调者的信息之后，他会默认执行提交事务，而不会一直持有事务资源并处于阻塞状态。</p>
+<p><strong>三阶段提交的问题</strong></p>
+<p> 在<strong>提交阶段</strong>如果发送的是<strong>中断事务请求</strong>，但是由于网络问题，导致部分参与者没有接到请求，那么参与者会在等待超时之后执行提交事务操作，<strong>这样这些由于网络问题导致提交事务的参与者的数据就与接受到中断事务请求的参与者存在数据不一致的问题</strong>。</p>
+<blockquote>
+<p> <strong>所以无论是2PC还是3PC都不能保证分布式系统中的数据100%一致</strong></p>
+<p>而且3PC 没有找到具体的实现，所以 3PC 应该只是纯的理论上的东西，而且可以看到相比于 2PC 它是做了一些努力但是效果甚微</p>
+</blockquote>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="强一致性分布式事务"><a href="#强一致性分布式事务" class="headerlink" title="强一致性分布式事务"></a>强一致性分布式事务</h3><p><strong>单体架构多数据源</strong>，在业务开发中，肯定是先执行对订单库的操作，但是不提交事务，再执行对库存库的操作，也不提交事务，如果两个操作都成功，在一起提交事务，如果有一个操作失败，则两个都进行回滚</p>
+<h4 id="基于2PC-XA协议实现的JTA"><a href="#基于2PC-XA协议实现的JTA" class="headerlink" title="基于2PC/XA协议实现的JTA"></a>基于2PC/XA协议实现的JTA</h4><p>我们已经知道了2PC和XA协议的原理，而JTA是java规范，是XA在java上的实现</p>
+<p>JTA(Java Transaction Manager) :</p>
+<ol>
+<li>TransactionManager : 常用方法,可以开启,回滚,获取事务. begin(),rollback()…</li>
+<li>XAResouce : 资源管理,通过Session来进行事务管理,commit(xid)…</li>
+<li>XID : 每一个事务都分配一个特定的XID</li>
+</ol>
+<p>JTA主要的原理是二阶段提交，当整个业务完成了之后只是第一阶段提交，在第二阶段提交之前会检查其他所有事务是否已经提交，如果前面出现了错误或是没有提交，那么第二阶段就不会提交，而是直接回滚，这样所有的事务都会做回滚操作</p>
+<p>基于JTA这种方案实现分布式事务的强一致性</p>
+<p><strong>JTA的特点：</strong></p>
+<ul>
+<li>基于两阶段提交，有可能会出现数据不一致的情况</li>
+<li>事务时间过长，阻塞</li>
+<li>性能低，吞吐量低</li>
+</ul>
+<p><strong>实现</strong>可以使用基于JTA实现的jar包<strong>Atomikos</strong> <em>使用例子可以自己百度一下</em></p>
+<p> 正常架构设计中是否应该出现这种跨库的操作，我觉得是不应该的，如果过按业务拆分将数据源进行分库，我们应该同时将服务也拆分出去才合适，应遵循一个系统只操作一个数据源（主从没关系），避免后续可能会出现的多个系统调用一个数据源的情况</p>
+<h3 id="最终一致性分布式事务方案（柔性事务）"><a href="#最终一致性分布式事务方案（柔性事务）" class="headerlink" title="最终一致性分布式事务方案（柔性事务）"></a>最终一致性分布式事务方案（柔性事务）</h3><p>JTA方案适用于单体架构多数据源时实现分布式事务，但对于微服务间的分布式事务就无能为力了，我们需要使用其他的方案实现分布式事务</p>
+<h4 id="1、本地消息表"><a href="#1、本地消息表" class="headerlink" title="1、本地消息表"></a>1、本地消息表</h4><p>本地消息表的核心思想是<strong>将分布式事务拆分成本地事务进行处理</strong></p>
+<p>以本文中例子，在订单系统新增一条消息表，<strong>将新增订单和新增消息放到一个事务里完成</strong>，然后通过轮询的方式去查询消息表，将消息推送到mq，库存系统去消费mq</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E6%9C%AC%E5%9C%B0%E6%B6%88%E6%81%AF%E8%A1%A8.png"></p>
+<p><strong>执行流程：</strong></p>
+<ol>
+<li>订单系统，添加一条订单和一条消息，在一个事务里提交</li>
+<li>订单系统，使用<strong>定时任务轮询</strong>查询状态为<strong>未同步</strong>的消息表，发送到mq，如果发送失败，就重试发送</li>
+<li>库存系统，接收mq消息，修改库存表，需要保证幂等操作</li>
+<li>如果修改成功，调用rpc接口修改订单系统消息表的状态为已完成或者直接删除这条消息</li>
+<li>如果修改失败，可以不做处理，等待重试</li>
+</ol>
+<p>订单系统中的消息有可能由于业务问题会一直重复发送，所以为了避免这种情况可以<strong>记录一下发送次数</strong>，当达到次数限制之后报警，人工接入处理；库存系统需要保证幂等，避免同一条消息被多次消费造成数据一致；</p>
+<p>本地消息表这种方案实现了最终一致性，需要在业务系统里增加消息表，业务逻辑中多一次插入的DB操作，所以性能会有损耗，而且最终一致性的间隔主要有定时任务的间隔时间决定</p>
+<h4 id="2、MQ消息事务"><a href="#2、MQ消息事务" class="headerlink" title="2、MQ消息事务"></a>2、MQ消息事务</h4><p>消息事务的原理是将两个事务通过<strong>消息中间件进行异步解耦</strong></p>
+<p>订单系统执行自己的本地事务，并发送mq消息，库存系统接收消息，执行自己的本地事务，乍一看，好像跟本地消息表的实现方案类似，只是省去了对本地消息表的操作和轮询发送mq的操作，但实际上两种方案的实现是不一样的</p>
+<p>消息事务一定要保证业务操作与消息发送的一致性，如果业务操作成功，这条消息也一定投递成功</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E6%B6%88%E6%81%AF%E4%BA%8B%E5%8A%A1.jpg"></p>
+<p>消息事务依赖于消息中间件的事务消息，基于消息中间件的二阶段提交实现的，RocketMQ就支持事务消息</p>
+<p><strong>执行流程：</strong></p>
+<ol>
+<li>发送<strong>prepare消息</strong>到消息中间件</li>
+<li>发送成功后，执行本地事务</li>
+<li>如果事务执行成功，则commit，消息中间件将消息下发至消费端</li>
+<li>如果事务执行失败，则回滚，消息中间件将这条prepare消息删除</li>
+<li>消费端接收到消息进行消费，如果消费失败，则不断重试</li>
+</ol>
+<p>这种方案也是实现了最终一致性，对比本地消息表实现方案，不需要再建消息表，不再依赖本地数据库事务了，所以这种方案更适用于高并发的场景</p>
+<h4 id="3、最大努力通知"><a href="#3、最大努力通知" class="headerlink" title="3、最大努力通知"></a>3、最大努力通知</h4><p>最大努力通知相比前两种方案实现简单，适用于一些<strong>最终一致性要求较低</strong>的业务，比如支付通知，短信通知这种业务</p>
+<p>以支付通知为例，业务系统调用支付平台进行支付，支付平台进行支付，进行操作支付之后支付平台会尽量去通知业务系统支付操作是否成功，但是会有一个最大通知次数，如果超过这个次数后还是通知失败，就不再通知，业务系统自行调用支付平台提供一个查询接口，供业务系统进行查询支付操作是否成功</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E6%9C%80%E5%A4%A7%E5%8A%AA%E5%8A%9B%E9%80%9A%E7%9F%A5.png"></p>
+<p><strong>执行流程：</strong></p>
+<ol>
+<li>业务系统调用支付平台支付接口， 并在本地进行记录，支付状态为支付中</li>
+<li>支付平台进行支付操作之后，无论成功还是失败，都需要给业务系统一个结果通知</li>
+<li>如果通知一直失败则根据重试规则进行重试，达到最大通知次数后，不在通知</li>
+<li>支付平台提供查询订单支付操作结果接口</li>
+<li>业务系统根据一定业务规则去支付平台查询支付结果</li>
+</ol>
+<p>这种方案也是实现了最终一致性</p>
+<h4 id="4、补偿事务TCC"><a href="#4、补偿事务TCC" class="headerlink" title="4、补偿事务TCC"></a>4、补偿事务TCC</h4><p>TCC Try-Confirm-Cancel的简称，针对每个操作，都需要有一个其对应的确认和取消操作，当操作成功时调用确认操作，当操作失败时调用取消操作，类似于二阶段提交，只不过是这里的提交和回滚是针对业务上的，所以基于TCC实现的分布式事务也可以看做是对业务的一种补偿机制</p>
+<p>TCC的三阶段：</p>
+<ol>
+<li><strong>Try 阶段</strong>：对业务系统做检测及资源预留</li>
+<li><strong>Confirm 阶段</strong>：对业务系统做确认提交，Try阶段执行成功并开始执行 Confirm阶段时，默认 Confirm阶段是不会出错的。即：只要Try成功，Confirm一定成功</li>
+<li><strong>Cancel 阶段</strong>：在业务执行错误，需要回滚的状态下执行的业务取消，预留资源释放</li>
+</ol>
+<p>在try阶段，是对业务系统进行检查及资源预览，比如订单和存储操作，需要检查库存剩余数量是否够用，并进行预留，预留操作的话就是新建一个可用库存数量字段，Try阶段操作是对这个可用库存数量进行操作</p>
+<p>比如下一个订单减一个库存:</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/TCC.png"></p>
+<p><strong>执行流程：</strong></p>
+<ol>
+<li>Try阶段：订单系统将当前订单状态设置为支付中，库存系统校验当前剩余库存数量是否大于1，然后将可用库存数量设置为库存剩余数量-1，</li>
+<li>如果Try阶段执行成功，执行Confirm 阶段，将订单状态修改为支付成功，库存剩余数量修改为可用库存数量</li>
+<li>如果Try阶段执行失败，执行Cancel 阶段，将订单状态修改为支付失败，可用库存数量修改为库存剩余数量</li>
+</ol>
+<p>基于TCC实现分布式事务，代码逻辑想对复杂一些，需要将原来的接口的逻辑拆分为：try，confirm ，cancel 三个接口的逻辑</p>
+<p>基于TCC实现的分布式事务框架：ByteTCC，tcc-transaction</p>
+<p>ByteTCC：<a target="_blank" rel="noopener" href="https://github.com/liuyangming/ByteTCC">https://github.com/liuyangming/ByteTCC</a></p>
+<p>tcc-transaction：<a target="_blank" rel="noopener" href="https://github.com/changmingxie/tcc-transaction">https://github.com/changmingxie/tcc-transaction</a></p>
+<hr>
+<p>转载自：<a target="_blank" rel="noopener" href="https://chenmingyu.top/distributed-transaction/">https://chenmingyu.top/distributed-transaction/</a></p>
 
                 
             </div>
@@ -585,7 +635,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2022/01/09/shuang-qin-wei-pai-ji-zhi/">https://destinationgitee.gitee.io/blog-article/blog-article/2022/01/09/shuang-qin-wei-pai-ji-zhi/</a>
+                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2022/01/14/fen-bu-shi-shi-wu/">https://destinationgitee.gitee.io/blog-article/blog-article/2022/01/14/fen-bu-shi-shi-wu/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -623,16 +673,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
-                                    <span class="chip bg-color">双亲委派机制</span>
-                                </a>
-                            
-                                <a href="/blog-article/tags/JVM/">
-                                    <span class="chip bg-color">JVM</span>
-                                </a>
-                            
-                                <a href="/blog-article/tags/ClassLoader/">
-                                    <span class="chip bg-color">ClassLoader</span>
+                                <a href="/blog-article/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
+                                    <span class="chip bg-color">分布式事务</span>
                                 </a>
                             
                         </div>
@@ -678,9 +720,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/blog-article/2022/01/14/fen-bu-shi-shi-wu/">
                     <div class="card-image">
@@ -698,9 +741,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-01-14
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -713,6 +756,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -731,13 +775,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/blog-article/2021/12/26/yuan-di-ha-xi/">
+                <a href="/blog-article/2022/01/09/shuang-qin-wei-pai-ji-zhi/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog-article/medias/featureimages/5.jpg" class="responsive-img" alt="原地哈希">
+                        <img src="/blog-article/medias/featureimages/4.jpg" class="responsive-img" alt="双亲委派机制">
                         
-                        <span class="card-title">原地哈希</span>
+                        <span class="card-title">双亲委派机制</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -748,14 +792,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-09
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/blog-article/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
-                                    数据结构与算法
+                            <a href="/blog-article/categories/Java/" class="post-category">
+                                    Java
                                 </a>
                             
                             
@@ -765,16 +809,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/blog-article/tags/%E5%8E%9F%E5%9C%B0hash/">
-                        <span class="chip bg-color">原地hash</span>
+                    <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
+                        <span class="chip bg-color">双亲委派机制</span>
                     </a>
                     
-                    <a href="/blog-article/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
+                    <a href="/blog-article/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
                     </a>
                     
-                    <a href="/blog-article/tags/%E6%95%B0%E7%BB%84/">
-                        <span class="chip bg-color">数组</span>
+                    <a href="/blog-article/tags/ClassLoader/">
+                        <span class="chip bg-color">ClassLoader</span>
                     </a>
                     
                 </div>
