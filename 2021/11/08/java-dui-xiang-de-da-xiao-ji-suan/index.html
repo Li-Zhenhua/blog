@@ -4,11 +4,11 @@
 
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-    <meta name="keywords" content="双亲委派机制, Hyouda">
-    <meta name="description" content="类加载器从Java虚拟机的角度上讲，其实只存在两种不同的类加载器，一是启动类加载器（Bootstrap ClassLoader），其为虚拟机的一部分，二是其他所有的类加载器。
-但是从开发人员的角度上说，类加载器可以分得更为细致。
+    <meta name="keywords" content="Java对象的大小计算, Hyouda">
+    <meta name="description" content="Java对象布局一个 Java 对象在内存中存储为三部分：对象头（Header）、实例数据（Instance Data）和对齐填充 （Padding）。可以用下图来清晰表示：
 
-一般认为">
+1、对象头
+Mark Word: 用于存储对象自身的运行时数据">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>双亲委派机制 | Hyouda</title>
+    <title>Java对象的大小计算 | Hyouda</title>
     <link rel="icon" type="image/png" href="/blog-article/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/blog-article/libs/awesome/css/all.min.css">
@@ -215,12 +215,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/blog-article/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/blog-article/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">双亲委派机制</h1>
+                    <h1 class="description center-align post-title">Java对象的大小计算</h1>
                 </div>
             </div>
         </div>
@@ -336,16 +336,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
-                                <span class="chip bg-color">双亲委派机制</span>
-                            </a>
-                        
                             <a href="/blog-article/tags/JVM/">
                                 <span class="chip bg-color">JVM</span>
                             </a>
                         
-                            <a href="/blog-article/tags/ClassLoader/">
-                                <span class="chip bg-color">ClassLoader</span>
+                            <a href="/blog-article/tags/Java%E5%AF%B9%E8%B1%A1/">
+                                <span class="chip bg-color">Java对象</span>
                             </a>
                         
                     </div>
@@ -369,7 +365,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-01-09
+                    2021-11-08
                 </div>
                 
 
@@ -378,14 +374,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.9k
+                    1.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    7 分
+                    5 分
                 </div>
                 
 
@@ -403,162 +399,104 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>从Java虚拟机的角度上讲，其实只存在两种不同的类加载器，一是启动类加载器（<code>Bootstrap ClassLoader</code>），其为虚拟机的一部分，二是其他所有的类加载器。</p>
-<p>但是从开发人员的角度上说，类加载器可以分得更为细致。</p>
-<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/image-20220109200810277.png"></p>
-<p>一般认为上一层加载器是下一层加载器的父加载器，因而，除了<code>BootstrapClassLoader</code>之外，所有的加载器都是有父加载器的。</p>
-<h3 id="启动类加载器（引导类加载器，Bootstrap-ClassLoader）"><a href="#启动类加载器（引导类加载器，Bootstrap-ClassLoader）" class="headerlink" title="启动类加载器（引导类加载器，Bootstrap ClassLoader）"></a><strong>启动类加载器（引导类加载器，Bootstrap ClassLoader）</strong></h3><ul>
-<li><p>这个类加载使用C/C++语言实现的，嵌套在JVM内部。</p>
+                <h2 id="Java对象布局"><a href="#Java对象布局" class="headerlink" title="Java对象布局"></a>Java对象布局</h2><p>一个 Java 对象在内存中存储为三部分：对象头（Header）、实例数据（Instance Data）和对齐填充 （Padding）。可以用下图来清晰表示：</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/webp.webp" alt="img"></p>
+<h3 id="1、对象头"><a href="#1、对象头" class="headerlink" title="1、对象头"></a>1、对象头</h3><ul>
+<li><p><strong>Mark Word</strong>: 用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等。</p>
+<pre class="line-numbers language-none"><code class="language-none">hash(25) + age(4) + lock(3) &#x3D; 32bit					#32位系统
+unused(25+1) + hash(31) + age(4) + lock(3) &#x3D; 64bit	#64位系统<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li><p><strong>Klass Word</strong>：类型指针，<strong>指向该对象在方法区中的 Class 类对象的指针</strong>，虚拟机通过这个指针来确定这个对象是哪个类的实例；在 64 位系统中，开启指针压缩（-XX:+UseCompressedOops）或者 JVM 堆的最大值小于 32G，这个指针也是 4byte，否则是 8byte（就是 <strong>Java 中的一个引用的大小</strong>）</p>
 </li>
-<li><p>它用来加载<strong>Java的核心库</strong>（JAVA_HOME/jre/lib/rt.jar、resources.jar或sun.boot.class.path路径下的内容），用于提供JVM自身需要的类</p>
-</li>
-<li><p>并不继承自ava.lang.ClassLoader，没有父加载器。</p>
-</li>
-<li><p>加载扩展类和应用程序类加载器，并指定为他们的父类加载器。</p>
-</li>
-<li><p>出于安全考虑，Bootstrap启动类加载器只加载包名为<strong>java、javax、sun</strong>等开头的类</p>
+<li><p>如果对象是一个<strong>数组</strong>，那在对象头中还有一块数据用于<strong>记录数组长度</strong>（多加<strong>四字节</strong>的内存：4byte/32bit）</p>
 </li>
 </ul>
-<h3 id="扩展类加载器（Extension-ClassLoader）"><a href="#扩展类加载器（Extension-ClassLoader）" class="headerlink" title="扩展类加载器（Extension ClassLoader）"></a><strong>扩展类加载器（Extension ClassLoader）</strong></h3><ul>
-<li><p>Java语言编写，由sun.misc.Launcher$ExtClassLoader实现。</p>
+<h3 id="2、实例数据"><a href="#2、实例数据" class="headerlink" title="2、实例数据"></a>2、实例数据</h3><blockquote>
+<p>实例数据部分是对象真正存储的有效信息，也是在程序代码中所定义的各种类型的字段内容，无论是从父类继承下来的，还是在子类中定义的，都需要记录起来</p>
+</blockquote>
+<h3 id="3、对齐填充"><a href="#3、对齐填充" class="headerlink" title="3、对齐填充"></a>3、对齐填充</h3><blockquote>
+<p>对齐填充没有特别的意义，仅仅起占位符的作用。64 位系统，由于 HotSpot VM 的自动内存管理系统要求<strong>对象起始地址必须是 8 字节的整数倍</strong>，就是对象的大小必须是 8 字节的整数倍，而对象头部分正好是 8 字节的倍数（1 倍或者 2 倍），因此当对象实例数据部分没有对齐时，就需要通过对齐填充来补全</p>
+</blockquote>
+<h2 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h2><ul>
+<li><p>基本数据类型（primitive type）</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png"></p>
 </li>
-<li><p>派生于ClassLoader类</p>
-</li>
-<li><p>父类加载器为启动类加载器</p>
-</li>
-<li><p>从<strong>java.ext.dirs</strong>系统属性所指定的目录中加载类库，或从JDK的安装目录的<strong>jre/1ib/ext</strong>子目录（扩展目录）下加载类库。如果用户创建的JAR放在此目录下，也会自动由扩展类加载器加载。</p>
+<li><p>引用类型 (reference type)</p>
+<p>除了对象本身之外，还存在一个<strong>指向它的引用（指针）</strong>，指针占用的内存在64位虚拟机上8个字节，如果开启指针压缩是<strong>4个字节</strong>，默认是开启的。</p>
 </li>
 </ul>
-<h3 id="应用程序类加载器（系统类加载器，AppClassLoader）"><a href="#应用程序类加载器（系统类加载器，AppClassLoader）" class="headerlink" title="应用程序类加载器（系统类加载器，AppClassLoader）"></a><strong>应用程序类加载器（系统类加载器，AppClassLoader）</strong></h3><ul>
-<li><p>java语言编写，由sun.misc.LaunchersAppClassLoader实现</p>
-</li>
-<li><p>派生于ClassLoader类</p>
-</li>
-<li><p>父类加载器为扩展类加载器</p>
-</li>
-<li><p>它负责加载<strong>环境变量classpath或系统属性java.class.path指定路径下的类库</strong></p>
-</li>
-<li><p>该类加载是程序中默认的类加载器，一般来说，Java应用的类都是由它来完成加载</p>
-</li>
-<li><p>通过ClassLoader#getSystemclassLoader() 方法可以获取到该类加载器</p>
-</li>
+<h4 id="字段重排序"><a href="#字段重排序" class="headerlink" title="字段重排序"></a>字段重排序</h4><p>为了更高效的使用内存，实例数据字段将会重排序。排序的优先级为： long = double &gt; int = float &gt; char = short &gt; byte &gt; boolean &gt; object reference</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">FieldTest</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">byte</span> a<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> c<span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span> d<span class="token punctuation">;</span>
+    <span class="token keyword">long</span> e<span class="token punctuation">;</span>
+    <span class="token class-name">Object</span> f<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">//重排序后结果</span>
+OFFSET  SIZE               TYPE DESCRIPTION            
+    <span class="token number">16</span>     <span class="token number">8</span>               <span class="token keyword">long</span> <span class="token class-name">FieldTest</span><span class="token punctuation">.</span>e            
+    <span class="token number">24</span>     <span class="token number">4</span>                <span class="token keyword">int</span> <span class="token class-name">FieldTest</span><span class="token punctuation">.</span>c            
+    <span class="token number">28</span>     <span class="token number">1</span>               <span class="token keyword">byte</span> <span class="token class-name">FieldTest</span><span class="token punctuation">.</span>a            
+    <span class="token number">29</span>     <span class="token number">1</span>            <span class="token keyword">boolean</span> <span class="token class-name">FieldTest</span><span class="token punctuation">.</span>d            
+    <span class="token number">30</span>     <span class="token number">2</span>              <span class="token punctuation">(</span>alignment<span class="token operator">/</span>padding gap<span class="token punctuation">)</span>
+    <span class="token number">32</span>     <span class="token number">8</span>            <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span></span>Object</span> <span class="token class-name">FieldTest</span><span class="token punctuation">.</span>f<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h2><ul>
+<li><p>一个int值在Java中为4byte，其包装对象Integer大小为：</p>
+<pre class="line-numbers language-none"><code class="language-none">4(Mark Word) + 4(Klass Word) + 4(data) + 4(Padding) &#x3D; 16byte<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 </ul>
-<h3 id="用户自定义类加载器"><a href="#用户自定义类加载器" class="headerlink" title="用户自定义类加载器"></a>用户自定义类加载器</h3><p>主要用途：隔离加载类、修改类加载的方式、扩展加载源、防止源码泄漏</p>
+<p>​    所以可以看出，包装类型比基本数据类型占用的空间大得多！！</p>
+<ul>
+<li><p>类似，一个Integer数组大小为：</p>
+<pre class="line-numbers language-none"><code class="language-none">4(Mark Word) + 4(Klass Word) + 4(length) + 4*10(10个int大小) + 4(Padding) &#x3D; 56sbyte<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h2 id="对象的实际大小"><a href="#对象的实际大小" class="headerlink" title="对象的实际大小"></a>对象的实际大小</h2><h3 id="浅堆（Shallow-Heap）"><a href="#浅堆（Shallow-Heap）" class="headerlink" title="浅堆（Shallow Heap）"></a>浅堆（Shallow Heap）</h3><p><strong>对象本身占用的内存，不包括内部引用对象的大小</strong>，32 位系统中一个对象引用占 4 个字节，每个对象头占用 8 个字节，根据堆快照格式不同，对象的大小会同 8 字节进行对齐。</p>
+<h3 id="保留集（Retained-Set）"><a href="#保留集（Retained-Set）" class="headerlink" title="保留集（Retained Set）"></a>保留集（Retained Set）</h3><p>对象 A 的保留集指当对象 A 被垃圾回收后，<strong>可以被释放的所有的对象集合（包括 A 本身）</strong>，所以对象 A 的保留集就是只能通过对象 A 被直接或间接访问到的所有对象的集合，就是仅被对象 A 所持有的对象的集合。</p>
+<p>对象 A 可以类比于可达性分析中的GC root元素，如果对象 A 不存在了，则此时<strong>不可达的节点</strong>都属于对象A的保留集</p>
+<h3 id="深堆（Retained-Heap）"><a href="#深堆（Retained-Heap）" class="headerlink" title="深堆（Retained Heap）"></a>深堆（Retained Heap）</h3><p>指对象的<strong>保留集中所有的对象的浅堆大小之和</strong>，一个对象的深堆指<strong>只能</strong>通过该对象<strong>访问到的</strong>（<strong>直接或间接</strong>）所有对象的浅堆之和，即对象被回收后，可以释放的真实空间。</p>
 <blockquote>
-<p>补充：<strong>获取ClassLoader的途径</strong></p>
-<ol>
-<li><p>获取当前ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">clazz<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li><p>获取当前线程上下文的ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li><p>获取系统的ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ClassLoader</span><span class="token punctuation">.</span><span class="token function">getSystemClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li><p>获取调用者的ClassLoader  </p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getCallerClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-</ol>
+<p><strong>一个对象所能触及的所有对象的浅堆大小之和，也就是通常意义上我们说的对象大小</strong></p>
 </blockquote>
-<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><blockquote>
-<p>定义：</p>
-<p><strong>当一个类加载器收到了类加载的请求的时候，他不会直接去加载指定的类，而是把这个请求委托给自己的父加载器去加载。只有父加载器无法加载这个类的时候，才会由当前这个加载器来负责类的加载。</strong></p>
-</blockquote>
-<p><strong>好处</strong>：</p>
-<p>1、因为类加载器之间有严格的层次关系，那么<strong>Java的类也随之具备了一种带优先级的层次关系</strong>。</p>
-<p>2、<strong>通过双亲委派的方式，还保证了安全性</strong>（因为Bootstrap ClassLoader在加载的时候，只会加载JAVA_HOME中的jar包里面的类，如java.lang.Object，那么这个类是不会被随意替换的，可以避免有人自定义一个有破坏功能的java.lang.Object被加载，也就是<strong>沙箱安全机制</strong>）</p>
+<p>下图显示了一个简单的对象引用关系图，对象 A 引用了 C 和 D，对象 B 引用了 C 和 E。<strong>那么对象 A 的浅堆大小只是 A 本身，A 的实际大小为 A、C、D 三者之和，A 的深堆大小为 A 与 D 之和</strong>，由于对象 C 还可以通过对象 B 访问到 C，因此 C 不在对象 A 的深堆范围内</p>
+<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/68747470733a2f2f67697465652e636f6d2f7365617a65616e2f696d616765732f7261772f6d61737465722f4a6176612f4a564d2de5afb9e8b1a1e79a84e5ae9ee99985e5a4a7e5b08f2e706e67.png" alt="img"></p>
+<h2 id="复杂实例"><a href="#复杂实例" class="headerlink" title="复杂实例"></a>复杂实例</h2><p>1、</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">C</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">char</span><span class="token punctuation">[</span><span class="token punctuation">]</span> cc<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">C</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        i <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+        cc <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">char</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">&#123;</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>Shallow Size</code>： 12(C Header) + 4 (i instance) + 4 (cc reference) + 4(padding) = 24bytes</p>
+<p><code>Retained Size</code>: 12(C Header) + 4 (i instance) + 4 (cc reference) + (16(cc header,注意是数组对象头) + 2(instance) * 3+ 2(padding)) + 4(padding) = 48bytes</p>
+<p>2、</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Fruit</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">private</span> <span class="token keyword">int</span> size<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Apple</span> <span class="token keyword">extends</span> <span class="token class-name">Fruit</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">private</span> <span class="token keyword">int</span> size<span class="token punctuation">;</span>
+	<span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+	<span class="token keyword">private</span> <span class="token class-name">Apple</span> brother<span class="token punctuation">;</span>
+	<span class="token keyword">private</span> <span class="token keyword">long</span> create_time<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>Apple大小：12(Apple Header) + 4(Fruit.size instance) + 4(Apple.size instance) + 4(name reference) + 4(brother reference) + 8(create_time instance) + 4(padding) = 40bytes</p>
+<p>如果假设已经初始化string = “apple”，则单独计算name内部会占用 ：</p>
 <blockquote>
-<p><strong>“父子加载器”之间的关系是继承吗？</strong></p>
-<p>不是！！</p>
-<p>类加载器之间的父子关系一般<strong>不会以继承（Inheritance）的关系</strong>来实现，而是都使用<strong>组合（Composition）关系</strong>来复用父加载器的代码的</p>
+<p>String类型：12（header） + 4（int） + 4 （int）+ 4（char[] reference)  = 24</p>
+<p>char[]类型：12 （header）+ 4（int，计算char[]长度的） + （2*5）（“Apple”）+ 6（padding）=32</p>
+<p>因此，此时深堆大小为40+24+32 = 96bytes</p>
 </blockquote>
-<h2 id="双亲委派是怎么实现的？"><a href="#双亲委派是怎么实现的？" class="headerlink" title="双亲委派是怎么实现的？"></a><strong>双亲委派是怎么实现的？</strong></h2><p>在java.lang.ClassLoader的loadClass()方法的短短数十行之中有很清晰地描述</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">protected</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> <span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token keyword">boolean</span> resolve<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span>
-        <span class="token punctuation">&#123;</span>
-
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token function">getClassLoadingLock</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                <span class="token comment">// First, check if the class has already been loaded</span>
-
-                <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> c <span class="token operator">=</span> <span class="token function">findLoadedClass</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
-
-                        <span class="token keyword">if</span> <span class="token punctuation">(</span>parent <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                            c <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-
-                            c <span class="token operator">=</span> <span class="token function">findBootstrapClassOrNull</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                        <span class="token punctuation">&#125;</span>
-
-                    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">ClassNotFoundException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                        <span class="token comment">// ClassNotFoundException thrown if class not found</span>
-
-                        <span class="token comment">// from the non-null parent class loader</span>
-
-                    <span class="token punctuation">&#125;</span>
-
-
-
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                        <span class="token comment">// If still not found, then invoke findClass in order</span>
-
-                        <span class="token comment">// to find the class.</span>
-
-                        c <span class="token operator">=</span> <span class="token function">findClass</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token punctuation">&#125;</span>
-
-                <span class="token punctuation">&#125;</span>
-
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>resolve<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-                    <span class="token function">resolveClass</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                <span class="token punctuation">&#125;</span>
-
-                <span class="token keyword">return</span> c<span class="token punctuation">;</span>
-
-            <span class="token punctuation">&#125;</span>
-
-        <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>具体过程从代码不难看出：</p>
-<p>1、先检查类是否已经被加载过</p>
-<p>2、若没有加载则调用父加载器的<code>loadClass()</code>方法进行加载</p>
-<p>3、若父加载器为空则默认使用启动类加载器作为父加载器。</p>
-<p>4、如果父类加载失败，抛出ClassNotFoundException异常后，再调用自己的<code>findClass()</code>方法进行加载。</p>
-<h2 id="破坏双亲委派机制"><a href="#破坏双亲委派机制" class="headerlink" title="破坏双亲委派机制"></a>破坏双亲委派机制</h2><p>从上面可以看到，因为他的双亲委派过程都是在<code>loadClass()</code>方法中实现的，那么<strong>想要破坏这种机制，那么就自定义一个类加载器，重写其中的<code>loadClass()</code>方法，使其不进行双亲委派即可</strong></p>
-<blockquote>
-<p><strong>双亲委派被破坏的例子</strong>：</p>
-<p><strong>1、双亲委派出现之前。</strong></p>
-<p>由于双亲委派模型是在JDK1.2之后才被引入的，而在这之前已经有用户自定义类加载器在用了。所以，这些是没有遵守双亲委派原则的。</p>
-<p><strong>2、JNDI、JDBC等需要加载SPI接口实现类的情况。</strong></p>
-<p>这种情况是基础类型想要调用回用户的代码（而根据双亲委派机制，越基础的类由越上层的加载器进行加载） =&gt; 引入线程上下文类加载器（Thread Context ClassLoader）</p>
-<p><strong>3、为了实现热插拔热部署工具。</strong></p>
-<p>为了让代码动态生效而无需重启，实现方式时把模块连同类加载器一起换掉就实现了代码的热替换。</p>
-<p><strong>4、Tomcat等web容器的出现。</strong></p>
-<p><strong>5、OSGI、Jigsaw等模块化技术的应用。</strong></p>
-</blockquote>
-<p>下面以JNDI、JDBC、Tomcat展开解释为什么要破坏双亲委派机制</p>
-<h3 id="JNDI，JDBC破坏双亲委派"><a href="#JNDI，JDBC破坏双亲委派" class="headerlink" title="JNDI，JDBC破坏双亲委派"></a><strong>JNDI，JDBC破坏双亲委派</strong></h3><p>我们日常开发中，大多数时候会通过API的方式调用Java提供的那些基础类，这些基础类时被Bootstrap加载的。但是，调用方式除了API之外，还有一种<strong>SPI</strong>的方式。</p>
-<p>例如典型的JDBC，需要以以下的方式创建数据库链接：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Connection</span> conn <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"jdbc:mysql://localhost:3306/mysql"</span><span class="token punctuation">,</span> <span class="token string">"root"</span><span class="token punctuation">,</span> <span class="token string">"1234"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p><em>原生的JDBC中的类是放在rt.jar包的，是由<strong>启动类加载器</strong>进行类加载的（即上述的<code>DriverManager</code>类是被<code>Bootstrap ClassLoader</code>加载的），原生的JDBC中Driver驱动本身只是一个接口，并没有具体的实现，JDBC中的Driver类中需要<strong>动态去加载不同数据库类型的Driver类</strong></em>，如mysql的<em>mysql-connector-</em>.jar中的Driver类是用户自己写的代码，那启动类加载器肯定是不能进行加载的，既然是自己编写的代码，那就需要由应用程序启动类去进行类加载</p>
-<p>于是，就<strong>在JDBC中通过引入ThreadContextClassLoader（线程上下文加载器，默认情况下是AppClassLoader）的方式破坏了双亲委派原则。</strong></p>
-<h3 id="Tomcat破坏双亲委派"><a href="#Tomcat破坏双亲委派" class="headerlink" title="Tomcat破坏双亲委派"></a><strong>Tomcat破坏双亲委派</strong></h3><p>由于Tomcat是web容器，那么一个web容器可能需要部署多个应用程序，<strong>不同的应用程序可能会依赖同一个第三方类库的不同版本</strong>，但是不同版本的类库中某一个类的<strong>全路径名可能是一样</strong>的。因而，<strong>如果采用默认的双亲委派类加载机制，那么是无法加载多个相同的类。</strong></p>
-<blockquote>
-<p>所以，<strong>Tomcat破坏双亲委派原则，提供隔离的机制，为每个web容器单独提供一个WebAppClassLoader加载器。</strong></p>
-<p>所以，为了实现<strong>隔离性</strong>，每一个应用自己的类加载器——WebAppClassLoader负责加载<strong>本身的目录下的class文件</strong>，加载不到时再交给父类加载器加载，这和双亲委派刚好相反</p>
-</blockquote>
-<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ol>
-<li>《深入理解Java虚拟机》周志明</li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/343563937">我竟然被“双亲委派”给虐了 - 知乎</a></li>
-</ol>
+<p>参考：</p>
+<p>1、<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1PJ411n7xZ">尚硅谷宋红康JVM全套教程（详解java虚拟机）</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6a85f0b3cdc9">Java中对象占用内存大小计算 - 简书</a></p>
+<p>3、<a target="_blank" rel="noopener" href="https://blog.csdn.net/belongtocode/article/details/103377187">(27条消息) 一个Java对象和Hashmap对象占用多大内存_Apple_Boy的博客-CSDN博客_hashmap占用内存大小</a></p>
+<p>4、<a target="_blank" rel="noopener" href="https://www.yuque.com/u21195183/jvm/nkq31c">补充：浅堆深堆与内存泄露 · 语雀</a></p>
 
                 
             </div>
@@ -585,7 +523,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2022/01/09/shuang-qin-wei-pai-ji-zhi/">https://destinationgitee.gitee.io/blog-article/blog-article/2022/01/09/shuang-qin-wei-pai-ji-zhi/</a>
+                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2021/11/08/java-dui-xiang-de-da-xiao-ji-suan/">https://destinationgitee.gitee.io/blog-article/blog-article/2021/11/08/java-dui-xiang-de-da-xiao-ji-suan/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -623,16 +561,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
-                                    <span class="chip bg-color">双亲委派机制</span>
-                                </a>
-                            
                                 <a href="/blog-article/tags/JVM/">
                                     <span class="chip bg-color">JVM</span>
                                 </a>
                             
-                                <a href="/blog-article/tags/ClassLoader/">
-                                    <span class="chip bg-color">ClassLoader</span>
+                                <a href="/blog-article/tags/Java%E5%AF%B9%E8%B1%A1/">
+                                    <span class="chip bg-color">Java对象</span>
                                 </a>
                             
                         </div>
@@ -682,13 +616,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/blog-article/2022/01/14/fen-bu-shi-shi-wu/">
+                <a href="/blog-article/2021/11/09/shuang-qin-wei-pai-ji-zhi/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog-article/medias/featureimages/0.jpg" class="responsive-img" alt="分布式事务">
+                        <img src="/blog-article/medias/featureimages/4.jpg" class="responsive-img" alt="双亲委派机制">
                         
-                        <span class="card-title">分布式事务</span>
+                        <span class="card-title">双亲委派机制</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -699,14 +633,14 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-01-14
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-09
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/blog-article/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
-                                    分布式
+                            <a href="/blog-article/categories/Java/" class="post-category">
+                                    Java
                                 </a>
                             
                             
@@ -716,8 +650,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/blog-article/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
-                        <span class="chip bg-color">分布式事务</span>
+                    <a href="/blog-article/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
+                    </a>
+                    
+                    <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
+                        <span class="chip bg-color">双亲委派机制</span>
+                    </a>
+                    
+                    <a href="/blog-article/tags/ClassLoader/">
+                        <span class="chip bg-color">ClassLoader</span>
                     </a>
                     
                 </div>
@@ -731,13 +673,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/blog-article/2021/12/26/yuan-di-ha-xi/">
+                <a href="/blog-article/2021/10/31/bi-bao/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog-article/medias/featureimages/5.jpg" class="responsive-img" alt="原地哈希">
+                        <img src="/blog-article/medias/featureimages/0.jpg" class="responsive-img" alt="闭包">
                         
-                        <span class="card-title">原地哈希</span>
+                        <span class="card-title">闭包</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -748,14 +690,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-31
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/blog-article/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
-                                    数据结构与算法
+                            <a href="/blog-article/categories/Golang/" class="post-category">
+                                    Golang
                                 </a>
                             
                             
@@ -765,16 +707,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/blog-article/tags/%E5%8E%9F%E5%9C%B0hash/">
-                        <span class="chip bg-color">原地hash</span>
+                    <a href="/blog-article/tags/Golang%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">Golang底层分析</span>
                     </a>
                     
-                    <a href="/blog-article/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
-                    </a>
-                    
-                    <a href="/blog-article/tags/%E6%95%B0%E7%BB%84/">
-                        <span class="chip bg-color">数组</span>
+                    <a href="/blog-article/tags/%E9%97%AD%E5%8C%85/">
+                        <span class="chip bg-color">闭包</span>
                     </a>
                     
                 </div>
@@ -931,7 +869,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">13.8k</span>
+                        class="white-color">20.1k</span>
             
             
             

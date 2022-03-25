@@ -379,7 +379,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    681
+                    682
                 </div>
                 
 
@@ -438,7 +438,7 @@
 </blockquote>
 <p>上述题目中对于每一个索引 $i$，经过元素换位后，索引$i$对应的正整数值 $i+1$ 若出现在数组中，一定已经换位到索引$i$处，其余的索引值要么为非正数，要么大于数组长度$n$。</p>
 <p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/%E5%8E%9F%E5%9C%B0%E5%93%88%E5%B8%8C2.png"></p>
-<p>总之，找到第一个 $nums[j]!= j$ 位置处即为所要找的数组中最小的未出现过的正整数对应的索引，对应的数值为$j+1$</p>
+<p>总之，找到第一个 $nums[j]!= j+1$ 位置处即为所要找的数组中最小的未出现过的正整数对应的索引，对应的数值为$j+1$</p>
 <h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">firstMissingPositive</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> nums<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
 	<span class="token keyword">int</span> n <span class="token operator">=</span> nums<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
     <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
@@ -588,7 +588,56 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/blog-article/2022/01/09/shuang-qin-wei-pai-ji-zhi/">
+                <a href="/blog-article/2022/01/14/fen-bu-shi-shi-wu/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/blog-article/medias/featureimages/0.jpg" class="responsive-img" alt="分布式事务">
+                        
+                        <span class="card-title">分布式事务</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-01-14
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/blog-article/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
+                                    分布式
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/blog-article/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
+                        <span class="chip bg-color">分布式事务</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/blog-article/2021/11/09/shuang-qin-wei-pai-ji-zhi/">
                     <div class="card-image">
                         
                         
@@ -604,9 +653,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-01-09
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-09
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -622,69 +671,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
-                        <span class="chip bg-color">双亲委派机制</span>
-                    </a>
-                    
                     <a href="/blog-article/tags/JVM/">
                         <span class="chip bg-color">JVM</span>
                     </a>
                     
+                    <a href="/blog-article/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
+                        <span class="chip bg-color">双亲委派机制</span>
+                    </a>
+                    
                     <a href="/blog-article/tags/ClassLoader/">
                         <span class="chip bg-color">ClassLoader</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/blog-article/2021/10/31/bi-bao/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/blog-article/medias/featureimages/0.jpg" class="responsive-img" alt="闭包">
-                        
-                        <span class="card-title">闭包</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-31
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/blog-article/categories/Golang/" class="post-category">
-                                    Golang
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/blog-article/tags/Golang%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90/">
-                        <span class="chip bg-color">Golang底层分析</span>
-                    </a>
-                    
-                    <a href="/blog-article/tags/%E9%97%AD%E5%8C%85/">
-                        <span class="chip bg-color">闭包</span>
                     </a>
                     
                 </div>
@@ -841,7 +837,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">13.8k</span>
+                        class="white-color">20.1k</span>
             
             
             
