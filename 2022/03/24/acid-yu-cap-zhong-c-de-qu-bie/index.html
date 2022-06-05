@@ -380,14 +380,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    265
+                    891
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    3 分
                 </div>
                 
 
@@ -407,9 +407,26 @@
             <div id="articleContent">
                 <h2 id="事务的ACID"><a href="#事务的ACID" class="headerlink" title="事务的ACID"></a>事务的ACID</h2><p>在关系数据库中，一个事务通常由多个 sql 语句组成。</p>
 <p><strong>原子性</strong>（A）保证每个事务都被视为一个完整的单元，要么全成功，要么全失败。如果构成事务的某个 sql 未能完成，则整个事务失败，数据库保持事务开始之前的状态，通常通过 undo log 实现。</p>
-<p><strong>一致性</strong>（C）确保事务只能将数据库从一种有效状态带到另一种有效状态，维护数据库不变性，例如有在有外键约束的情况下，无法从数据库中删除一条被另外一个表引用的记录。</p>
-<p><strong>隔离性</strong>是指在并发执行事务的情况下能获得和顺序执行事务相同的状态，根据具体的实现细节可以分为不同的隔离级别。</p>
-<p><strong>持久性</strong>保证一旦事务被提交，即使在系统故障的情况下它也将保持提交后的状态，通常通过 redo log 实现。</p>
+<p><strong>一致性</strong>（C）确保事务只能将数据库<strong>从一种有效状态带到另一种有效状态，维护数据库不变性</strong>，例如有在有外键约束的情况下，无法从数据库中删除一条被另外一个表引用的记录。</p>
+<p><strong>隔离性</strong>（I）是指在并发执行事务的情况下能获得和顺序执行事务相同的状态，根据具体的实现细节可以分为不同的隔离级别。</p>
+<p><strong>持久性</strong>（D）保证一旦事务被提交，即使在系统故障的情况下它也将保持提交后的状态，通常通过 redo log 实现。</p>
+<h2 id="全局事务"><a href="#全局事务" class="headerlink" title="全局事务"></a>全局事务</h2><p>随着互联网的发展，系统架构从早期单体架构慢慢演化到了分布式架构。之前关系数据库事务包含的多个 sql 语句，随着分布式系统的出现，会在<strong>多个物理节点上执行</strong>。此时便出现了全局事务。全局事务的定义是<strong>一种适用于单个服务使用多个数据源场景的事务解决方案</strong>，本质上是在分布式系统中追求一致性的处理方案</p>
+<p>一种解决分布式环境下一致性的方法是<strong>两阶段提交</strong>。</p>
+<h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><p>分布式也从单服务访问多数据源变成了<strong>多服务访问多数据源</strong>。</p>
+<p><strong>Consistency 一致性</strong>代表数据在任何时刻、任何分布式节点中所看到的都是符合预期的。</p>
+<p><strong>Availability 可用性</strong>代表系统不间断地提供服务的能力。</p>
+<p><strong>Partition tolerance 分区容错性</strong>代表分布式环境中部分节点因网络原因而彼此失联后，系统仍能正确地提供服务的能力。</p>
+<p>三者只能满足其二</p>
+<blockquote>
+<p>此时的一致性和前面两种一致性差别就比较大了。在分布式环境中达成一致性需要通过<strong>共识算法</strong>，分布式共识算法的基本思路就是<strong>少数服从多数</strong>。</p>
+<p>如果说ACID的C是节点服务器的<strong>数据完整性</strong>，而CAP的一致性是分布式<strong>多服务器之间复制数据以取得这些服务器拥有同样的数据</strong>，这是一种分布式领域的一致性概念。因此两者是完全不同的概念。</p>
+<p><strong>分布式一致性是作为分布式系统整体对外表现为一个一致性的系统，而其内部节点之间可能存在差异</strong></p>
+<p>此时，分布式系统的一致性和之前的一致性在概念上有较大的差别，因此大家对一致性重新做了定义，将之前的一致性叫做<em>强一致性</em>，此时的一致性叫做<em>最终一致性</em>，同时也将之前的事务叫做<em>刚性事务</em>，此时的事务叫做<em>柔性事务</em>。</p>
+</blockquote>
+<p>还有一种形象的比喻就是，ACID的C与CAP的C的关系类似<strong>精确与一致性</strong>的关系：</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/23145886.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1、<a target="_blank" rel="noopener" href="https://chenyuanwai.com/">ACID 的 C 和 CAP 的 C 到底什么关系</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://www.jdon.com/46956">ACID中C与CAP定理中C的区别</a></p>
 
                 
             </div>
@@ -533,18 +550,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/blog-article/2022/03/24/acid-yu-cap-zhong-c-de-qu-bie/">
+                <a href="/blog-article/2022/04/10/oauth2-wei-shi-me-bu-neng-tiao-guo-code-huo-qu-er-zhi-jie-huo-qu-token/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog-article/medias/featureimages/14.jpg" class="responsive-img" alt="ACID与CAP中C的区别">
+                        <img src="/blog-article/medias/featureimages/19.jpg" class="responsive-img" alt="Oauth2为什么不能跳过Code获取而直接获取Token？">
                         
-                        <span class="card-title">ACID与CAP中C的区别</span>
+                        <span class="card-title">Oauth2为什么不能跳过Code获取而直接获取Token？</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -554,39 +570,30 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-24
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-04-10
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/blog-article/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
-                                    分布式
+                            <a href="/blog-article/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
+                                    中间件
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/blog-article/tags/ACID/">
-                        <span class="chip bg-color">ACID</span>
+                    <a href="/blog-article/tags/Oauth2/">
+                        <span class="chip bg-color">Oauth2</span>
                     </a>
                     
-                    <a href="/blog-article/tags/CAP/">
-                        <span class="chip bg-color">CAP</span>
-                    </a>
-                    
-                    <a href="/blog-article/tags/%E4%BA%8B%E5%8A%A1/">
-                        <span class="chip bg-color">事务</span>
-                    </a>
-                    
-                    <a href="/blog-article/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
-                        <span class="chip bg-color">分布式</span>
+                    <a href="/blog-article/tags/%E5%8E%9F%E7%90%86/">
+                        <span class="chip bg-color">原理</span>
                     </a>
                     
                 </div>
@@ -796,7 +803,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">20.1k</span>
+                        class="white-color">28.9k</span>
             
             
             

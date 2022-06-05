@@ -405,7 +405,7 @@
             <div id="articleContent">
                 <h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>从Java虚拟机的角度上讲，其实只存在两种不同的类加载器，一是启动类加载器（<code>Bootstrap ClassLoader</code>），其为虚拟机的一部分，二是其他所有的类加载器。</p>
 <p>但是从开发人员的角度上说，类加载器可以分得更为细致。</p>
-<p><img src="https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/image-20220109200810277.png"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220109200810277.png"></p>
 <p>一般认为上一层加载器是下一层加载器的父加载器，因而，除了<code>BootstrapClassLoader</code>之外，所有的加载器都是有父加载器的。</p>
 <h3 id="启动类加载器（引导类加载器，Bootstrap-ClassLoader）"><a href="#启动类加载器（引导类加载器，Bootstrap-ClassLoader）" class="headerlink" title="启动类加载器（引导类加载器，Bootstrap ClassLoader）"></a><strong>启动类加载器（引导类加载器，Bootstrap ClassLoader）</strong></h3><ul>
 <li><p>这个类加载使用C/C++语言实现的，嵌套在JVM内部。</p>
@@ -530,7 +530,7 @@
 <p>1、先检查类是否已经被加载过</p>
 <p>2、若没有加载则调用父加载器的<code>loadClass()</code>方法进行加载</p>
 <p>3、若父加载器为空则默认使用启动类加载器作为父加载器。</p>
-<p>4、如果父类加载失败，抛出ClassNotFoundException异常后，再调用自己的<code>findClass()</code>方法进行加载。</p>
+<p>4、如果父类加载失败，抛出ClassNotFoundException异常后，再调用自定义的<code>findClass()</code>方法进行加载。</p>
 <blockquote>
 <p>如果我们自定义的类加载器不希望破坏双亲委派机制，那么只需要重写 <code>ClassLoader</code> 的 <code>findClass</code> 方法即可，在这个方法中，我们可以自定义类的查找顺序，根据某种规则查找类。</p>
 </blockquote>
@@ -685,13 +685,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/blog-article/2021/12/26/yuan-di-ha-xi/">
+                <a href="/blog-article/2021/11/15/idea-chang-yong-de-yi-xie-kuai-jie-jian/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog-article/medias/featureimages/5.jpg" class="responsive-img" alt="原地哈希">
+                        <img src="/blog-article/medias/featureimages/13.jpg" class="responsive-img" alt="IDEA常用快捷键">
                         
-                        <span class="card-title">原地哈希</span>
+                        <span class="card-title">IDEA常用快捷键</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -702,14 +702,14 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-26
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-15
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/blog-article/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
-                                    数据结构与算法
+                            <a href="/blog-article/categories/IDEA/" class="post-category">
+                                    IDEA
                                 </a>
                             
                             
@@ -719,16 +719,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/blog-article/tags/%E5%8E%9F%E5%9C%B0hash/">
-                        <span class="chip bg-color">原地hash</span>
-                    </a>
-                    
-                    <a href="/blog-article/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
-                    </a>
-                    
-                    <a href="/blog-article/tags/%E6%95%B0%E7%BB%84/">
-                        <span class="chip bg-color">数组</span>
+                    <a href="/blog-article/tags/IDEA%E5%BF%AB%E6%8D%B7%E9%94%AE/">
+                        <span class="chip bg-color">IDEA快捷键</span>
                     </a>
                     
                 </div>
@@ -938,7 +930,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">20.1k</span>
+                        class="white-color">28.9k</span>
             
             
             
