@@ -35,16 +35,6 @@
 
 
 
-   <style>
-    body{
-       background-image: url(https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/wallhaven-1kom71.jpg);
-       background-repeat:no-repeat;
-       background-size: 100% 100%;
-       background-attachment:fixed;
-    }
-</style>
-
-
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -406,9 +396,9 @@
     <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220322123929888.png" alt="image-20220322123929888"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220322123929888.png"></p>
 <p>可以看到，65535长度的字符串确实超出限制了，如果是65534的结果如下</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220331003022939.png" alt="image-20220331003022939"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220331003022939.png"></p>
 <p>此时可以成功创建字符串</p>
 <blockquote>
 <p>JVM规范对常量池有所限制。常量池中的每一种数据项都有自己的类型，Java中的UTF-8编码的Unicode字符串在常量池中CONSTANT_Utf8类型表示</p>
@@ -433,13 +423,13 @@
 <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s2<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>那么结果就不一样了，它们是可以跑出结果的，如下图</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220331004542833.png" alt="image-20220331004542833"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220331004542833.png"></p>
 <p>其实这样在非字符串常量的堆上生成的字符串只会受到<strong>运行期限制</strong>，此时的字符串最大长度取决于<strong>堆的大小</strong>，理论上说，如果是Integer.MAX_VALUE长度的字符串，在JDK8下占据的字节数为2*Integer.MAX_VALUE，也就是4GB。一般实际情况由于各种因素影响，会比MAX_VALUE这个值要小一点。</p>
 <h2 id="JVM内存区域中的字符串常量池"><a href="#JVM内存区域中的字符串常量池" class="headerlink" title="JVM内存区域中的字符串常量池"></a>JVM内存区域中的字符串常量池</h2><p>其实，这个问题来源于字符串常量池在内存中的位置区域，《深入理解Java虚拟机》P46中有一句话说到：”JDK 7的HotSpot，已经把<strong>原本放在永久代的字符串常量池、静态变量等移出</strong>。”另外，在P62可以看到，<strong>字符串常量池被移动到了Java堆之中</strong>，也就是说，JDK6和JDK7的字符串常量池已经在不同位置，就如下两图所示：</p>
 <p>JDK6:</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220322010119819.png" alt="image-20220322010119819"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220322010119819.png"></p>
 <p>JDK7:</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220322010509189.png" alt="image-20220322010509189"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220322010509189.png"></p>
 <p><del>本次实验的时候采用的是JDK8，故字符串常量池是在<strong>堆</strong>中的！！这也就说明了为什么超过65534的字符串还能够在常量池中出现。因此，此时的字符串最大长度取决于<strong>堆的大小</strong>，理论上说，如果是Integer.MAX_VALUE长度的字符串，在JDK8下占据的字节数为2*Integer.MAX_VALUE，也就是4GB。一般实际情况由于各种因素影响，会比MAX_VALUE这个值要小一点。</del></p>
 <h2 id="简单总结"><a href="#简单总结" class="headerlink" title="简单总结"></a>简单总结</h2><p>String 的长度是有限制的。在编译期间的字符串长度受到Class类文件中的CONSTANT_Utf8限制，u2是无符号的16位整数，加上null 值使用两个 字节来表示，因此只剩下 65536－ 2 ＝ 65534个字节。</p>
 <p><del>运行期间字符串长度与字符串常量池所在位置有关，<strong>JDK7（不包括）之前</strong>字符串常量池在方法区（永久代），因此可以用-XX:MaxPerSize限制，注意这里限制的长度是给定最大内存的1/2（因为一个char占两个字节），移动到堆上，此时字符串的最大长度就只跟堆的大小有关了</del></p>
@@ -1124,9 +1114,20 @@ $(function () {
     <!--腾讯兔小巢-->
     
     
-
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/blog-article/libs/background/canvas-nest.js"></script>
     
 
+    
+    
+    <script type="text/javascript" size="150" alpha='0.6'
+        zIndex="-1" src="/blog-article/libs/background/ribbon-refresh.min.js" async="async"></script>
+    
+
+    
+    <script type="text/javascript" src="/blog-article/libs/background/ribbon-dynamic.js" async="async"></script>
     
 
     

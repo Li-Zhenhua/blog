@@ -37,16 +37,6 @@ Mark Word: 用于存储对象自身的运行时数据">
 
 
 
-   <style>
-    body{
-       background-image: url(https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/wallhaven-1kom71.jpg);
-       background-repeat:no-repeat;
-       background-size: 100% 100%;
-       background-attachment:fixed;
-    }
-</style>
-
-
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -400,7 +390,7 @@ Mark Word: 用于存储对象自身的运行时数据">
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="Java对象布局"><a href="#Java对象布局" class="headerlink" title="Java对象布局"></a>Java对象布局</h2><p>一个 Java 对象在内存中存储为三部分：对象头（Header）、实例数据（Instance Data）和对齐填充 （Padding）。可以用下图来清晰表示：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/webp.webp" alt="img"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/webp.webp"></p>
 <h3 id="1、对象头"><a href="#1、对象头" class="headerlink" title="1、对象头"></a>1、对象头</h3><ul>
 <li><p><strong>Mark Word</strong>: 用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等。</p>
 <pre class="line-numbers language-none"><code class="language-none">hash(25) + age(4) + lock(3) &#x3D; 32bit					#32位系统
@@ -459,7 +449,7 @@ OFFSET  SIZE               TYPE DESCRIPTION
 <p><strong>一个对象所能触及的所有对象的浅堆大小之和，也就是通常意义上我们说的对象大小</strong></p>
 </blockquote>
 <p>下图显示了一个简单的对象引用关系图，对象 A 引用了 C 和 D，对象 B 引用了 C 和 E。<strong>那么对象 A 的浅堆大小只是 A 本身，A 的实际大小为 A、C、D 三者之和，A 的深堆大小为 A 与 D 之和</strong>，由于对象 C 还可以通过对象 B 访问到 C，因此 C 不在对象 A 的深堆范围内</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/68747470733a2f2f67697465652e636f6d2f7365617a65616e2f696d616765732f7261772f6d61737465722f4a6176612f4a564d2de5afb9e8b1a1e79a84e5ae9ee99985e5a4a7e5b08f2e706e67.png" alt="img"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/68747470733a2f2f67697465652e636f6d2f7365617a65616e2f696d616765732f7261772f6d61737465722f4a6176612f4a564d2de5afb9e8b1a1e79a84e5ae9ee99985e5a4a7e5b08f2e706e67.png"></p>
 <h2 id="复杂实例"><a href="#复杂实例" class="headerlink" title="复杂实例"></a>复杂实例</h2><p>1、</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">C</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">private</span> <span class="token keyword">int</span> i<span class="token punctuation">;</span>
@@ -1170,9 +1160,20 @@ $(function () {
     <!--腾讯兔小巢-->
     
     
-
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/blog-article/libs/background/canvas-nest.js"></script>
     
 
+    
+    
+    <script type="text/javascript" size="150" alpha='0.6'
+        zIndex="-1" src="/blog-article/libs/background/ribbon-refresh.min.js" async="async"></script>
+    
+
+    
+    <script type="text/javascript" src="/blog-article/libs/background/ribbon-dynamic.js" async="async"></script>
     
 
     

@@ -39,16 +39,6 @@
 
 
 
-   <style>
-    body{
-       background-image: url(https://gitee.com/DestiNationGitee/drawing-bed/raw/master/blogImg/wallhaven-1kom71.jpg);
-       background-repeat:no-repeat;
-       background-size: 100% 100%;
-       background-attachment:fixed;
-    }
-</style>
-
-
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -418,9 +408,9 @@
 <p>因为窗口函数是对where或者group by子句处理后的结果进行操作，所以<strong>窗口函数原则上只能写在select子句中</strong>。</p>
 <h3 id="三-如何使用？"><a href="#三-如何使用？" class="headerlink" title="三.如何使用？"></a><strong>三.如何使用？</strong></h3><p>接下来，就结合实例，给大家介绍几种窗口函数的用法。</p>
 <h4 id="1-专用窗口函数rank"><a href="#1-专用窗口函数rank" class="headerlink" title="1.专用窗口函数rank"></a><strong>1.专用窗口函数rank</strong></h4><p>例如下图，是班级表中的内容</p>
-<p><img src="https://pic2.zhimg.com/80/v2-f8c3b3deb99122d75bb506fdbea81c8d_720w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-f8c3b3deb99122d75bb506fdbea81c8d_720w.jpg"></p>
 <p>如果我们想在每个班级内按成绩排名，得到下面的结果。</p>
-<p><img src="https://pic3.zhimg.com/80/v2-3285d1d648de9f90864000d58847087a_720w.jpg" alt="img"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-3285d1d648de9f90864000d58847087a_720w.jpg"></p>
 <p>以班级“1”为例，这个班级的成绩“95”排在第1位，这个班级的“83”排在第4位。上面这个结果确实按我们的要求在每个班级内，按成绩排名了。</p>
 <p>得到上面结果的sql语句代码如下：</p>
 <pre class="line-numbers language-text" data-language="text"><code class="language-text">select *,
@@ -433,10 +423,10 @@ from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><s
 <p><strong>partition by用来对表分组</strong>。在这个例子中，所以我们指定了按“班级”分组（partition by 班级）<br>2）按成绩排名</p>
 <p><strong>order by子句的功能是对分组后的结果进行排序</strong>，默认是按照升序（asc）排列。在本例中（order by 成绩 desc）是按成绩这一列排序，加了desc关键词表示降序排列。</p>
 <p>通过下图，我们就可以理解partiition by（分组）和order by（在组内排序）的作用了。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-451c70aa24c68aa7142693fd27c85605_720w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-451c70aa24c68aa7142693fd27c85605_720w.jpg"></p>
 <p>窗口函数具备了我们之前学过的group by子句分组的功能和order by子句排序的功能。那么，为什么还要用窗口函数呢？</p>
 <p>这是因为，<strong>group by分组汇总后改变了表的行数，一行只有一个类别。而partiition by和rank函数不会减少原表中的行数</strong>。例如下面统计每个班级的人数。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-a9342df7f64ec7d9a52b42adcdb48341_720w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-a9342df7f64ec7d9a52b42adcdb48341_720w.jpg"></p>
 <pre class="line-numbers language-text" data-language="text"><code class="language-text">相信通过这个例子，你已经明白了这个窗口函数的使用：
 
 select *,
@@ -461,7 +451,7 @@ from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><s
 from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>得到结果：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-ad1d86f5a5b9f0ef684907b20b341099_720w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-ad1d86f5a5b9f0ef684907b20b341099_720w.jpg"></p>
 <p>从上面的结果可以看出：</p>
 <blockquote>
 <p>rank函数：这个例子中是5位，5位，5位，8位，也就是如果有并列名次的行，会占用下一名次的位置。比如正常排名是1，2，3，4，但是现在前3名是并列的名次，结果是：<strong>1，1，1</strong>，4。</p>
@@ -469,7 +459,7 @@ from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><s
 <p>row_number函数：这个例子中是5位，6位，7位，8位，也就是不考虑并列名次的情况。比如前3名是并列的名次，排名是正常的<strong>1，2，3</strong>，4。</p>
 <p>这三个函数的区别如下：</p>
 </blockquote>
-<p><img src="https://pic3.zhimg.com/80/v2-7b63c571dfa285c0aa0c8f944ca89482_720w.jpg" alt="img"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-7b63c571dfa285c0aa0c8f944ca89482_720w.jpg"></p>
 <p>最后，需要强调的一点是：在上述的这三个专用窗口函数中，函数后面的括号不需要任何参数，保持()空着就可以。</p>
 <p>现在，大家对窗口函数有一个基本了解了吗？</p>
 <h4 id="3-聚合函数作为窗口函数"><a href="#3-聚合函数作为窗口函数" class="headerlink" title="3.聚合函数作为窗口函数"></a><strong>3.聚合函数作为窗口函数</strong></h4><p>聚和窗口函数和上面提到的专用窗口函数用法完全相同，只需要把聚合函数写在窗口函数的位置即可，但是函数后面括号里面不能为空，需要指定聚合的列名。</p>
@@ -483,11 +473,11 @@ from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><s
 from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>得到结果：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-c48f0218306f65049fcf9f98c184226d_720w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-c48f0218306f65049fcf9f98c184226d_720w.jpg"></p>
 <p>有发现什么吗？我单独用sum举个例子：</p>
 <p>如上图，聚合函数sum在窗口函数中，是对自身记录、及位于自身记录以上的数据进行求和的结果。比如0004号，在使用sum窗口函数后的结果，是对0001，0002，0003，0004号的成绩求和，若是0005号，则结果是0001号~0005号成绩的求和，以此类推。</p>
 <p>不仅是sum求和，平均、计数、最大最小值，也是同理，都是针对自身记录、以及自身记录之上的所有数据进行计算，现在再结合刚才得到的结果（下图），是不是理解起来容易多了？</p>
-<p><img src="https://pic2.zhimg.com/80/v2-c48f0218306f65049fcf9f98c184226d_720w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-c48f0218306f65049fcf9f98c184226d_720w.jpg"></p>
 <p>比如0005号后面的聚合窗口函数结果是：学号0001~0005五人成绩的总和、平均、计数及最大最小值。</p>
 <p>如果想要知道所有人成绩的总和、平均等聚合结果，看最后一行即可。</p>
 <p><strong>这样使用窗口函数有什么用呢？</strong></p>
@@ -498,7 +488,7 @@ from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><s
 from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>得到结果：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-c589fe21dd785ff5996174684cc4de84_720w.jpg" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-c589fe21dd785ff5996174684cc4de84_720w.jpg"></p>
 <p>但是，这就失去了窗口函数的功能，所以一般不要这么使用。</p>
 <h3 id="四-总结"><a href="#四-总结" class="headerlink" title="四.总结"></a><strong>四.总结</strong></h3><h4 id="1-窗口函数语法"><a href="#1-窗口函数语法" class="headerlink" title="1.窗口函数语法"></a><strong>1.窗口函数语法</strong></h4><pre class="line-numbers language-text" data-language="text"><code class="language-text">&lt;窗口函数> over (partition by &lt;用于分组的列名>
                 order by &lt;用于排序的列名>)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
@@ -724,12 +714,12 @@ from 班级表<span aria-hidden="true" class="line-numbers-rows"><span></span><s
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/blog-article/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
-                    </a>
-                    
                     <a href="/blog-article/tags/%E6%B0%B4%E5%A1%98%E6%8A%BD%E6%A0%B7/">
                         <span class="chip bg-color">水塘抽样</span>
+                    </a>
+                    
+                    <a href="/blog-article/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
                     </a>
                     
                     <a href="/blog-article/tags/%E6%95%B0%E5%AD%A6/">
@@ -1191,9 +1181,20 @@ $(function () {
     <!--腾讯兔小巢-->
     
     
-
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/blog-article/libs/background/canvas-nest.js"></script>
     
 
+    
+    
+    <script type="text/javascript" size="150" alpha='0.6'
+        zIndex="-1" src="/blog-article/libs/background/ribbon-refresh.min.js" async="async"></script>
+    
+
+    
+    <script type="text/javascript" src="/blog-article/libs/background/ribbon-dynamic.js" async="async"></script>
     
 
     
