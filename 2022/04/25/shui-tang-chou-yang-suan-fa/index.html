@@ -37,6 +37,16 @@
 
 
 
+   <style>
+    body{
+       background-image: url(https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/wallhaven-1kom71.jpg);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -368,7 +378,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1k
+                    1.2k
                 </div>
                 
 
@@ -408,7 +418,7 @@
 </blockquote>
 <h3 id="算法正确性验证"><a href="#算法正确性验证" class="headerlink" title="算法正确性验证"></a>算法正确性验证</h3><p>设 nums 中有 k 个值为 target 的元素，该算法会保证这 k 个元素的下标成为最终返回值的概率均为 1/k，证明如下：</p>
 <blockquote>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220426002240562.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220426002240562.png"></p>
 </blockquote>
 <p>因此，对于这个nums数组中的所有元素而言，每个元素的下标作为最终结果的概率都是一样的，故其实题目也可改为获取随机一个元素的下标。上述问题的代码可以写为：</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Solution</span> <span class="token punctuation">&#123;</span>
@@ -486,6 +496,8 @@
 
 <h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p>1、<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/random-pick-index/solution/sui-ji-shu-suo-yin-by-leetcode-solution-ofsq/">随机数索引 - 随机数索引 - 力扣（LeetCode）</a></p>
 <p>2、<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29178293">水塘抽样（Reservoir Sampling） - 知乎</a></p>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>在2022.6.9这道leetcode 497每日一题中，也可以使用水塘抽样算法，这道题基本思路是先选中其中的一个矩形，然后再在矩形里面随机抽出一个点，其实整体思路有点像上面的一般化结论的例子。</p>
+<p>结合来看，水塘抽样算法可以用于<strong>多层级抽取</strong>之后保证<strong>每个抽样点概率一致</strong>的问题中，基本思路就是先得到数据流的顺序或者到目前为止的数据总和等，然后判断每一个一级数据被保留的概率，然后在一级之下的二级数据用平均的随机思想抽取</p>
 
                 
             </div>
@@ -512,7 +524,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2022/04/25/shui-tang-chou-yang-suan-fa/">https://destinationgitee.gitee.io/blog-article/blog-article/2022/04/25/shui-tang-chou-yang-suan-fa/</a>
+                    <a href="https://desti_nation.gitee.io/blog-article/blog-article/2022/04/25/shui-tang-chou-yang-suan-fa/">https://desti_nation.gitee.io/blog-article/blog-article/2022/04/25/shui-tang-chou-yang-suan-fa/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -858,7 +870,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">28.9k</span>
+                        class="white-color">34.6k</span>
             
             
             
@@ -978,8 +990,8 @@
     $(document).ready(function () {
 
         var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-        var pvcountOffset = 5649;  // 初始化首次数据
-        var uvcountOffset = 1564;
+        var pvcountOffset = 986;  // 初始化首次数据
+        var uvcountOffset = 264;
 
         function fixCount() {
             if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {

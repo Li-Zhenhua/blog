@@ -34,6 +34,16 @@
 
 
 
+   <style>
+    body{
+       background-image: url(https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/wallhaven-1kom71.jpg);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -361,7 +371,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    814
+                    824
                 </div>
                 
 
@@ -388,7 +398,7 @@
             <div id="articleContent">
                 <h2 id="Oauth2为什么不能跳过Code获取而直接获取Token？"><a href="#Oauth2为什么不能跳过Code获取而直接获取Token？" class="headerlink" title="Oauth2为什么不能跳过Code获取而直接获取Token？"></a>Oauth2为什么不能跳过Code获取而直接获取Token？</h2><p>首先，我们都知道，Oauth2整体思路是，在客户端与数据存储的服务端中间添加了一个授权层，客户端不能直接访问数据存储的服务端，只能登录到授权层，将认证和授权分隔开来。客户端访问服务端存储的数据需要携带认证层返回的code。</p>
 <p>总之，一句话，”客户端”登录授权层以后，”服务提供商”根据令牌的权限范围和有效期，向”客户端”开放用户储存的资料。</p>
-<h3 id="Oauth2的运行流程"><a href="#Oauth2的运行流程" class="headerlink" title="Oauth2的运行流程"></a>Oauth2的运行流程</h3><p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/bg2014051203.png" alt="OAuth运行流程"></p>
+<h3 id="Oauth2的运行流程"><a href="#Oauth2的运行流程" class="headerlink" title="Oauth2的运行流程"></a>Oauth2的运行流程</h3><p><img src="https://cdn.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/bg2014051203.png" alt="OAuth运行流程"></p>
 <p>（A）用户打开客户端以后，客户端要求用户给予授权。</p>
 <p>（B）用户同意给予客户端授权。</p>
 <p>（C）客户端使用上一步获得的授权，向认证服务器申请令牌。</p>
@@ -396,14 +406,14 @@
 <p>（E）客户端使用令牌，向资源服务器申请获取资源。</p>
 <p>（F）资源服务器确认令牌无误，同意向客户端开放资源</p>
 <p>一种很常见的授权模式即为第三方登录使用的授权码模式，该模式的流程图如下：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/bg2014051204.png" alt="授权码模式"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/bg2014051204.png" alt="授权码模式"></p>
 <p>（A）用户访问客户端，后者将前者导向认证服务器。</p>
 <p>（B）用户选择是否给予客户端授权。</p>
 <p>（C）假设用户给予授权，认证服务器将用户导向客户端事先指定的”重定向URI”（redirection URI），同时附上一个授权码code。</p>
 <p>（D）客户端收到授权码，附上早先的”重定向URI”，向认证服务器申请令牌。这一步是在客户端的后台的服务器上完成的，对用户不可见。</p>
 <p>（E）认证服务器核对了授权码和重定向URI，确认无误后，向客户端发送访问令牌（access token）和更新令牌（refresh token）。</p>
 <h3 id="为什么要使用code这步中间步骤"><a href="#为什么要使用code这步中间步骤" class="headerlink" title="为什么要使用code这步中间步骤"></a>为什么要使用code这步中间步骤</h3><p>说了这么多Oauth2的流程，那具体是什么原因使得我们不能直接去访问服务端得到token呢？</p>
-<p>我们来使用反证法来考虑一下。首先得注意到的是，认证服务器的返回是通过 302 重定向实现的，也就是说，返回的code值是显示在url上的，假如我们不用code，客户端请求之后直接获得访问令牌（access token），那么token将会显示在url上，中间人就很容易截获token，token的失窃风险急剧上升。</p>
+<p>其实主要的原因很简单，我们来使用反证法来考虑一下。首先得注意到的是，认证服务器的返回是通过 302 重定向实现的，也就是说，返回的code值是显示在url上的，假如我们不用code，客户端请求之后直接获得访问令牌（access token），那么token将会显示在url上，中间人就很容易截获token，token的失窃风险急剧上升。</p>
 <p>此外，我们用 code 换取 token，不需要借助用户浏览器，是由 client 后台直接访问授权服务器的，这个步骤 client 还需要发送自己的 app secret，授权服务器也需要使用这个 app secret 来验证 client 的身份</p>
 <p>如果在用户登陆时就要返回 token，那么 client 将不得不生成一个包含自己 app secret 的授权地址，那么 client 的 app secret 任何人都可以通过浏览器url地址栏看到了，对 client 来说也不安全</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>1、<a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html">理解OAuth 2.0 - 阮一峰的网络日志</a></p>
@@ -434,7 +444,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2022/04/10/oauth2-wei-shi-me-bu-neng-tiao-guo-code-huo-qu-er-zhi-jie-huo-qu-token/">https://destinationgitee.gitee.io/blog-article/blog-article/2022/04/10/oauth2-wei-shi-me-bu-neng-tiao-guo-code-huo-qu-er-zhi-jie-huo-qu-token/</a>
+                    <a href="https://desti_nation.gitee.io/blog-article/blog-article/2022/04/10/oauth2-wei-shi-me-bu-neng-tiao-guo-code-huo-qu-er-zhi-jie-huo-qu-token/">https://desti_nation.gitee.io/blog-article/blog-article/2022/04/10/oauth2-wei-shi-me-bu-neng-tiao-guo-code-huo-qu-er-zhi-jie-huo-qu-token/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -788,7 +798,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">28.9k</span>
+                        class="white-color">34.6k</span>
             
             
             
@@ -908,8 +918,8 @@
     $(document).ready(function () {
 
         var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-        var pvcountOffset = 5649;  // 初始化首次数据
-        var uvcountOffset = 1564;
+        var pvcountOffset = 986;  // 初始化首次数据
+        var uvcountOffset = 264;
 
         function fixCount() {
             if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {

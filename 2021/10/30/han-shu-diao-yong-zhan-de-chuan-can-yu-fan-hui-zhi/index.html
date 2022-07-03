@@ -38,6 +38,16 @@
 
 
 
+   <style>
+    body{
+       background-image: url(https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/wallhaven-1kom71.jpg);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -391,15 +401,15 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>我们知道，由于Go语言是值传递，如果在被调用函数内部交换两个数的值，调用者内部对应的实参是不会发生变化的，就如下所示：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/swap%E5%87%BD%E6%95%B0.PNG"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/swap%E5%87%BD%E6%95%B0.PNG"></p>
 <p>但这个现象的原因从函数调用栈来说具体的机理是什么呢？我们通过函数调用栈看看问题到底出在哪</p>
 <p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/swap%E6%A0%88%E5%B8%A7.PNG"></p>
 <p>由于函数调用没有返回值，所以局部变量后面就是给被调用函数传入的参数$args$，注意调用函数的<strong>参数入栈顺序由右到左，返回值也是一样</strong>（原因是这样被调用函数通过**$sp$+偏移寻址**就比较方便了）</p>
 <p>可以看出，当<code>swap</code>函数交换两数时，交换的是<code>args</code>内的$a、b$，而不是<code>main</code>函数中的局部变量，所以<code>main</code>函数中的$a、b$交换失败。</p>
 <h2 id="传指针的例子"><a href="#传指针的例子" class="headerlink" title="传指针的例子"></a>传指针的例子</h2><p>同理与上面的例子，我们便可以很容易理解传指针时为什么可以成功交换$a、b$的值</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/swap%E5%87%BD%E6%95%B02.PNG"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/swap%E5%87%BD%E6%95%B02.PNG"></p>
 <p>此时的栈帧空间分布如下：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/swap%E6%A0%88%E5%B8%A72.PNG"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/swap%E6%A0%88%E5%B8%A72.PNG"></p>
 <p><code>swap</code>执行到<code>*a,*b=*b,*a</code>时，交换的是这两个指针指向的数据，也就是这两个地址的数据，所以这一次能交换成功</p>
 <h2 id="匿名函数返回值"><a href="#匿名函数返回值" class="headerlink" title="匿名函数返回值"></a>匿名函数返回值</h2><p>Go语言支持多返回值，所以在<strong>栈上分配返回值空间</strong>更合适</p>
 <p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E5%8C%BF%E5%90%8D%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0.PNG"></p>
@@ -456,7 +466,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2021/10/30/han-shu-diao-yong-zhan-de-chuan-can-yu-fan-hui-zhi/">https://destinationgitee.gitee.io/blog-article/blog-article/2021/10/30/han-shu-diao-yong-zhan-de-chuan-can-yu-fan-hui-zhi/</a>
+                    <a href="https://desti_nation.gitee.io/blog-article/blog-article/2021/10/30/han-shu-diao-yong-zhan-de-chuan-can-yu-fan-hui-zhi/">https://desti_nation.gitee.io/blog-article/blog-article/2021/10/30/han-shu-diao-yong-zhan-de-chuan-can-yu-fan-hui-zhi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -798,7 +808,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">28.9k</span>
+                        class="white-color">34.6k</span>
             
             
             
@@ -918,8 +928,8 @@
     $(document).ready(function () {
 
         var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-        var pvcountOffset = 5649;  // 初始化首次数据
-        var uvcountOffset = 1564;
+        var pvcountOffset = 986;  // 初始化首次数据
+        var uvcountOffset = 264;
 
         function fixCount() {
             if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {

@@ -35,6 +35,16 @@
 
 
 
+   <style>
+    body{
+       background-image: url(https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/wallhaven-1kom71.jpg);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -370,14 +380,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    891
+                    872
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    3 分
+                    2 分
                 </div>
                 
 
@@ -407,8 +417,8 @@
 <p><strong>Availability 可用性</strong>代表系统不间断地提供服务的能力。</p>
 <p><strong>Partition tolerance 分区容错性</strong>代表分布式环境中部分节点因网络原因而彼此失联后，系统仍能正确地提供服务的能力。</p>
 <p>三者只能满足其二</p>
-<blockquote>
-<p>此时的一致性和前面两种一致性差别就比较大了。在分布式环境中达成一致性需要通过<strong>共识算法</strong>，分布式共识算法的基本思路就是<strong>少数服从多数</strong>。</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><blockquote>
+<p>在分布式环境中达成一致性需要通过<strong>共识算法</strong>，分布式共识算法的基本思路就是<strong>少数服从多数</strong>。</p>
 <p>如果说ACID的C是节点服务器的<strong>数据完整性</strong>，而CAP的一致性是分布式<strong>多服务器之间复制数据以取得这些服务器拥有同样的数据</strong>，这是一种分布式领域的一致性概念。因此两者是完全不同的概念。</p>
 <p><strong>分布式一致性是作为分布式系统整体对外表现为一个一致性的系统，而其内部节点之间可能存在差异</strong></p>
 <p>此时，分布式系统的一致性和之前的一致性在概念上有较大的差别，因此大家对一致性重新做了定义，将之前的一致性叫做<em>强一致性</em>，此时的一致性叫做<em>最终一致性</em>，同时也将之前的事务叫做<em>刚性事务</em>，此时的事务叫做<em>柔性事务</em>。</p>
@@ -443,7 +453,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2022/03/24/acid-yu-cap-zhong-c-de-qu-bie/">https://destinationgitee.gitee.io/blog-article/blog-article/2022/03/24/acid-yu-cap-zhong-c-de-qu-bie/</a>
+                    <a href="https://desti_nation.gitee.io/blog-article/blog-article/2022/03/24/acid-yu-cap-zhong-c-de-qu-bie/">https://desti_nation.gitee.io/blog-article/blog-article/2022/03/24/acid-yu-cap-zhong-c-de-qu-bie/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -793,7 +803,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">28.9k</span>
+                        class="white-color">34.6k</span>
             
             
             
@@ -913,8 +923,8 @@
     $(document).ready(function () {
 
         var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-        var pvcountOffset = 5649;  // 初始化首次数据
-        var uvcountOffset = 1564;
+        var pvcountOffset = 986;  // 初始化首次数据
+        var uvcountOffset = 264;
 
         function fixCount() {
             if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {

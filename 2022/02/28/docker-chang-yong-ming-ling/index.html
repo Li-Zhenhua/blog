@@ -38,6 +38,16 @@
 
 
 
+   <style>
+    body{
+       background-image: url(https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/wallhaven-1kom71.jpg);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
@@ -387,13 +397,13 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="1、帮助、启动类命令"><a href="#1、帮助、启动类命令" class="headerlink" title="1、帮助、启动类命令"></a>1、帮助、启动类命令</h2><ul>
-<li>启动docker： systemctl start docker</li>
-<li>停止docker： systemctl stop docker</li>
-<li> 重启docker： systemctl restart docker</li>
+<li>启动docker： <code>systemctl start docker</code></li>
+<li>停止docker： <code>systemctl stop docker</code></li>
+<li> 重启docker： <code>systemctl restart docker</code></li>
 <li> 查看docker状态： systemctl status docker</li>
 <li> 开机启动： systemctl enable docker</li>
 <li> 查看docker概要信息： docker info</li>
-<li>查看docker总体帮助文档： docker –help</li>
+<li>查看docker总体帮助文档： <code>docker --help</code></li>
 <li>查看docker命令帮助文档： docker [具体命令] –help</li>
 </ul>
 <h2 id="2、镜像命令"><a href="#2、镜像命令" class="headerlink" title="2、镜像命令"></a>2、镜像命令</h2><ul>
@@ -425,8 +435,8 @@
 <ul>
 <li><code>--name</code>：指定容器的名称，如果正在运行该名称的容器，会报错。</li>
 <li><code>--rm</code>：用完即删除，通常用来测试。</li>
-<li><code>-d</code>：后台方式运行。</li>
-<li><code>-it</code>：使用交互方式运行，可以进入容器查看内容。</li>
+<li><code>-d</code>：<strong>后台方式运行</strong>。</li>
+<li><code>-it</code>：<strong>使用交互方式运行，可以进入容器查看内容</strong>。</li>
 <li><code>-e</code>：指定运行环境。</li>
 <li><code>-P</code>：随机指定端口。</li>
 <li><code>-p</code>：指定容器的端口，如：<code>-p 8080:8080</code>。还可以有以下写法：<ul>
@@ -514,7 +524,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://destinationgitee.gitee.io/blog-article/blog-article/2022/02/28/docker-chang-yong-ming-ling/">https://destinationgitee.gitee.io/blog-article/blog-article/2022/02/28/docker-chang-yong-ming-ling/</a>
+                    <a href="https://desti_nation.gitee.io/blog-article/blog-article/2022/02/28/docker-chang-yong-ming-ling/">https://desti_nation.gitee.io/blog-article/blog-article/2022/02/28/docker-chang-yong-ming-ling/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -856,7 +866,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">28.9k</span>
+                        class="white-color">34.6k</span>
             
             
             
@@ -976,8 +986,8 @@
     $(document).ready(function () {
 
         var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-        var pvcountOffset = 5649;  // 初始化首次数据
-        var uvcountOffset = 1564;
+        var pvcountOffset = 986;  // 初始化首次数据
+        var uvcountOffset = 264;
 
         function fixCount() {
             if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
