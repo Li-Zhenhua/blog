@@ -34,56 +34,62 @@
 }
 
 body {
-    background-color: #eaeaea;
+    background-color: #d6ded6;
     margin: 0;
-    color: #4c66ad;
+    color: #0c0c0c;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 h1 {
     margin: 48px 0 22px -5px;
-    font-size: 2.0rem;
+    font-size: 2.2rem;
     font-weight: bold;
     line-height: 2.0rem;
+    color: #4c16e2;
 }
 
 h2 {
     margin: 42px 0 18px -5px;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: bold;
     line-height: 1.8rem;
+    color:#1650e2;
 }
 
 h3 {
     margin: 38px 0 15px -4px;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: bold;
     line-height: 1.7rem;
+    color:#1650e2;
 }
 
 h4 {
     margin: 32px 0 12px -4px;
-    font-size: 1.45rem;
+    font-size: 1.6rem;
     font-weight: bold;
     line-height: 1.45rem;
+    color:#a116e2;
 }
 
 h5 {
     margin: 28px 0 8px -4px;
-    font-size: 1.2rem;
+    font-size: 1.45rem;
     font-weight: bold;
     line-height: 1.2rem;
+    color:#a116e2;
 }
 
 h6 {
     margin: 22px 0 4px -4px;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     line-height: 1.1rem;
+    color:#a116e2;
 }
 
 p {
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.5rem;
 }
 
@@ -94,9 +100,9 @@ hr {
 }
 
 blockquote {
-    border-left: 5px solid #42b983;
+    border-left: 5px solid #4ca1eb;
     padding: 1rem 0.8rem 0.2rem 0.8rem;
-    color: #666;
+    color: rgb(18, 152, 186);
     background-color: rgba(66, 185, 131, .1);
 }
 
@@ -124,7 +130,7 @@ code {
     padding: 1px 5px;
     top: 13px !important;
     font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
-    font-size: 0.91rem;
+    font-size: 1rem;
     color: #e96900;
     background-color: #f8f8f8;
     border-radius: 2px;
@@ -206,6 +212,7 @@ kbd {
 b,
 strong {
     font-weight: bold;
+    color: #f42424;
 }
 
 dfn {
@@ -581,16 +588,20 @@ header .go-back i {
     position: relative;
 }
 
-.bg-cover .description {
+.bg-cover {
+    color: #eb141c;
+}
+
+.description {
     font-weight: 300;
     font-size: 1.25rem;
     line-height: 1.4em;
-    color: #eee;
+    color: #f3f7f7;
 }
 
 .bg-cover .post-title {
     margin: 0 auto;
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 400;
 }
 
@@ -1165,8 +1176,8 @@ article .article-tags .chip {
 
 #articleContent p {
     margin: 2px 2px 10px;
-    font-size: 1.05rem;
-    line-height: 1.85rem;
+    font-size: 1.15rem;
+    line-height: 2rem;
 }
 
 #articleContent blockquote p {
