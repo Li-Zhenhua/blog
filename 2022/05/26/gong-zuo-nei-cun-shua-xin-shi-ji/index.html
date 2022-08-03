@@ -30,6 +30,7 @@
     <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
@@ -49,7 +50,28 @@
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -122,7 +144,7 @@
     <ul class="sub-nav menus_item_child ">
       
       <li>
-        <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system">
+        <a href="https://li-zhenhua.github.io/operating_system">
           
           <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
           
@@ -148,6 +170,15 @@
       <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
       
       <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
     </a>
     
   </li>
@@ -233,7 +264,7 @@
               
                 <li>
 
-                  <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
 				  
 				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
 			      
@@ -260,6 +291,17 @@
 			    <i class="fa-fw fas fa-user-circle"></i>
 			
 			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
 		</a>
           
         </li>
@@ -503,7 +545,7 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这段代码首先是设置了一个共享变量flag，默认为true，线程t1在<code>flag=true</code>的时候执行循环，线程t2会的功能是设置flag=false，本意是使得线程t1可以退出循环，而t2执行的时候sleep一段时间也是保证t1先行与t2运行。运行的结果如下所示：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220527222947937.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220527222947937.png"></p>
 <p>可以看到，整个程序一直保持运行无法正常结束，由此可以推知t2线程对共享变量的修改t1线程是看不到的，这也符合Java内存模型工作内存和主内存的预期，但是如果我们修改t1循环内的代码后，如下：</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> test <span class="token punctuation">&#123;</span>
     <span class="token keyword">static</span> <span class="token keyword">boolean</span> flag <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
@@ -537,7 +579,7 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>则再次运行后的结果为：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220527230610609.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220527230610609.png"></p>
 <p>神奇的是，t1线程并没有一直在循环中，由此可以推知这种情况下t1线程一定是重新从主内存中再次获取到了共享变量，那为什么就增加了创建几个大数组就可以让线程重新去主内存刷新共享变量呢？这就涉及到工作内存的刷新时机</p>
 <h3 id="另一个例子"><a href="#另一个例子" class="headerlink" title="另一个例子"></a>另一个例子</h3><p>首先我们来看网上有一个更为常见的例子，就是上述循环的代码块里面写一个print语句，类似这样：</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">while</span><span class="token punctuation">(</span>flag<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
@@ -576,9 +618,9 @@
 <p>因此，根据上述已有知识的推测，如果创建的对象数组过大，会导致这个流程耗时时间长，当前线程所持有的CPU在new对象数组的时候，<strong>相当于sleep了一个小时间</strong>，这个时间内CPU就会去主内存获取贡献变量的值刷新到工作内存</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>工作内存中的非volatile修饰的共享变量大致会在上述三种情况下去主内存重新刷新变量值，但是对于需要保证可见性的共享变量，尽可能还是用锁或者volatile进行修饰，确保每次得到的共享变量值都是最新的。</p>
 <h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>后面发现一个有意思的现象，就是我们不是直接run代码，而是debug，在while循环内的x=1语句上打断点，如下：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220528151222672.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220528151222672.png"></p>
 <p>debug执行后，等待两秒再放行，发现此时可以得到flag的值为t2线程修改后的false</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220528151437543.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/image-20220528151437543.png"></p>
 <p>这进一步验证了当CPU并不是被完全占用的时候，会从主内存去刷新共享变量的值</p>
 
                 
@@ -606,7 +648,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://desti_nation.gitee.io/2022/05/26/gong-zuo-nei-cun-shua-xin-shi-ji/">https://desti_nation.gitee.io/2022/05/26/gong-zuo-nei-cun-shua-xin-shi-ji/</a>
+                    <a href="https://li-zhenhua.github.io/2022/05/26/gong-zuo-nei-cun-shua-xin-shi-ji/">https://li-zhenhua.github.io/2022/05/26/gong-zuo-nei-cun-shua-xin-shi-ji/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -703,13 +745,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/06/03/completablefuture-xue-xi/">
+                <a href="/2022/06/06/shu-zhuang-shu-zu-he-xian-duan-shu/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="CompletableFuture学习">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="树状数组和线段树">
                         
-                        <span class="card-title">CompletableFuture学习</span>
+                        <span class="card-title">树状数组和线段树</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -720,14 +762,14 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-03
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-06
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Java/" class="post-category">
-                                    Java
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
+                                    数据结构与算法
                                 </a>
                             
                             
@@ -737,12 +779,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/CompletableFuture/">
-                        <span class="chip bg-color">CompletableFuture</span>
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
                     </a>
                     
-                    <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">
-                        <span class="chip bg-color">异步编程</span>
+                    <a href="/tags/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">
+                        <span class="chip bg-color">树状数组</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/">
+                        <span class="chip bg-color">线段树</span>
                     </a>
                     
                 </div>
@@ -777,11 +823,23 @@
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            DestiNation
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E9%AB%98%E5%B9%B6%E5%8F%91/" class="post-category">
+                                    高并发
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E9%99%90%E6%B5%81/">
+                        <span class="chip bg-color">限流</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -838,7 +896,7 @@
             contentSelector: '#articleContent',
             headingsOffset: -($(window).height() * 0.4 - 45),
             collapseDepth: Number('0'),
-            headingSelector: 'h2, h3, h4'
+            headingSelector: 'h1, h2, h3, h4'
         });
 
         // modify the toc link href to support Chinese.
@@ -850,7 +908,7 @@
 
         // modify the heading title id to support Chinese.
         i = 0;
-        $('#articleContent').children('h2, h3, h4').each(function () {
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
             $(this).attr('id', tocHeading + (++i));
         });
 
@@ -936,7 +994,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.6k</span>
+                        class="white-color">121k</span>
             
             
             
@@ -970,8 +1028,8 @@
                         var years = days * 365;
                         var today = new Date();
                         var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "30";
+                        var startMonth = "1";
+                        var startDate = "21";
                         var startHour = "0";
                         var startMinute = "0";
                         var startSecond = "0";

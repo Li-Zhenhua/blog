@@ -36,7 +36,7 @@
 body {
     background-color: #d6ded6;
     margin: 0;
-    color: #0c0c0c;
+    color: #2a292c;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -46,7 +46,7 @@ h1 {
     font-size: 2.2rem;
     font-weight: bold;
     line-height: 2.0rem;
-    color: #4c16e2;
+    color: #1b84e5;
 }
 
 h2 {
@@ -54,7 +54,7 @@ h2 {
     font-size: 2rem;
     font-weight: bold;
     line-height: 1.8rem;
-    color:#1650e2;
+    color:#1b84e5;
 }
 
 h3 {
@@ -62,7 +62,7 @@ h3 {
     font-size: 1.8rem;
     font-weight: bold;
     line-height: 1.7rem;
-    color:#1650e2;
+    color:#1b84e5;
 }
 
 h4 {
@@ -70,7 +70,7 @@ h4 {
     font-size: 1.6rem;
     font-weight: bold;
     line-height: 1.45rem;
-    color:#a116e2;
+    color:#13a8df;
 }
 
 h5 {
@@ -78,18 +78,18 @@ h5 {
     font-size: 1.45rem;
     font-weight: bold;
     line-height: 1.2rem;
-    color:#a116e2;
+    color:#13a8df;
 }
 
 h6 {
     margin: 22px 0 4px -4px;
     font-size: 1.3rem;
     line-height: 1.1rem;
-    color:#a116e2;
+    color:#13a8df;
 }
 
 p {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     line-height: 1.5rem;
 }
 
@@ -102,7 +102,7 @@ hr {
 blockquote {
     border-left: 5px solid #4ca1eb;
     padding: 1rem 0.8rem 0.2rem 0.8rem;
-    color: rgb(18, 152, 186);
+    color: rgb(102, 122, 115);
     background-color: rgba(66, 185, 131, .1);
 }
 
@@ -212,7 +212,7 @@ kbd {
 b,
 strong {
     font-weight: bold;
-    color: #f42424;
+    color: #f5682b;
 }
 
 dfn {
@@ -1220,7 +1220,7 @@ article .article-tags .chip {
 #articleContent ol li {
     display: list-item;
     line-height: 1.8rem;
-    font-size: 1rem;
+    font-size: 1.15rem;
 }
 
 #articleContent ul li {

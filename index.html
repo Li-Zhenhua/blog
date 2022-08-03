@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
@@ -46,7 +47,28 @@
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -119,7 +141,7 @@
     <ul class="sub-nav menus_item_child ">
       
       <li>
-        <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system">
+        <a href="https://li-zhenhua.github.io/operating_system">
           
           <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
           
@@ -145,6 +167,15 @@
       <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
       
       <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
     </a>
     
   </li>
@@ -230,7 +261,7 @@
               
                 <li>
 
-                  <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
 				  
 				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
 			      
@@ -257,6 +288,17 @@
 			    <i class="fa-fw fas fa-user-circle"></i>
 			
 			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
 		</a>
           
         </li>
@@ -487,7 +529,7 @@
     
     <div class="row">
         <div class="col l8 offset-l2 m10 offset-m1 s10 offset-s1 center-align text">
-            生活的道路一旦选定，就要勇敢地走到底，决不回头。——— 左拉
+            种下一颗种子，最好的时间是十年前，其次是现在！
         </div>
     </div>
 </div>
@@ -517,6 +559,114 @@
     <!-- 所有文章卡片 -->
     <article id="articles" class="container articles">
         <div class="row article-row">
+            
+             <!-- 隐藏某个文章 -->
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/07/30/sql-yu-ju-jian-xi/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="SQL语句简析">
+                            
+                            <span class="card-title">SQL语句简析</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                SQL执行顺序
+
+(8) SELECT(9) DISTINCT column,…选择字段 、去重
+(6) AGG_FUNC(column or expression),…聚合函数
+(1) FROM [left_table]选择表
+(3)  
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-30
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/MySQL/" class="post-category">
+                                    MySQL
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/SQL%E8%AF%AD%E5%8F%A5/">
+                            <span class="chip bg-color">SQL语句</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+              <!-- 隐藏某个文章 -->
+            
+             <!-- 隐藏某个文章 -->
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/07/21/xian-cheng-beng-kui-wei-shi-me-bu-hui-dao-zhi-jvm-beng-kui/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="线程崩溃为什么不会导致JVM崩溃">
+                            
+                            <span class="card-title">线程崩溃为什么不会导致JVM崩溃</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                前言最近在复习之前听操作系统课程的笔记时，发现线程的缺点中有一个：一个线程崩溃, 会导致其所属进程的所有线程崩溃，但是Java中经常可以看到某个线程崩溃了，主线程仍然可以运行下去的情况，比如下面这个例子：
+public class test
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-21
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
+                                    操作系统
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/%E7%BA%BF%E7%A8%8B/">
+                            <span class="chip bg-color">线程</span>
+                        </a>
+                        
+                        <a href="/tags/%E8%BF%9B%E7%A8%8B/">
+                            <span class="chip bg-color">进程</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+              <!-- 隐藏某个文章 -->
             
              <!-- 隐藏某个文章 -->
             <div class="article col s12 m6 l4" data-aos="zoom-in">
@@ -564,6 +714,56 @@
                         
                         <a href="/tags/%E5%A4%9A%E6%80%81/">
                             <span class="chip bg-color">多态</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+              <!-- 隐藏某个文章 -->
+            
+             <!-- 隐藏某个文章 -->
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/06/25/git-de-rebase-ming-ling/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="Git的rebase命令">
+                            
+                            <span class="card-title">Git的rebase命令</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                前言以前基本合并分支都是直接用git merge，这样导致提交pr 的时候出现了多个之前已经提交合并了的commit记录，网上查到用rebase变基可以消除这种情况，因此记录一下学习 rebase 命令的过程。
+Rebase 命令git r
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-25
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Git/" class="post-category">
+                                    Git
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Git%E5%91%BD%E4%BB%A4/">
+                            <span class="chip bg-color">Git命令</span>
                         </a>
                         
                     </div>
@@ -731,8 +931,6 @@ git
             </div>
               <!-- 隐藏某个文章 -->
             
-              <!-- 隐藏某个文章 -->
-            
              <!-- 隐藏某个文章 -->
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -809,6 +1007,8 @@ git
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
+                                前言最近在看实习公司的代码，发现有一个@Throttle装饰器（TypeScript中的装饰器就类似于Java的注解，只是功能更强大一些，一些情况不需要反射也可以处理一些简单的逻辑），这个单词翻译过来就是喉咙、气管的意思，引申来看，这个注解
+                            
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
@@ -816,13 +1016,25 @@ git
                             </span>
                             <span class="publish-author">
                                 
-                                <i class="fas fa-user fa-fw"></i>
-                                DestiNation
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E9%AB%98%E5%B9%B6%E5%8F%91/" class="post-category">
+                                    高并发
+                                </a>
+                                
                                 
                             </span>
                         </div>
                     </div>
 
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/%E9%99%90%E6%B5%81/">
+                            <span class="chip bg-color">限流</span>
+                        </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -999,122 +1211,6 @@ git
             </div>
               <!-- 隐藏某个文章 -->
             
-             <!-- 隐藏某个文章 -->
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2022/03/24/acid-yu-cap-zhong-c-de-qu-bie/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="ACID与CAP中C的区别">
-                            
-                            <span class="card-title">ACID与CAP中C的区别</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                事务的ACID在关系数据库中，一个事务通常由多个 sql 语句组成。
-原子性（A）保证每个事务都被视为一个完整的单元，要么全成功，要么全失败。如果构成事务的某个 sql 未能完成，则整个事务失败，数据库保持事务开始之前的状态，通常通过 un
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-24
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
-                                    分布式
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/ACID/">
-                            <span class="chip bg-color">ACID</span>
-                        </a>
-                        
-                        <a href="/tags/CAP/">
-                            <span class="chip bg-color">CAP</span>
-                        </a>
-                        
-                        <a href="/tags/%E4%BA%8B%E5%8A%A1/">
-                            <span class="chip bg-color">事务</span>
-                        </a>
-                        
-                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
-                            <span class="chip bg-color">分布式</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-              <!-- 隐藏某个文章 -->
-            
-             <!-- 隐藏某个文章 -->
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2022/03/21/string-zi-fu-chuan-zui-da-chang-du-tan-jiu/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="String字符串最大长度探究">
-                            
-                            <span class="card-title">String字符串最大长度探究</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                String字符串的最大长度是多少？在学习和开发过程中，我们能够记住int等基本数据类型的长度，但是类似String等数据的长度的讨论少之又少。那么对于 String 类型，它到底有没有长度限制呢？
-很多网上的文章说，关于 String 的
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-21
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Java/" class="post-category">
-                                    Java
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/String/">
-                            <span class="chip bg-color">String</span>
-                        </a>
-                        
-                        <a href="/tags/%E5%AE%9E%E8%B7%B5%E6%8E%A2%E7%A9%B6/">
-                            <span class="chip bg-color">实践探究</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-              <!-- 隐藏某个文章 -->
-            
         </div>
     </article>
 
@@ -1131,7 +1227,7 @@ git
             
         </div>
         <div class="page-info col m4 l4 hide-on-small-only">
-            <div class="center-align b-text-gray">1 / 3</div>
+            <div class="center-align b-text-gray">1 / 4</div>
         </div>
         <div class="col s6 m4 l4">
             
@@ -1163,7 +1259,7 @@ git
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.6k</span>
+                        class="white-color">121k</span>
             
             
             
@@ -1197,8 +1293,8 @@ git
                         var years = days * 365;
                         var today = new Date();
                         var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "30";
+                        var startMonth = "1";
+                        var startDate = "21";
                         var startHour = "0";
                         var startMinute = "0";
                         var startSecond = "0";

@@ -28,6 +28,7 @@
     <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
@@ -47,7 +48,28 @@
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -120,7 +142,7 @@
     <ul class="sub-nav menus_item_child ">
       
       <li>
-        <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system">
+        <a href="https://li-zhenhua.github.io/operating_system">
           
           <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
           
@@ -146,6 +168,15 @@
       <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
       
       <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
     </a>
     
   </li>
@@ -231,7 +262,7 @@
               
                 <li>
 
-                  <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
 				  
 				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
 			      
@@ -258,6 +289,17 @@
 			    <i class="fa-fw fas fa-user-circle"></i>
 			
 			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
 		</a>
           
         </li>
@@ -466,13 +508,13 @@
 <p> 在电商网站中，用户对商品进行下单，需要在订单表中创建一条订单数据，同时需要在库存表中修改当前商品的剩余库存数量，两步操作一个添加，一个修改，我们一定要保证这两步操作一定同时操作成功或失败，否则业务就会出现问题</p>
 <p><strong>建立时：</strong></p>
 <p> 业务量不大，用户少，系统只是一个单体架构，订单表与库存表都在一个数据库中，这时可以使用mysql的本地事务保证数据一致性</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84.png"></p>
 <p><strong>发展期：</strong></p>
 <p> 业务发展迅速，用户量变多，单数据已经出现了性能瓶颈，按照业务纬度进行分库，分为订单库和库存库，由于跨库跨机器，mysql的本地事务不能再保证订单库和库存库的数据一致性，这时候就需要分布式事务来保证</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E5%88%86%E5%BA%93.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E5%88%86%E5%BA%93.png"></p>
 <p><strong>成熟期：</strong></p>
 <p> 业务拓展，单体架构已经满足不了需求，进而衍化成了分布式系统，这时的订单和库存已经拆分为了两个子系统提供服务，子系统间使用rpc进行通信，但是无论系统发展成什么样，我们都要保证业务不出问题，保证订单和库存的数据一致，这时候要思考下在服务之间我们应如何保证数据一致</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%9C%8D%E5%8A%A1%E6%8B%86%E5%88%86.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%9C%8D%E5%8A%A1%E6%8B%86%E5%88%86.png"></p>
 <h2 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h2><p> 在讲解具体方案之前，有必要了解一下分布式中数据设计需要遵循的理论基础，CAP理论和BASE理论，为后面的实践铺平道路</p>
 <h3 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h3><p>CAP：Consistency Availability Partition tolerance 的简写</p>
 <ul>
@@ -489,7 +531,7 @@
 <p>因为分布式系统中系统肯定部署在多台机器上，无法保证网络做到100%的可靠，所以网络分区一定存在，即<strong>P一定存在</strong>；</p>
 <p>在出现网络分区后，就出现了可用性和一致性的问题，我们必须要在这两者之间进行取舍，因此就有了两种架构：CP架构，AP架构（zookeeper就是CP架构）</p>
 <h4 id="CP架构"><a href="#CP架构" class="headerlink" title="CP架构"></a>CP架构</h4><p>当网络分区出现后，为了保证一致性，就必须拒接请求，否则无法保证一致性</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/CP.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/CP.png"></p>
 <ol>
 <li>当没有出网络分区时，系统A与系统B的数据一致，X=1</li>
 <li>将系统A的X修改为2，X=2</li>
@@ -500,7 +542,7 @@
 <p>CAP理论是忽略网络延迟，从系统A同步数据到系统B的网络延迟是忽略的</p>
 <p>CP架构保证了客户端在获取数据时一定是最近的写操作，或者获取到异常信息，绝不会出现数据不一致的情况</p>
 <h4 id="AP架构"><a href="#AP架构" class="headerlink" title="AP架构"></a>AP架构</h4><p>当网络分区出现后，为了保证可用性，系统B可以返回旧值，保证系统的可用性</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/AP.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/AP.png"></p>
 <ol>
 <li>当没有出网络分区时，系统A与系统B的数据一致，X=1</li>
 <li>将系统A的X修改为2，X=2</li>
@@ -526,7 +568,7 @@
 <p>BASE理论本质上是对CAP理论的延伸</p>
 <h2 id="分布式事务协议"><a href="#分布式事务协议" class="headerlink" title="分布式事务协议"></a>分布式事务协议</h2><p> 前提：在单体架构中，事务的保证有mysql实现，不用我们实现，当单个数据库的性能出现瓶颈的时候，对数据库进行分表分库处理，按业务纬度将订单和库存的表分为两个库，订单库和库存库</p>
 <h3 id="X-Open-XA-协议"><a href="#X-Open-XA-协议" class="headerlink" title="X/Open XA 协议"></a>X/Open XA 协议</h3><p>XA是一个分布式事务协议，由Tuxedo提出。XA规范主要定义了（全局）事务管理器（Transaction Manager）和（局部）资源管理器（Resource Manager）之间的接口。XA接口是双向的系统接口，在事务管理器Transaction Manager）以及一个或多个资源管理器（Resource Manager）之间形成通信桥梁</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/XA.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/XA.png"></p>
 <p>XA协议采用<strong>两阶段提交</strong>方式来管理分布式事务。XA接口提供资源管理器与事务管理器之间进行通信的标准接口</p>
 <h3 id="2PC-二阶段提交-协议"><a href="#2PC-二阶段提交-协议" class="headerlink" title="2PC 二阶段提交 协议"></a>2PC 二阶段提交 协议</h3><p> 二阶段提交（Two-phase Commit），是指为了使基于分布式系统架构下的所有节点在进行事务提交时保持一致性而设计的一种算法(Algorithm)。通常，二阶段提交也被称为是一种协议(Protocol)。在分布式系统中，每个节点虽然可以知晓自己的操作时成功或者失败，却无法知道其他节点的操作的成功或失败。当一个事务跨越多个节点时，为了保持事务的ACID特性，需要引入一个<strong>作为协调者的组件</strong>来统一掌控所有节点(称作<strong>参与者</strong>)的操作结果并最终指示这些节点是否要把操作结果进行真正的提交(比如将更新后的数据写入磁盘等等)。因此，二阶段提交的算法思路可以概括为： <strong>参与者将操作成败通知协调者，再由协调者根据所有参与者的反馈情报决定各参与者是否要提交操作还是中止操作</strong></p>
 <p>二阶段提交算法的成立基于以下假设：</p>
@@ -536,16 +578,16 @@
 <li>所有节点不会永久性损坏，即使损坏后仍然可以恢复</li>
 </ol>
 <p>二阶段提交分为两阶段：第一阶段：投票阶段，第二阶段：提交阶段</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/2pc.jpg"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/2pc.jpg"></p>
 <p><strong>投票阶段 Prepares</strong></p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/2pc-1.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/2pc-1.png"></p>
 <ol>
 <li>协调者向所有参与者询问是否可以执行提交操作，并开始等待各参与者的响应</li>
 <li>参与者执行事务操作，如果执行成功就返回Yes响应，如果执行失败就返回No响应</li>
 <li>如果协调者接受参与者响应超时，也会认为执行事务操作失败</li>
 </ol>
 <p><strong>提交阶段 commit</strong></p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/2pc-2.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/2pc-2.png"></p>
 <ol>
 <li>如果第一阶段中所有参与者都返回yes响应，协调者向所有参与者发出提交请求，所有参与者提交事务</li>
 <li>如果第一阶段中有一个或者多个参与者返回no响应，协调者向所有参与者发出回滚请求，所有参与者进行回滚操作</li>
@@ -567,7 +609,7 @@
 <p> 如果协调者在第二阶段<strong>发送提交请求之后挂掉</strong>，而<strong>唯一接受到这条消息的参与者执行之后也挂掉了</strong>，即使协调者通过选举协议产生了新的协调者并通知其他参与者进行提交或回滚操作的话，都可能会与这个已经执行的参与者执行的操作不一样，<strong>当这个挂掉的参与者恢复之后，就会产生数据不一致的问题</strong></p>
 <h3 id="3PC-三阶段提交-协议"><a href="#3PC-三阶段提交-协议" class="headerlink" title="3PC 三阶段提交 协议"></a>3PC 三阶段提交 协议</h3><p> 三阶段提交（Three-phase commit），三阶段提交是为解决两阶段提交协议|的缺点而设计的。 与两阶段提交不同的是，三阶段提交是<strong>“非阻塞”协议</strong>。三阶段提交在两阶段提交的第一阶段与第二阶段之间插入了一个准备阶段，使得原先在两阶段提交中，参与者在投票之后，由于协调者发生崩溃或错误，而导致参与者处于无法知晓是否提交或者中止的“不确定状态”所产生的可能相当长的延时的问题得以解决</p>
 <p>三阶段提交的三个阶段：CanCommit，PreCommit，DoCommit三个阶段</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/3pc.jpg"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/3pc.jpg"></p>
 <p><strong>询问阶段 CanCommit</strong></p>
 <p>协调者向参与者发送commit请求，参与者如果可以提交就返回Yes响应，否则返回No响应</p>
 <p><strong>准备阶段 PreCommit</strong></p>
@@ -615,7 +657,7 @@
 <h3 id="最终一致性分布式事务方案（柔性事务）"><a href="#最终一致性分布式事务方案（柔性事务）" class="headerlink" title="最终一致性分布式事务方案（柔性事务）"></a>最终一致性分布式事务方案（柔性事务）</h3><p>JTA方案适用于单体架构多数据源时实现分布式事务，但对于微服务间的分布式事务就无能为力了，我们需要使用其他的方案实现分布式事务</p>
 <h4 id="1、本地消息表"><a href="#1、本地消息表" class="headerlink" title="1、本地消息表"></a>1、本地消息表</h4><p>本地消息表的核心思想是<strong>将分布式事务拆分成本地事务进行处理</strong></p>
 <p>以本文中例子，在订单系统新增一条消息表，<strong>将新增订单和新增消息放到一个事务里完成</strong>，然后通过轮询的方式去查询消息表，将消息推送到mq，库存系统去消费mq</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%9C%AC%E5%9C%B0%E6%B6%88%E6%81%AF%E8%A1%A8.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%9C%AC%E5%9C%B0%E6%B6%88%E6%81%AF%E8%A1%A8.png"></p>
 <p><strong>执行流程：</strong></p>
 <ol>
 <li>订单系统，添加一条订单和一条消息，在一个事务里提交</li>
@@ -629,7 +671,7 @@
 <h4 id="2、MQ消息事务"><a href="#2、MQ消息事务" class="headerlink" title="2、MQ消息事务"></a>2、MQ消息事务</h4><p>消息事务的原理是将两个事务通过<strong>消息中间件进行异步解耦</strong></p>
 <p>订单系统执行自己的本地事务，并发送mq消息，库存系统接收消息，执行自己的本地事务，乍一看，好像跟本地消息表的实现方案类似，只是省去了对本地消息表的操作和轮询发送mq的操作，但实际上两种方案的实现是不一样的</p>
 <p>消息事务一定要保证业务操作与消息发送的一致性，如果业务操作成功，这条消息也一定投递成功</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%B6%88%E6%81%AF%E4%BA%8B%E5%8A%A1.jpg"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%B6%88%E6%81%AF%E4%BA%8B%E5%8A%A1.jpg"></p>
 <p>消息事务依赖于消息中间件的事务消息，基于消息中间件的二阶段提交实现的，RocketMQ就支持事务消息</p>
 <p><strong>执行流程：</strong></p>
 <ol>
@@ -642,7 +684,7 @@
 <p>这种方案也是实现了最终一致性，对比本地消息表实现方案，不需要再建消息表，不再依赖本地数据库事务了，所以这种方案更适用于高并发的场景</p>
 <h4 id="3、最大努力通知"><a href="#3、最大努力通知" class="headerlink" title="3、最大努力通知"></a>3、最大努力通知</h4><p>最大努力通知相比前两种方案实现简单，适用于一些<strong>最终一致性要求较低</strong>的业务，比如支付通知，短信通知这种业务</p>
 <p>以支付通知为例，业务系统调用支付平台进行支付，支付平台进行支付，进行操作支付之后支付平台会尽量去通知业务系统支付操作是否成功，但是会有一个最大通知次数，如果超过这个次数后还是通知失败，就不再通知，业务系统自行调用支付平台提供一个查询接口，供业务系统进行查询支付操作是否成功</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%9C%80%E5%A4%A7%E5%8A%AA%E5%8A%9B%E9%80%9A%E7%9F%A5.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%9C%80%E5%A4%A7%E5%8A%AA%E5%8A%9B%E9%80%9A%E7%9F%A5.png"></p>
 <p><strong>执行流程：</strong></p>
 <ol>
 <li>业务系统调用支付平台支付接口， 并在本地进行记录，支付状态为支付中</li>
@@ -661,7 +703,7 @@
 </ol>
 <p>在try阶段，是对业务系统进行检查及资源预览，比如订单和存储操作，需要检查库存剩余数量是否够用，并进行预留，预留操作的话就是新建一个可用库存数量字段，Try阶段操作是对这个可用库存数量进行操作</p>
 <p>比如下一个订单减一个库存:</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/TCC.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/TCC.png"></p>
 <p><strong>执行流程：</strong></p>
 <ol>
 <li>Try阶段：订单系统将当前订单状态设置为支付中，库存系统校验当前剩余库存数量是否大于1，然后将可用库存数量设置为库存剩余数量-1，</li>
@@ -700,7 +742,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://desti_nation.gitee.io/2022/01/14/fen-bu-shi-shi-wu/">https://desti_nation.gitee.io/2022/01/14/fen-bu-shi-shi-wu/</a>
+                    <a href="https://li-zhenhua.github.io/2022/01/14/fen-bu-shi-shi-wu/">https://li-zhenhua.github.io/2022/01/14/fen-bu-shi-shi-wu/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -948,7 +990,7 @@
             contentSelector: '#articleContent',
             headingsOffset: -($(window).height() * 0.4 - 45),
             collapseDepth: Number('0'),
-            headingSelector: 'h2, h3, h4'
+            headingSelector: 'h1, h2, h3, h4'
         });
 
         // modify the toc link href to support Chinese.
@@ -960,7 +1002,7 @@
 
         // modify the heading title id to support Chinese.
         i = 0;
-        $('#articleContent').children('h2, h3, h4').each(function () {
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
             $(this).attr('id', tocHeading + (++i));
         });
 
@@ -1046,7 +1088,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.6k</span>
+                        class="white-color">121k</span>
             
             
             
@@ -1080,8 +1122,8 @@
                         var years = days * 365;
                         var today = new Date();
                         var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "30";
+                        var startMonth = "1";
+                        var startDate = "21";
                         var startHour = "0";
                         var startMinute = "0";
                         var startSecond = "0";

@@ -5,7 +5,7 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="keywords" content="限流算法, Hyouda">
-    <meta name="description" content="限流算法 | Hyouda">
+    <meta name="description" content="前言最近在看实习公司的代码，发现有一个@Throttle装饰器（TypeScript中的装饰器就类似于Java的注解，只是功能更强大一些，一些情况不需要反射也可以处理一些简单的逻辑），这个单词翻译过来就是喉咙、气管的意思，引申来看，这个注解">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
@@ -46,7 +47,28 @@
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -119,7 +141,7 @@
     <ul class="sub-nav menus_item_child ">
       
       <li>
-        <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system">
+        <a href="https://li-zhenhua.github.io/operating_system">
           
           <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
           
@@ -145,6 +167,15 @@
       <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
       
       <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
     </a>
     
   </li>
@@ -230,7 +261,7 @@
               
                 <li>
 
-                  <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
 				  
 				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
 			      
@@ -257,6 +288,17 @@
 			    <i class="fa-fw fas fa-user-circle"></i>
 			
 			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
 		</a>
           
         </li>
@@ -396,12 +438,25 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E9%99%90%E6%B5%81/">
+                                <span class="chip bg-color">限流</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E9%AB%98%E5%B9%B6%E5%8F%91/" class="post-category">
+                                高并发
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -419,14 +474,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    4.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    19 分
                 </div>
                 
 
@@ -444,7 +499,441 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在看实习公司的代码，发现有一个<code>@Throttle</code>装饰器（TypeScript中的装饰器就类似于Java的注解，只是功能更强大一些，一些情况不需要反射也可以处理一些简单的逻辑），这个单词翻译过来就是喉咙、气管的意思，引申来看，这个注解应该就是起到限流作用，之前自己也基本很少了解限流的知识，趁这个机会正好把限流原理和常用方法整理一遍。</p>
+<h2 id="限流简介"><a href="#限流简介" class="headerlink" title="限流简介"></a>限流简介</h2><p>每个系统在实际线上都是有限的资源、有限的处理能力，所以当流量超过服务极限能力时，系统可能会出现卡死、崩溃的情况，为了维护系统的稳定与安全，就需要对对应的调用服务请求进行一定程度的限制，保障系统的可用性。</p>
+<blockquote>
+<p>其实这就好比疫情下的超市，为了防止疫情传播，需要限制同一时间下的顾客数量，保证超市不会人满为患，也保证超市不会变成高风险地区而不可用哈哈🤣</p>
+</blockquote>
+<h2 id="限流算法"><a href="#限流算法" class="headerlink" title="限流算法"></a>限流算法</h2><h3 id="1、固定窗口算法"><a href="#1、固定窗口算法" class="headerlink" title="1、固定窗口算法"></a>1、固定窗口算法</h3><p><strong>固定窗口算法</strong>又叫<strong>计数器算法</strong>，是一种<strong>简单</strong>方便的限流算法。主要通过一个支持<strong>原子操作</strong>的计数器来累计 1 秒内的请求次数，当 1 秒内计数达到限流阈值时触发拒绝策略。每过 1 秒，计数器重置为 0 开始重新计数。</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p>下面是简单的代码实现，QPS 限制为 2，这里的代码做了一些<strong>优化</strong>，并没有单独开一个线程去每隔 1 秒重置计数器，而是在每次调用时进行时间间隔计算来确定是否先重置计数器。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * 
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">RateLimiterSimpleWindow</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 阈值</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Integer</span> QPS <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token comment">// 时间窗口（毫秒）</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">long</span> TIME_WINDOWS <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+    <span class="token comment">// 计数器</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">AtomicInteger</span> REQ_COUNT <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AtomicInteger</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">long</span> START_TIME <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">synchronized</span> <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">tryAcquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> START_TIME<span class="token punctuation">)</span> <span class="token operator">></span> TIME_WINDOWS<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            REQ_COUNT<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            START_TIME <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> REQ_COUNT<span class="token punctuation">.</span><span class="token function">incrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;=</span> QPS<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">250</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">LocalTime</span> now <span class="token operator">=</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">tryAcquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>now <span class="token operator">+</span> <span class="token string">" 被限流"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>now <span class="token operator">+</span> <span class="token string">" 做点什么"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>运行结果：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">43.038922</span> 做点什么
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">43.291435</span> 做点什么
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">43.543087</span> 被限流
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">43.796666</span> 做点什么
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">44.050855</span> 做点什么
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">44.303547</span> 被限流
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">44.555008</span> 被限流
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">44.809083</span> 做点什么
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">45.063828</span> 做点什么
+<span class="token number">20</span><span class="token operator">:</span><span class="token number">53</span><span class="token operator">:</span><span class="token number">45.314433</span> 被限流<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>从输出结果中可以看到大概每秒操作 3 次，由于限制 QPS 为 2，所以平均会有一次被限流。看起来可以了，不过我们思考一下就会发现这种简单的限流方式是有问题的，虽然我们限制了 QPS 为 2，但是当遇到时间窗口的临界突变时，如 1s 中的后 500 ms 和第 2s 的前 500ms 时，虽然是加起来是 1s 时间，却可以被请求 4 次。</p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/f06351f6.png" alt="图片"></p>
+<h3 id="2、滑动窗口算法"><a href="#2、滑动窗口算法" class="headerlink" title="2、滑动窗口算法"></a>2、滑动窗口算法</h3><p>我们已经知道固定窗口算法的实现方式以及它所存在的问题，而滑动窗口算法是对固定窗口算法的改进。既然固定窗口算法在遇到时间窗口的临界突变时会有问题，那么我们在遇到下一个时间窗口前也调整时间窗口不就可以了吗？</p>
+<p>下面是滑动窗口的示意图。</p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/a25e5f06.png" alt="图片"></p>
+<p>上图的示例中，每 500ms 滑动一次窗口，可以发现窗口滑动的间隔越短，时间窗口的临界突变问题发生的概率也就越小，不过只要有时间窗口的存在，还是有可能发生<strong>时间窗口的临界突变问题</strong>。</p>
+<h4 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h4><p>下面是基于以上滑动窗口思路实现的简单的滑动窗口限流工具类。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>wdbyte<span class="token punctuation">.</span>rate<span class="token punctuation">.</span>limiter</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>time<span class="token punctuation">.</span></span><span class="token class-name">LocalTime</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span>atomic<span class="token punctuation">.</span></span><span class="token class-name">AtomicInteger</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * 滑动窗口限流工具类
+ *
+ * 
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">RateLimiterSlidingWindow</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">/**
+     * 阈值
+     */</span>
+    <span class="token keyword">private</span> <span class="token keyword">int</span> qps <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token comment">/**
+     * 时间窗口总大小（毫秒）
+     */</span>
+    <span class="token keyword">private</span> <span class="token keyword">long</span> windowSize <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+    <span class="token comment">/**
+     * 多少个子窗口
+     */</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> windowCount <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+    <span class="token comment">/**
+     * 窗口列表
+     */</span>
+    <span class="token keyword">private</span> <span class="token class-name">WindowInfo</span><span class="token punctuation">[</span><span class="token punctuation">]</span> windowArray <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WindowInfo</span><span class="token punctuation">[</span>windowCount<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">RateLimiterSlidingWindow</span><span class="token punctuation">(</span><span class="token keyword">int</span> qps<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>qps <span class="token operator">=</span> qps<span class="token punctuation">;</span>
+        <span class="token keyword">long</span> currentTimeMillis <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> windowArray<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            windowArray<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WindowInfo</span><span class="token punctuation">(</span>currentTimeMillis<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">AtomicInteger</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">/**
+     * 1. 计算当前时间窗口
+     * 2. 更新当前窗口计数 &amp; 重置过期窗口计数
+     * 3. 当前 QPS 是否超过限制
+     *
+     * @return
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">synchronized</span> <span class="token keyword">boolean</span> <span class="token function">tryAcquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">long</span> currentTimeMillis <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 1. 计算当前时间窗口</span>
+        <span class="token keyword">int</span> currentIndex <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">(</span>currentTimeMillis <span class="token operator">%</span> windowSize <span class="token operator">/</span> <span class="token punctuation">(</span>windowSize <span class="token operator">/</span> windowCount<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 2.  更新当前窗口计数 &amp; 重置过期窗口计数</span>
+        <span class="token keyword">int</span> sum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> windowArray<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">WindowInfo</span> windowInfo <span class="token operator">=</span> windowArray<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>currentTimeMillis <span class="token operator">-</span> windowInfo<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">></span> windowSize<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                windowInfo<span class="token punctuation">.</span><span class="token function">getNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                windowInfo<span class="token punctuation">.</span><span class="token function">setTime</span><span class="token punctuation">(</span>currentTimeMillis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>currentIndex <span class="token operator">==</span> i <span class="token operator">&amp;&amp;</span> windowInfo<span class="token punctuation">.</span><span class="token function">getNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> qps<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                windowInfo<span class="token punctuation">.</span><span class="token function">getNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">incrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            sum <span class="token operator">=</span> sum <span class="token operator">+</span> windowInfo<span class="token punctuation">.</span><span class="token function">getNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token comment">// 3. 当前 QPS 是否超过限制</span>
+        <span class="token keyword">return</span> sum <span class="token operator">&lt;=</span> qps<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">class</span> <span class="token class-name">WindowInfo</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 窗口开始时间</span>
+        <span class="token keyword">private</span> <span class="token class-name">Long</span> time<span class="token punctuation">;</span>
+        <span class="token comment">// 计数器</span>
+        <span class="token keyword">private</span> <span class="token class-name">AtomicInteger</span> number<span class="token punctuation">;</span>
+
+        <span class="token keyword">public</span> <span class="token class-name">WindowInfo</span><span class="token punctuation">(</span><span class="token keyword">long</span> time<span class="token punctuation">,</span> <span class="token class-name">AtomicInteger</span> number<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>time <span class="token operator">=</span> time<span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>number <span class="token operator">=</span> number<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token comment">// get...set...</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>下面是测试用例，设置 QPS 为 2,测试次数 20 次，每次间隔 300 毫秒，预计成功次数在 12 次左右。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span> qps <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> count <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">,</span> sleep <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span> success <span class="token operator">=</span> count <span class="token operator">*</span> sleep <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">*</span> qps<span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"当前QPS限制为:%d,当前测试次数:%d,间隔:%dms,预计成功次数:%d"</span><span class="token punctuation">,</span> qps<span class="token punctuation">,</span> count<span class="token punctuation">,</span> sleep<span class="token punctuation">,</span> success<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    success <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token class-name">RateLimiterSlidingWindow</span> myRateLimiter <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RateLimiterSlidingWindow</span><span class="token punctuation">(</span>qps<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> count<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span>sleep<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>myRateLimiter<span class="token punctuation">.</span><span class="token function">tryAcquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            success<span class="token operator">++</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>success <span class="token operator">%</span> qps <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">": success, "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">": success, "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">": fail"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"实际测试成功次数:"</span> <span class="token operator">+</span> success<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>下面是测试的结果。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">当前QPS限制为<span class="token operator">:</span><span class="token number">2</span><span class="token punctuation">,</span>当前测试次数<span class="token operator">:</span><span class="token number">20</span><span class="token punctuation">,</span>间隔<span class="token operator">:</span><span class="token number">300</span>ms<span class="token punctuation">,</span>预计成功次数<span class="token operator">:</span><span class="token number">12</span>
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">27.077782</span><span class="token operator">:</span> success<span class="token punctuation">,</span> <span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">27.380715</span><span class="token operator">:</span> success<span class="token punctuation">,</span> 
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">27.684244</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">27.989579</span><span class="token operator">:</span> success<span class="token punctuation">,</span> <span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">28.293347</span><span class="token operator">:</span> success<span class="token punctuation">,</span> 
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">28.597658</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">28.901688</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">29.205262</span><span class="token operator">:</span> success<span class="token punctuation">,</span> <span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">29.507117</span><span class="token operator">:</span> success<span class="token punctuation">,</span> 
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">29.812188</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">30.115316</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">30.420596</span><span class="token operator">:</span> success<span class="token punctuation">,</span> <span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">30.725897</span><span class="token operator">:</span> success<span class="token punctuation">,</span> 
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">31.028599</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">31.331047</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">31.634127</span><span class="token operator">:</span> success<span class="token punctuation">,</span> <span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">31.939411</span><span class="token operator">:</span> success<span class="token punctuation">,</span> 
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">32.242380</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">32.547626</span><span class="token operator">:</span> fail
+<span class="token number">16</span><span class="token operator">:</span><span class="token number">04</span><span class="token operator">:</span><span class="token number">32.847965</span><span class="token operator">:</span> success<span class="token punctuation">,</span> 
+实际测试成功次数<span class="token operator">:</span><span class="token number">11</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="3、漏桶算法"><a href="#3、漏桶算法" class="headerlink" title="3、漏桶算法"></a>3、漏桶算法</h3><p>漏桶算法中的漏桶是一个形象的比喻，这里可以用生产者消费者模式进行说明，请求是一个生产者，每一个请求都如一滴水，请求到来后放到一个队列（漏桶）中，而桶底有一个孔，不断的漏出水滴，就如消费者不断的在消费队列中的内容，消费的速率（漏出的速度）等于限流阈值。即假如 QPS  为 2，则每 <code>1s / 2= 500ms</code> 消费一次。漏桶的桶有大小，就如队列的容量，当请求堆积超过指定容量时，会触发拒绝策略。</p>
+<p>下面是漏桶算法的示意图。</p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/d87d26f4.png" alt="图片"></p>
+<p>由介绍可以知道，漏桶模式中的消费处理总是能以恒定的速度进行，可以很好的<strong>保护自身系统</strong>不被突如其来的流量冲垮；但是这也是漏桶模式的缺点，假设 QPS 为 2，同时 2 个请求进来，2 个请求并不能同时进行处理响应，因为每 <code>1s / 2= 500ms</code> 只能处理一个请求。</p>
+<h3 id="4、令牌桶算法"><a href="#4、令牌桶算法" class="headerlink" title="4、令牌桶算法"></a>4、令牌桶算法</h3><p>令牌桶算法同样是实现限流是一种常见的思路，最为常用的 Google 的 Java 开发工具包 Guava 中的限流工具类 RateLimiter 就是令牌桶的一个实现。令牌桶的实现思路类似于生产者和消费之间的关系。</p>
+<p>系统服务作为生产者，按照指定频率向桶（容器）中添加令牌，如 QPS 为 2，每 500ms 向桶中添加一个令牌，如果桶中令牌数量达到阈值，则不再添加。</p>
+<p>请求执行作为消费者，每个请求都需要去桶中拿取一个令牌，取到令牌则继续执行；如果桶中无令牌可取，就触发拒绝策略，可以是超时等待，也可以是直接拒绝本次请求，由此达到限流目的。</p>
+<p>下面是令牌桶限流算法示意图。</p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/6d0f7a8f.png" alt="图片"></p>
+<p>思考令牌桶的实现可以以下特点。</p>
+<ol>
+<li>1s / 阈值（QPS）  = 令牌添加时间间隔。</li>
+<li>桶的容量等于限流的阈值，令牌数量达到阈值时，不再添加。</li>
+<li>可以适应流量突发，N 个请求到来只需要从桶中获取 N 个令牌就可以继续处理。</li>
+<li>有启动过程，令牌桶启动时桶中无令牌，然后按照令牌添加时间间隔添加令牌，若启动时就有阈值数量的请求过来，会因为桶中没有足够的令牌而触发拒绝策略，不过如 RateLimiter 限流工具已经优化了这类问题。</li>
+</ol>
+<h4 id="代码实现-2"><a href="#代码实现-2" class="headerlink" title="代码实现"></a>代码实现</h4><p>Google 的 Java 开发工具包 Guava 中的限流工具类 RateLimiter 就是令牌桶的一个实现，日常开发中我们也不会手动实现了，这里直接使用 RateLimiter 进行测试。</p>
+<p>引入依赖：</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">></span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.google.guava<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>guava<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>31.0.1-jre<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>RateLimiter 限流体验：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// qps 2</span>
+<span class="token class-name">RateLimiter</span> rateLimiter <span class="token operator">=</span> <span class="token class-name">RateLimiter</span><span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">String</span> time <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token class-name">DateTimeFormatter</span><span class="token punctuation">.</span>ISO_LOCAL_TIME<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>time <span class="token operator">+</span> <span class="token string">":"</span> <span class="token operator">+</span> rateLimiter<span class="token punctuation">.</span><span class="token function">tryAcquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">250</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>代码中限制 QPS 为 2，也就是每隔 500ms 生成一个令牌，但是程序每隔 250ms 获取一次令牌，所以两次获取中只有一次会成功。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">17</span>:19:06.797557:true
+<span class="token number">17</span>:19:07.061419:false
+<span class="token number">17</span>:19:07.316283:true
+<span class="token number">17</span>:19:07.566746:false
+<span class="token number">17</span>:19:07.817035:true
+<span class="token number">17</span>:19:08.072483:false
+<span class="token number">17</span>:19:08.326347:true
+<span class="token number">17</span>:19:08.577661:false
+<span class="token number">17</span>:19:08.830252:true
+<span class="token number">17</span>:19:09.085327:false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p>虽然演示了 Google Guava 工具包中的 RateLimiter 的实现，但是我们需要思考一个问题，就是令牌的添加方式，如果按照指定间隔添加令牌，那么需要开一个线程去定时添加，如果有很多个接口很多个 RateLimiter 实例，<strong>线程数会随之增加</strong>，这显然不是一个好的办法。显然 Google 也考虑到了这个问题，在 RateLimiter 中，是<strong>在每次令牌获取时才进行计算令牌是否足够的</strong>。它通过存储的下一个令牌生成的时间，和当前获取令牌的时间差，再结合阈值，去计算令牌是否足够，同时再记录下一个令牌的生成时间以便下一次调用。</p>
+<p>下面是 Guava 中 RateLimiter 类的子类 SmoothRateLimiter 的 <code>resync()</code> 方法的代码分析，可以看到其中的令牌计算逻辑。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">void</span> <span class="token function">resync</span><span class="token punctuation">(</span><span class="token keyword">long</span> nowMicros<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 当前微秒时间</span>
+    <span class="token comment">// 当前时间是否大于下一个令牌生成时间</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>nowMicros <span class="token operator">></span> <span class="token keyword">this</span><span class="token punctuation">.</span>nextFreeTicketMicros<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> 
+       <span class="token comment">// 可生成的令牌数 newPermits = （当前时间 - 下一个令牌生成时间）/ 令牌生成时间间隔。</span>
+       <span class="token comment">// 如果 QPS 为2，这里的 coolDownIntervalMicros 就是 500000.0 微秒(500ms)</span>
+        <span class="token keyword">double</span> newPermits <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span><span class="token punctuation">(</span>nowMicros <span class="token operator">-</span> <span class="token keyword">this</span><span class="token punctuation">.</span>nextFreeTicketMicros<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">coolDownIntervalMicros</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 更新令牌库存 storedPermits。</span>
+       <span class="token keyword">this</span><span class="token punctuation">.</span>storedPermits <span class="token operator">=</span> <span class="token class-name">Math</span><span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>maxPermits<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>storedPermits <span class="token operator">+</span> newPermits<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 更新下一个令牌生成时间 nextFreeTicketMicros</span>
+       <span class="token keyword">this</span><span class="token punctuation">.</span>nextFreeTicketMicros <span class="token operator">=</span> nowMicros<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="5、Redis-分布式限流"><a href="#5、Redis-分布式限流" class="headerlink" title="5、Redis 分布式限流"></a>5、Redis 分布式限流</h3><p>Redis 是一个开源的内存数据库，可以用来作为数据库、缓存、消息中间件等。Redis 是单线程的，又在内存中操作，所以速度极快，得益于 Redis 的各种特性，所以使用 Redis 实现一个限流工具是十分方便的。</p>
+<p>下面的演示都基于Spring Boot 项目，并需要以下依赖。</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-data-redis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>配置 Redis 信息。</p>
+<pre class="line-numbers language-yml" data-language="yml"><code class="language-yml">spring:
+  redis:
+    database: 0
+    password: 
+    port: 6379
+    host: 127.0.0.1
+    lettuce:
+      shutdown-timeout: 100ms
+      pool:
+        min-idle: 5
+        max-idle: 10
+        max-active: 8
+        max-wait: 1ms<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="7-1-固定窗口限流"><a href="#7-1-固定窗口限流" class="headerlink" title="7.1. 固定窗口限流"></a>7.1. 固定窗口限流</h4><p>Redis 中的固定窗口限流是使用 <code>incr</code> 命令实现的，<code>incr</code> 命令通常用来自增计数；如果我们使用时间戳信息作为 key，自然就可以统计每秒的请求量了，以此达到限流目的。</p>
+<p>这里有两点要注意。</p>
+<ol>
+<li>对于不存在的 key，第一次新增时，value 始终为 1。</li>
+<li>INCR 和 EXPIRE 命令操作应该在一个<strong>原子操作</strong>中提交，以保证每个 key 都正确设置了过期时间，不然会有 key 值无法自动删除而导致的内存溢出。</li>
+</ol>
+<p>由于 Redis 中实现事务的复杂性，所以这里直接只用 <code>lua</code> 脚本来实现原子操作。下面是 <code>lua</code> 脚本内容。</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> count <span class="token operator">=</span> redis<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">"incr"</span><span class="token punctuation">,</span>KEYS<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> count <span class="token operator">==</span> <span class="token number">1</span> <span class="token keyword">then</span>
+  redis<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">'expire'</span><span class="token punctuation">,</span>KEYS<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>ARGV<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">end</span>
+<span class="token keyword">if</span> count <span class="token operator">></span> <span class="token function">tonumber</span><span class="token punctuation">(</span>ARGV<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">then</span>
+  <span class="token keyword">return</span> <span class="token number">0</span>
+<span class="token keyword">end</span>
+<span class="token keyword">return</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>下面是使用 Spring Boot 中 <code>RedisTemplate</code> 来实现的 <code>lua</code> 脚本调用测试代码。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * 
+ */</span>
+<span class="token annotation punctuation">@SpringBootTest</span>
+<span class="token keyword">class</span> <span class="token class-name">RedisLuaLimiterByIncr</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">String</span> KEY_PREFIX <span class="token operator">=</span> <span class="token string">"limiter_"</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">String</span> QPS <span class="token operator">=</span> <span class="token string">"4"</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">String</span> EXPIRE_TIME <span class="token operator">=</span> <span class="token string">"1"</span><span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">StringRedisTemplate</span> stringRedisTemplate<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">redisLuaLimiterTests</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">15</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> <span class="token function">acquire</span><span class="token punctuation">(</span><span class="token string">"user1"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">/**
+     * 计数器限流
+     *
+     * @param key
+     * @return
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">acquire</span><span class="token punctuation">(</span><span class="token class-name">String</span> key<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 当前秒数作为 key</span>
+        key <span class="token operator">=</span> KEY_PREFIX <span class="token operator">+</span> key <span class="token operator">+</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+        <span class="token class-name">DefaultRedisScript</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">></span></span> redisScript <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultRedisScript</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        redisScript<span class="token punctuation">.</span><span class="token function">setResultType</span><span class="token punctuation">(</span><span class="token class-name">Long</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//lua文件存放在resources目录下</span>
+        redisScript<span class="token punctuation">.</span><span class="token function">setScriptSource</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ResourceScriptSource</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ClassPathResource</span><span class="token punctuation">(</span><span class="token string">"limiter.lua"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>redisScript<span class="token punctuation">,</span> <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">,</span> QPS<span class="token punctuation">,</span> EXPIRE_TIME<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>代码中虽然限制了 QPS 为 4，但是因为这种限流实现是把毫秒时间戳作为 key 的，所以会有临界窗口突变的问题，下面是运行结果，可以看到因为时间窗口的变化，导致了 QPS 超过了限制值 4。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">17</span>:38:23.122044 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:23.695124 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:23.903220 <span class="token boolean">true</span>
+<span class="token comment"># 此处有时间窗口变化，所以下面继续 true</span>
+<span class="token number">17</span>:38:24.106206 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:24.313458 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:24.519431 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:24.724446 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:24.932387 <span class="token boolean">false</span>
+<span class="token number">17</span>:38:25.137912 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:25.355595 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:25.558219 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:25.765801 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:25.969426 <span class="token boolean">false</span>
+<span class="token number">17</span>:38:26.176220 <span class="token boolean">true</span>
+<span class="token number">17</span>:38:26.381918 <span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="7-3-滑动窗口限流"><a href="#7-3-滑动窗口限流" class="headerlink" title="7.3. 滑动窗口限流"></a>7.3. 滑动窗口限流</h4><p>通过对上面的基于 <code>incr</code> 命令实现的 Redis 限流方式的测试，我们已经发现了固定窗口限流所带来的问题，在这篇文章的第三部分已经介绍了滑动窗口限流的优势，它可以大幅度降低因为窗口临界突变带来的问题，那么如何使用 Redis 来实现滑动窗口限流呢？</p>
+<p>这里主要使用 <code>ZSET</code> 有序集合来实现滑动窗口限流，<code>ZSET</code> 集合有下面几个特点：</p>
+<ol>
+<li>ZSET 集合中的  key 值可以自动排序。</li>
+<li>ZSET 集合中的 value 不能有重复值。</li>
+<li>ZSET 集合可以方便的使用 ZCARD 命令获取元素个数。</li>
+<li>ZSET 集合可以方便的使用 ZREMRANGEBYLEX 命令移除指定范围的 key 值。</li>
+</ol>
+<p>基于上面的四点特性，可以编写出基于 <code>ZSET </code>的滑动窗口限流 <code>lua</code> 脚本。</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token comment">--KEYS[1]: 限流 key</span>
+<span class="token comment">--ARGV[1]: 时间戳 - 时间窗口</span>
+<span class="token comment">--ARGV[2]: 当前时间戳（作为score）</span>
+<span class="token comment">--ARGV[3]: 阈值</span>
+<span class="token comment">--ARGV[4]: score 对应的唯一value</span>
+<span class="token comment">-- 1. 移除时间窗口之前的数据</span>
+redis<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">'zremrangeByScore'</span><span class="token punctuation">,</span> KEYS<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> ARGV<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment">-- 2. 统计当前元素数量</span>
+<span class="token keyword">local</span> res <span class="token operator">=</span> redis<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">'zcard'</span><span class="token punctuation">,</span> KEYS<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment">-- 3. 是否超过阈值</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>res <span class="token operator">==</span> <span class="token keyword">nil</span><span class="token punctuation">)</span> <span class="token keyword">or</span> <span class="token punctuation">(</span>res <span class="token operator">&lt;</span> <span class="token function">tonumber</span><span class="token punctuation">(</span>ARGV<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">then</span>
+    redis<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">'zadd'</span><span class="token punctuation">,</span> KEYS<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ARGV<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ARGV<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token number">1</span>
+<span class="token keyword">else</span>
+    <span class="token keyword">return</span> <span class="token number">0</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>下面是使用 Spring Boot 中 <code>RedisTemplate</code> 来实现的 <code>lua</code> 脚本调用测试代码。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@SpringBootTest</span>
+<span class="token keyword">class</span> <span class="token class-name">RedisLuaLimiterByZset</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">String</span> KEY_PREFIX <span class="token operator">=</span> <span class="token string">"limiter_"</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> QPS <span class="token operator">=</span> <span class="token string">"4"</span><span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">StringRedisTemplate</span> stringRedisTemplate<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">redisLuaLimiterTests</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">15</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> <span class="token function">acquire</span><span class="token punctuation">(</span><span class="token string">"user1"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">/**
+     * 计数器限流
+     *
+     * @param key
+     * @return
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">acquire</span><span class="token punctuation">(</span><span class="token class-name">String</span> key<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">long</span> now <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        key <span class="token operator">=</span> KEY_PREFIX <span class="token operator">+</span> key<span class="token punctuation">;</span>
+        <span class="token class-name">String</span> oldest <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>now <span class="token operator">-</span> <span class="token number">1_000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> score <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> scoreValue <span class="token operator">=</span> score<span class="token punctuation">;</span>
+        <span class="token class-name">DefaultRedisScript</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">></span></span> redisScript <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultRedisScript</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        redisScript<span class="token punctuation">.</span><span class="token function">setResultType</span><span class="token punctuation">(</span><span class="token class-name">Long</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//lua文件存放在resources目录下</span>
+        redisScript<span class="token punctuation">.</span><span class="token function">setScriptSource</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ResourceScriptSource</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ClassPathResource</span><span class="token punctuation">(</span><span class="token string">"limiter2.lua"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>redisScript<span class="token punctuation">,</span> <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">,</span> oldest<span class="token punctuation">,</span> score<span class="token punctuation">,</span> QPS<span class="token punctuation">,</span> scoreValue<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>代码中限制 QPS 为 4，运行结果信息与之一致。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">17</span>:36:37.150370 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:37.716341 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:37.922577 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:38.127497 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:38.335879 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:38.539225 <span class="token boolean">false</span>
+<span class="token number">17</span>:36:38.745903 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:38.952491 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:39.159497 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:39.365239 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:39.570572 <span class="token boolean">false</span>
+<span class="token number">17</span>:36:39.776635 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:39.982022 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:40.185614 <span class="token boolean">true</span>
+<span class="token number">17</span>:36:40.389469 <span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里介绍了 Redis 实现限流的两种方式，当然使用 Redis 也可以实现漏桶和令牌桶两种限流算法，这里就不做演示了，感兴趣的可以自己研究下。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章介绍实现限流的几种方式，主要是<strong>窗口算法和桶算法</strong>，两者各有优势。</p>
+<ul>
+<li><p>窗口算法实现简单，逻辑清晰，可以很直观的得到当前的 QPS 情况，但是会有时间窗口的临界突变问题，而且不像桶一样有队列可以缓冲。</p>
+</li>
+<li><p>桶算法虽然稍微复杂，不好统计 QPS 情况，但是桶算法也有优势所在。</p>
+</li>
+<li><ul>
+<li>漏桶模式消费速率恒定，可以很好的<strong>保护自身系统</strong>，可以对流量进行整形，但是面对突发流量不能快速响应。</li>
+<li>令牌桶模式可以面对突发流量，但是启动时会有缓慢加速的过程，不过常见的开源工具中已经对此优化。</li>
+</ul>
+</li>
+</ul>
+<p><strong>单机限流与分布式限流</strong></p>
+<p>上面演示的基于代码形式的窗口算法和桶算法限流都适用于单机限流，如果需要分布式限流可以结合注册中心、负载均衡计算每个服务的限流阈值，但这样会降低一定精度，如果对精度要求不是太高，可以使用。</p>
+<p>而 Redis 的限流，由于 Redis 的单机性，本身就可以用于分布式限流。使用 Redis 可以实现各种可以用于限流算法，如果觉得麻烦也可以使用开源工具如 redisson，已经封装了基于 Redis 的限流。</p>
+<p><strong>其他限流工具</strong></p>
+<p>文中已经提到了 <code>Guava</code> 的限流工具包，不过它毕竟是单机的，开源社区中也有很多分布式限流工具，如阿里开源的 Sentinel 就是不错的工具，Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xNvBdI99fKOsMFdoNC4K3w">5种限流算法，7种限流方式，挡住突发流量？</a></p>
+
                 
             </div>
             <hr/>
@@ -470,7 +959,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://desti_nation.gitee.io/2022/05/08/xian-liu-suan-fa/">https://desti_nation.gitee.io/2022/05/08/xian-liu-suan-fa/</a>
+                    <a href="https://li-zhenhua.github.io/2022/05/08/xian-liu-suan-fa/">https://li-zhenhua.github.io/2022/05/08/xian-liu-suan-fa/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -507,7 +996,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E9%99%90%E6%B5%81/">
+                                    <span class="chip bg-color">限流</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -710,7 +1203,7 @@
             contentSelector: '#articleContent',
             headingsOffset: -($(window).height() * 0.4 - 45),
             collapseDepth: Number('0'),
-            headingSelector: 'h2, h3, h4'
+            headingSelector: 'h1, h2, h3, h4'
         });
 
         // modify the toc link href to support Chinese.
@@ -722,7 +1215,7 @@
 
         // modify the heading title id to support Chinese.
         i = 0;
-        $('#articleContent').children('h2, h3, h4').each(function () {
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
             $(this).attr('id', tocHeading + (++i));
         });
 
@@ -808,7 +1301,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.6k</span>
+                        class="white-color">121k</span>
             
             
             
@@ -842,8 +1335,8 @@
                         var years = days * 365;
                         var today = new Date();
                         var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "30";
+                        var startMonth = "1";
+                        var startDate = "21";
                         var startHour = "0";
                         var startMinute = "0";
                         var startSecond = "0";

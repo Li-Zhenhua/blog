@@ -29,6 +29,7 @@
     <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
@@ -48,7 +49,28 @@
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -121,7 +143,7 @@
     <ul class="sub-nav menus_item_child ">
       
       <li>
-        <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system">
+        <a href="https://li-zhenhua.github.io/operating_system">
           
           <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
           
@@ -147,6 +169,15 @@
       <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
       
       <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
     </a>
     
   </li>
@@ -232,7 +263,7 @@
               
                 <li>
 
-                  <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
 				  
 				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
 			      
@@ -259,6 +290,17 @@
 			    <i class="fa-fw fas fa-user-circle"></i>
 			
 			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
 		</a>
           
         </li>
@@ -539,7 +581,7 @@
     <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="累加和数组"><a href="#累加和数组" class="headerlink" title="累加和数组"></a>累加和数组</h3><p>首先看一下累加和sums，图形化理解如下图所示：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84_%E5%9B%BE%E8%A7%A3.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84_%E5%9B%BE%E8%A7%A3.png"></p>
 <p>其实从这张图片可以清晰看到，累加和数组就是有种树的性质，然后其实 前缀和也可以很容易从累加和得到，例如：<br>$$<br>prefixSum[6] = sum[4] + sum[6]<br>$$<br>初始化累加和的时候，对应于上图其实是整体流程从下往上的，一次遍历数组nums，判断nums[i]影响了哪些sum，比如，nums[0]影响了sum[1]、sum[2]、sum[4]、sum[8]，而nums[2]影响了sum[3]、sum[4]、sum[8]，代码段：</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">while</span> <span class="token punctuation">(</span>indexSum <span class="token operator">&lt;</span> sums<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     sums<span class="token punctuation">[</span>indexSum<span class="token punctuation">]</span> <span class="token operator">=</span> sums<span class="token punctuation">[</span>indexSum<span class="token punctuation">]</span> <span class="token operator">+</span> val<span class="token punctuation">;</span>
@@ -553,7 +595,7 @@
 
 <p>通过位运算的方式，找到x的最低位的1并只保留这个1，比如5，二进制101，-5二进制011（忽略符号位），则两者进行&amp;运算之后，结果是001，从而<code>lowBit(5) = 1</code>；再比如，10的二进制1010，-10的二进制0110（忽略符号位），二者取&amp;结果为0010，即<code>lowBit(10) = 4</code>。</p>
 <p>回到上面的代码，通过找到当前<code>indexSum</code>的只保留最低位1的那个数，并与其相加，从而得到**上层中受到nums[i]影响的sum[j]**，图解如下：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84_%E5%9B%BE%E8%A7%A32.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84_%E5%9B%BE%E8%A7%A32.png"></p>
 <h3 id="更新操作"><a href="#更新操作" class="headerlink" title="更新操作"></a>更新操作</h3><p>如果此时我们要更新nums数组中index位置的元素，那么就可以如同上述的流程一样，依次从indexSum = index + 1开始，依次判断nums[index]影响了哪些sum[j]，用<code>lowBit()</code>找到下一个上层sum[j]的位置，这部分代码就很清晰易懂了。</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token keyword">int</span> index<span class="token punctuation">,</span> <span class="token keyword">int</span> val<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">int</span> indexSum <span class="token operator">=</span> index <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
@@ -576,10 +618,10 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>与更新操作不同，这部分通过每次减去<code>lowBit(x)</code>得到<strong>前一部分和值</strong>的位置，直到减为零，图解如下：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84_%E5%9B%BE%E8%A7%A33.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84_%E5%9B%BE%E8%A7%A33.png"></p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>其实树状数组的关键逻辑非常简单，明白<code>lowBit()</code>函数以及通过相加、相减找下一层的元素的流程，就可以理解整体的功能实现了！</p>
 <h2 id="线段树"><a href="#线段树" class="headerlink" title="线段树"></a>线段树</h2><p>写了半天，总算是到这个折磨了我很久的线段树了。前面已经介绍过，线段树满足的需求除了求区间和，还可满足修改某一个区间的值，时间复杂度都是O(logn)，线段树的基本结构如下：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E7%BA%BF%E6%AE%B5%E6%A0%91_%E7%BB%93%E6%9E%84.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E7%BA%BF%E6%AE%B5%E6%A0%91_%E7%BB%93%E6%9E%84.png"></p>
 <p>这里对应的nums数组为<code>[1, 2, 3, 4, 5]</code>，线段树的叶子节点就对应于nums数组的每一个元素，父节点表示其两边子节点的的元素值之和，因此每一个节点的值就对应底下的区间的和值</p>
 <p>对于线段树的每一个节点，我们可以用一个Node类表示：</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Node</span> <span class="token punctuation">&#123;</span>
@@ -590,7 +632,7 @@
 
 
 <h3 id="查询操作"><a href="#查询操作" class="headerlink" title="查询操作"></a>查询操作</h3><p>线段树中查找某一个区间的，就是在线段树中从根节点向树的两边递归找到包含于查询区间的小区间，比如上图的线段树中查找[2,4]范围的区间和，那整个过程会如下图所示</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E7%BA%BF%E6%AE%B5%E6%A0%91_%E6%9F%A5%E8%AF%A2png.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E7%BA%BF%E6%AE%B5%E6%A0%91_%E6%9F%A5%E8%AF%A2png.png"></p>
 <p>沿着上述的路径，找到两个黄色的节点，此时两个黄色节点的区间范围之和正好等于要查询的区间范围，因此此时查询的结果为<code>3 + 9 = 12</code>。</p>
 <p>代码模板:</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">query</span><span class="token punctuation">(</span><span class="token class-name">Node</span> node<span class="token punctuation">,</span> <span class="token keyword">int</span> start<span class="token punctuation">,</span> <span class="token keyword">int</span> end<span class="token punctuation">,</span> <span class="token keyword">int</span> l<span class="token punctuation">,</span> <span class="token keyword">int</span> r<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
@@ -610,7 +652,7 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="更新操作-1"><a href="#更新操作-1" class="headerlink" title="更新操作"></a>更新操作</h3><p>更新操作和查询操作其实与查询是非常类似的，毕竟要更新元素的值首先肯定得先查找到对应得位置，但是，这里有个小优化：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E7%BA%BF%E6%AE%B5%E6%A0%91_%E6%9B%B4%E6%96%B0.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E7%BA%BF%E6%AE%B5%E6%A0%91_%E6%9B%B4%E6%96%B0.png"></p>
 <p>如上图，朴素得想法是，我们每次更新都要更新到叶子节点，比如更新[2,4]区间，那一般肯定是索引为2、3、4得这三个节点都要更新，但是，查询的时候我们查到黄色的节点就可以了，更新了[3,4]区间那么理论上[3,3]、[4,4]区间都会更新，因此没必要查找到诸如红色的叶子节点，因此，这样的线段树可以使用一个懒标记标明该节点的所有子节点都应该有更新，懒标记的值就是每个叶子节点需要更新的值。</p>
 <p>改进后的Node节点：</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Node</span> <span class="token punctuation">&#123;</span>
@@ -745,7 +787,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://desti_nation.gitee.io/2022/06/06/shu-zhuang-shu-zu-he-xian-duan-shu/">https://desti_nation.gitee.io/2022/06/06/shu-zhuang-shu-zu-he-xian-duan-shu/</a>
+                    <a href="https://li-zhenhua.github.io/2022/06/06/shu-zhuang-shu-zu-he-xian-duan-shu/">https://li-zhenhua.github.io/2022/06/06/shu-zhuang-shu-zu-he-xian-duan-shu/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -891,13 +933,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/06/03/completablefuture-xue-xi/">
+                <a href="/2022/05/26/gong-zuo-nei-cun-shua-xin-shi-ji/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="CompletableFuture学习">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="工作内存刷新时机">
                         
-                        <span class="card-title">CompletableFuture学习</span>
+                        <span class="card-title">工作内存刷新时机</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -908,14 +950,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-03
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-26
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Java/" class="post-category">
-                                    Java
+                            <a href="/categories/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="post-category">
+                                    Java多线程
                                 </a>
                             
                             
@@ -925,12 +967,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/CompletableFuture/">
-                        <span class="chip bg-color">CompletableFuture</span>
+                    <a href="/tags/%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AD%98/">
+                        <span class="chip bg-color">工作内存</span>
                     </a>
                     
-                    <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">
-                        <span class="chip bg-color">异步编程</span>
+                    <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+                        <span class="chip bg-color">多线程</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">
+                        <span class="chip bg-color">底层原理</span>
                     </a>
                     
                 </div>
@@ -989,7 +1035,7 @@
             contentSelector: '#articleContent',
             headingsOffset: -($(window).height() * 0.4 - 45),
             collapseDepth: Number('0'),
-            headingSelector: 'h2, h3, h4'
+            headingSelector: 'h1, h2, h3, h4'
         });
 
         // modify the toc link href to support Chinese.
@@ -1001,7 +1047,7 @@
 
         // modify the heading title id to support Chinese.
         i = 0;
-        $('#articleContent').children('h2, h3, h4').each(function () {
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
             $(this).attr('id', tocHeading + (++i));
         });
 
@@ -1087,7 +1133,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.6k</span>
+                        class="white-color">121k</span>
             
             
             
@@ -1121,8 +1167,8 @@
                         var years = days * 365;
                         var today = new Date();
                         var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "30";
+                        var startMonth = "1";
+                        var startDate = "21";
                         var startHour = "0";
                         var startMinute = "0";
                         var startSecond = "0";

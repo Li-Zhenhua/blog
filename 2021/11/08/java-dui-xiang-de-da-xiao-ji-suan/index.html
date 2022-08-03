@@ -30,6 +30,7 @@ Mark Word: 用于存储对象自身的运行时数据">
     <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
@@ -49,7 +50,28 @@ Mark Word: 用于存储对象自身的运行时数据">
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -122,7 +144,7 @@ Mark Word: 用于存储对象自身的运行时数据">
     <ul class="sub-nav menus_item_child ">
       
       <li>
-        <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system">
+        <a href="https://li-zhenhua.github.io/operating_system">
           
           <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
           
@@ -148,6 +170,15 @@ Mark Word: 用于存储对象自身的运行时数据">
       <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
       
       <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
     </a>
     
   </li>
@@ -233,7 +264,7 @@ Mark Word: 用于存储对象自身的运行时数据">
               
                 <li>
 
-                  <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
 				  
 				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
 			      
@@ -260,6 +291,17 @@ Mark Word: 用于存储对象自身的运行时数据">
 			    <i class="fa-fw fas fa-user-circle"></i>
 			
 			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
 		</a>
           
         </li>
@@ -465,7 +507,7 @@ Mark Word: 用于存储对象自身的运行时数据">
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="Java对象布局"><a href="#Java对象布局" class="headerlink" title="Java对象布局"></a>Java对象布局</h2><p>一个 Java 对象在内存中存储为三部分：对象头（Header）、实例数据（Instance Data）和对齐填充 （Padding）。可以用下图来清晰表示：</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/webp.webp"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/webp.webp"></p>
 <h3 id="1、对象头"><a href="#1、对象头" class="headerlink" title="1、对象头"></a>1、对象头</h3><ul>
 <li><p><strong>Mark Word</strong>: 用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等。</p>
 <pre class="line-numbers language-none"><code class="language-none">hash(25) + age(4) + lock(3) &#x3D; 32bit					#32位系统
@@ -483,7 +525,7 @@ unused(25+1) + hash(31) + age(4) + lock(3) &#x3D; 64bit	#64位系统<span aria-h
 </blockquote>
 <h2 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h2><ul>
 <li><p>基本数据类型（primitive type）</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png"></p>
 </li>
 <li><p>引用类型 (reference type)</p>
 <p>除了对象本身之外，还存在一个<strong>指向它的引用（指针）</strong>，指针占用的内存在64位虚拟机上8个字节，如果开启指针压缩是<strong>4个字节</strong>，默认是开启的。</p>
@@ -524,7 +566,7 @@ OFFSET  SIZE               TYPE DESCRIPTION
 <p><strong>一个对象所能触及的所有对象的浅堆大小之和，也就是通常意义上我们说的对象大小</strong></p>
 </blockquote>
 <p>下图显示了一个简单的对象引用关系图，对象 A 引用了 C 和 D，对象 B 引用了 C 和 E。<strong>那么对象 A 的浅堆大小只是 A 本身，A 的实际大小为 A、C、D 三者之和，A 的深堆大小为 A 与 D 之和</strong>，由于对象 C 还可以通过对象 B 访问到 C，因此 C 不在对象 A 的深堆范围内</p>
-<p><img src="https://fastly.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/68747470733a2f2f67697465652e636f6d2f7365617a65616e2f696d616765732f7261772f6d61737465722f4a6176612f4a564d2de5afb9e8b1a1e79a84e5ae9ee99985e5a4a7e5b08f2e706e67.png"></p>
+<p><img src="https://testingcf.jsdelivr.net/gh/Li-Zhenhua/blogpicture@main/img/68747470733a2f2f67697465652e636f6d2f7365617a65616e2f696d616765732f7261772f6d61737465722f4a6176612f4a564d2de5afb9e8b1a1e79a84e5ae9ee99985e5a4a7e5b08f2e706e67.png"></p>
 <h2 id="复杂实例"><a href="#复杂实例" class="headerlink" title="复杂实例"></a>复杂实例</h2><p>1、</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">C</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">private</span> <span class="token keyword">int</span> i<span class="token punctuation">;</span>
@@ -588,7 +630,7 @@ OFFSET  SIZE               TYPE DESCRIPTION
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://desti_nation.gitee.io/2021/11/08/java-dui-xiang-de-da-xiao-ji-suan/">https://desti_nation.gitee.io/2021/11/08/java-dui-xiang-de-da-xiao-ji-suan/</a>
+                    <a href="https://li-zhenhua.github.io/2021/11/08/java-dui-xiang-de-da-xiao-ji-suan/">https://li-zhenhua.github.io/2021/11/08/java-dui-xiang-de-da-xiao-ji-suan/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -681,13 +723,13 @@ OFFSET  SIZE               TYPE DESCRIPTION
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/11/09/shuang-qin-wei-pai-ji-zhi/">
+                <a href="/2021/11/15/idea-chang-yong-de-yi-xie-kuai-jie-jian/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="双亲委派机制">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="IDEA常用快捷键">
                         
-                        <span class="card-title">双亲委派机制</span>
+                        <span class="card-title">IDEA常用快捷键</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -698,14 +740,14 @@ OFFSET  SIZE               TYPE DESCRIPTION
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-09
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-15
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Java/" class="post-category">
-                                    Java
+                            <a href="/categories/IDEA/" class="post-category">
+                                    IDEA
                                 </a>
                             
                             
@@ -715,16 +757,8 @@ OFFSET  SIZE               TYPE DESCRIPTION
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/JVM/">
-                        <span class="chip bg-color">JVM</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
-                        <span class="chip bg-color">双亲委派机制</span>
-                    </a>
-                    
-                    <a href="/tags/ClassLoader/">
-                        <span class="chip bg-color">ClassLoader</span>
+                    <a href="/tags/IDEA%E5%BF%AB%E6%8D%B7%E9%94%AE/">
+                        <span class="chip bg-color">IDEA快捷键</span>
                     </a>
                     
                 </div>
@@ -836,7 +870,7 @@ OFFSET  SIZE               TYPE DESCRIPTION
             contentSelector: '#articleContent',
             headingsOffset: -($(window).height() * 0.4 - 45),
             collapseDepth: Number('0'),
-            headingSelector: 'h2, h3, h4'
+            headingSelector: 'h1, h2, h3, h4'
         });
 
         // modify the toc link href to support Chinese.
@@ -848,7 +882,7 @@ OFFSET  SIZE               TYPE DESCRIPTION
 
         // modify the heading title id to support Chinese.
         i = 0;
-        $('#articleContent').children('h2, h3, h4').each(function () {
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
             $(this).attr('id', tocHeading + (++i));
         });
 
@@ -934,7 +968,7 @@ OFFSET  SIZE               TYPE DESCRIPTION
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.6k</span>
+                        class="white-color">121k</span>
             
             
             
@@ -968,8 +1002,8 @@ OFFSET  SIZE               TYPE DESCRIPTION
                         var years = days * 365;
                         var today = new Date();
                         var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "30";
+                        var startMonth = "1";
+                        var startDate = "21";
                         var startHour = "0";
                         var startMinute = "0";
                         var startSecond = "0";

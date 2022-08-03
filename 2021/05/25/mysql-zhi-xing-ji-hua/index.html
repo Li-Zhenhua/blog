@@ -1,0 +1,1560 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="keywords" content="MySQL执行计划解析, Hyouda">
+    <meta name="description" content="MySQL执行计划解析EXPLAIN 是常用于分析SQL语句并对SQL进行优化的利器，它提供具体执行语句的相关信息。
+EXPLAIN 可以为 SELECT 语句中使用到的每张表输出一行信息 。它按照 MySQL 在处理 SELECT 语句时">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>MySQL执行计划解析 | Hyouda</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+
+   <style>
+    body{
+       background-image: url(/medias/images/wallhaven-1kom71.jpg);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
+
+<body>
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Hyouda</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>学习笔记</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="https://li-zhenhua.github.io/operating_system">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>操作系统</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/">
+          
+          <span>加紧整理中...</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Hyouda</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			学习笔记
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>
+
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>操作系统</span>
+                  </a>
+                </li>
+              
+                <li>
+
+                  <a href="/ " style="margin-left:75px">
+				  
+		          <span>加紧整理中...</span>
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">MySQL执行计划解析</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/MySql/">
+                                <span class="chip bg-color">MySql</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92/">
+                                <span class="chip bg-color">执行计划</span>
+                            </a>
+                        
+                            <a href="/tags/Explain/">
+                                <span class="chip bg-color">Explain</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/MySQL/" class="post-category">
+                                MySQL
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-05-25
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    13 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="MySQL执行计划解析"><a href="#MySQL执行计划解析" class="headerlink" title="MySQL执行计划解析"></a>MySQL执行计划解析</h1><p><code>EXPLAIN</code> 是常用于分析SQL语句并对SQL进行优化的利器，它提供具体执行语句的相关信息。</p>
+<p><code>EXPLAIN</code> 可以为 <code>SELECT</code> 语句中使用到的每张表输出一行信息 。它按照 MySQL 在处理 <code>SELECT</code> 语句时的读取顺序来列出各张表。</p>
+<p><code>EXPLAIN</code> 输出列如下：</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_id"><code>id</code></a></td>
+<td><code>SELECT</code> 标识符</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_select_type"><code>select_type</code></a></td>
+<td><code>SELECT</code> 类型</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_table"><code>table</code></a></td>
+<td>引用的表名</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_partitions"><code>partitions</code></a></td>
+<td>匹配的分区</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_type"><code>type</code></a></td>
+<td>连接类型</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_possible_keys"><code>possible_keys</code></a></td>
+<td>可选的索引</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_key"><code>key</code></a></td>
+<td>实际选择的索引</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_key_len"><code>key_len</code></a></td>
+<td>实际所选 key 的长度</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_ref"><code>ref</code></a></td>
+<td>与索引比较的列</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_rows"><code>rows</code></a></td>
+<td>扫描行数</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_filtered"><code>filtered</code></a></td>
+<td>按表条件过滤的行百分比</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_extra"><code>Extra</code></a></td>
+<td>附加信息</td>
+</tr>
+</tbody></table>
+<h2 id="id"><a href="#id" class="headerlink" title="id"></a>id</h2><p><code>id</code> 列的编号是 <code>SELECT</code> 的序列号，有几个 <code>SELECT</code> 就有几个 <code>id</code>，并且id的顺序是按 select 出现的顺序增长的。**<code>id</code> 值越大执行优先级越高，<code>id</code> 值相同则从上往下执行**，<code>id</code> 值为 <code>NULL</code> 则最后执行。</p>
+<h2 id="select-type"><a href="#select-type" class="headerlink" title="select_type"></a>select_type</h2><p>表示查询类型是简单查询还是复杂查询。常见 <code>SELECT</code> 类型如下：</p>
+<table>
+<thead>
+<tr>
+<th><code>select_type</code> Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SIMPLE</code></td>
+<td>简单查询，没有使用union或者子查询</td>
+</tr>
+<tr>
+<td><code>PRIMARY</code></td>
+<td>对于包含union、union all或者子查询的一个大查询来说，它是由几个小查询构成的，而最左边的那个查询就是primary类型</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/union.html"><code>UNION</code></a></td>
+<td>对于包含union、union all的一个大查询来说，它是由几个小查询构成的，除了最左边的那个查询之外其余的就是union类型</td>
+</tr>
+<tr>
+<td><code>UNION RESULT</code></td>
+<td>临时表用于union的去重操作，如果对该临时表进行查询，则对应于UNION RESULT</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/optimizer-hints.html#optimizer-hints-subquery"><code>SUBQUERY</code></a></td>
+<td>如果包含子查询的查询语句不能够转为对应的semi-join[1]的形式，并且该子查询是<strong>不相关</strong>子查询，并且查询优化器决定采用将该子查询<strong>物化</strong>[2]的方案来执行该子查询时，该<strong>子查询</strong>的第一个SELECT关键字代表的那个查询的<code>select_type</code>就是SUBQUERY</td>
+</tr>
+<tr>
+<td><code>MATERIALIZED</code></td>
+<td>如果是子查询物化之后与外层查询进行连接查询时，该子查询对应的<code>select_type</code>属性就是MATERIALIZED</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注[1]：</p>
+<p>semi-join子查询，是指当一张表在另一张表找到匹配的记录之后，半连接（semi-jion）返回第一张表中的记录。与条件连接相反，即使在右节点中找到几条匹配的记录，左节点的表也只会返回一条记录。另外，右节点的表一条记录也不会返回。<strong>半连接通常使用IN 或 EXISTS 作为连接条件</strong></p>
+</blockquote>
+<blockquote>
+<p>注[2]：</p>
+<p>将<strong>子查询结果集</strong>中的记录保存到<strong>临时表</strong>的过程称之为物化（Materialize）。存储子查询结果集的临时表称之为<strong>物化表</strong>。正因为物化表中的记录都建立了索引（基于内存的物化表有哈希索引，基于磁盘的有B+树索引），<strong>通过索引执行IN语句判断某个操作数在不在子查询结果集中变得非常快</strong>，从而提升了子查询语句的性能。</p>
+</blockquote>
+<p>还有一些其他value值，详见<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html#explain_select_type">官网</a></p>
+<h2 id="table"><a href="#table" class="headerlink" title="table"></a>table</h2><p>表示输出行所引用的表名，特殊情况如下：</p>
+<ul>
+<li><strong>&lt;union*M*,*N*&gt;：</strong>该行指的是 <code>id</code> 值为 <em>M</em> 和 <em>N</em> 的并集。</li>
+<li><strong>&lt;derived*N*&gt;：</strong>当 <code>FROM</code> 子句中有子查询时，表示当前查询<strong>依赖于</strong> id=N 的查询结果，于是先执行 id=N 的查询。</li>
+<li><strong>&lt;subquery*N*&gt;：</strong>表示改行对应于id=N的物化子查询的临时表记录的结果</li>
+</ul>
+<h2 id="type"><a href="#type" class="headerlink" title="type"></a>type</h2><p>单表查询的性能对比：<code>system</code> &gt; <code>const</code> &gt; <code>eq_ref</code> &gt; <code>ref</code> &gt; <code>range</code> &gt; <code>index</code> &gt; <code>ALL</code>。一般来说，得保证查询达到 <code>range</code> 级别，最好达到 <code>ref</code> 级别。</p>
+<h3 id="system"><a href="#system" class="headerlink" title="system"></a>system</h3><p>该表只有一行。是 <code>const</code> 连接类型的特例。</p>
+<h3 id="const"><a href="#const" class="headerlink" title="const"></a>const</h3><p>该表<strong>最多只有一个匹配行</strong>，该行在查询开始时读取。因为只有一行，所以优化器的其余部分可以将这一行中列的值视为常量。<code>const</code> 表非常快，因为它们只能读取一次。</p>
+<p><strong>当主键索引（<code>PRIMARY KEY</code> ）或唯一索引（<code>UNIQUE KEY</code>）与常量值比较时使用 <code>const</code> 类型</strong>。如下：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name <span class="token keyword">WHERE</span> primary_key <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name <span class="token keyword">WHERE</span> primary_key_part1 <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">AND</span> primary_key_part2 <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name <span class="token keyword">WHERE</span> unique_key <span class="token operator">=</span> <span class="token string">'001'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name <span class="token keyword">WHERE</span> unique_key_part1 <span class="token operator">=</span> <span class="token string">'001'</span> <span class="token operator">AND</span> unique_key_part2 <span class="token operator">=</span> <span class="token string">'002'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> ref_table<span class="token punctuation">,</span>other_table
+  <span class="token keyword">WHERE</span> ref_table<span class="token punctuation">.</span>unique_key_column <span class="token operator">=</span> other_table<span class="token punctuation">.</span>unique_key_column
+  <span class="token operator">AND</span> other_table<span class="token punctuation">.</span>unique_key_column <span class="token operator">=</span> <span class="token string">'001'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="eq-ref"><a href="#eq-ref" class="headerlink" title="eq_ref"></a>eq_ref</h3><p>对于 <code>other_table</code> 中的每行，仅从 <code>ref_table</code> 中读取唯一一行。<code>eq_ref</code> 类型用于主键索引（<code>PRIMARY KEY</code> ）或 <code>NOT NULL</code> 的唯一索引（<code>UNIQUE KEY</code>），且索引被表连接所使用时。除了 <code>system</code> 和 <code>const</code> 类型之外，这是最好的连接类型。<code>select_type=SIMPLE</code> 简单查询类型不会出现这种类型。</p>
+<p>例子：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> ref_table<span class="token punctuation">,</span>other_table
+  <span class="token keyword">WHERE</span> ref_table<span class="token punctuation">.</span>unique_key_column <span class="token operator">=</span> other_table<span class="token punctuation">.</span><span class="token keyword">column</span><span class="token punctuation">;</span>
+  
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> ref_table<span class="token punctuation">,</span>other_table
+  <span class="token keyword">WHERE</span> ref_table<span class="token punctuation">.</span>unique_key_column_part1 <span class="token operator">=</span> other_table<span class="token punctuation">.</span><span class="token keyword">column</span>
+  <span class="token operator">AND</span> ref_table<span class="token punctuation">.</span>unique_key_column_part2 <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h3><p>对于 <code>other_table</code> 中的每行，从 <code>ref_table</code> 中读取所有匹配行。<code>ref</code> 类型用于<strong>普通索引或联合索引的最左前缀列</strong>（<code>leftmost prefix of the key</code>），即无法根据键值查询到唯一一行。</p>
+<p>例子：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> ref_table <span class="token keyword">WHERE</span> key_column <span class="token operator">=</span> expr<span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> ref_table <span class="token keyword">WHERE</span> key_column_part1 <span class="token operator">=</span> expr<span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> ref_table<span class="token punctuation">,</span>other_table
+  <span class="token keyword">WHERE</span> ref_table<span class="token punctuation">.</span>key_column <span class="token operator">=</span> other_table<span class="token punctuation">.</span><span class="token keyword">column</span><span class="token punctuation">;</span>
+  
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> ref_table<span class="token punctuation">,</span>other_table
+  <span class="token keyword">WHERE</span> ref_table<span class="token punctuation">.</span>key_column_part1 <span class="token operator">=</span> other_table<span class="token punctuation">.</span><span class="token keyword">column</span>
+  <span class="token operator">AND</span> ref_table<span class="token punctuation">.</span>key_column_part2 <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="range"><a href="#range" class="headerlink" title="range"></a>range</h3><p>使用索引进行范围查询时，例如：<code>=</code>, <code>&lt;&gt;</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&lt;=&gt;</code>, <code>IS NULL</code>, <code>BETWEEN</code>, <code>LIKE</code>, <code>IN()</code>。</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name
+  <span class="token keyword">WHERE</span> key_column <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name
+  <span class="token keyword">WHERE</span> key_column <span class="token operator">BETWEEN</span> <span class="token number">10</span> <span class="token operator">and</span> <span class="token number">20</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name
+  <span class="token keyword">WHERE</span> key_column <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> tbl_name
+  <span class="token keyword">WHERE</span> key_part1 <span class="token operator">=</span> <span class="token number">10</span> <span class="token operator">AND</span> key_part2 <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="index"><a href="#index" class="headerlink" title="index"></a>index</h3><p>索引扫描，类似于 <code>ALL</code> 全表扫描。以下情况发生：</p>
+<ul>
+<li><p><strong>覆盖索引</strong>（<code>covering index</code>）。此时 <code>Extra</code> 列显示 <code>Using index</code>。覆盖索引扫描通常比全表扫描速度更快，因为其存储空间更小。例子：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> primary_key <span class="token keyword">FROM</span> tbl_name<span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> unique_key <span class="token keyword">FROM</span> tbl_name<span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>primary_key<span class="token punctuation">)</span> <span class="token keyword">FROM</span> tbl_name<span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>unique_key<span class="token punctuation">)</span> <span class="token keyword">FROM</span> tbl_name<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="ALL"><a href="#ALL" class="headerlink" title="ALL"></a>ALL</h3><p>全表扫描。此时必须增加索引优化查询。</p>
+<p>全表扫描发生的情况如下：</p>
+<ul>
+<li>小表，此时全表扫描比二级索引扫描再回表的速度要快；</li>
+<li><code>ON</code> 或 <code>WHERE</code> 子句没有可用的索引；</li>
+<li>查询的字段虽然使用了索引，但查询条件覆盖的<strong>范围太大</strong>以至于还不如全表扫描。优化方式详见：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/where-optimization.html">Section 8.2.1.1, “WHERE Clause Optimization”</a></li>
+<li>使用了<strong>区分度（cardinality）低</strong>的索引，索引扫描范围太大以至于还不如全表扫描。如果是统计不准，可以用 <code>ANALYZE TABLE</code> 语句优化：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/analyze-table.html">Section 13.7.2.1, “ANALYZE TABLE Syntax”</a></li>
+</ul>
+<h2 id="possible-keys"><a href="#possible-keys" class="headerlink" title="possible_keys"></a>possible_keys</h2><p>表示 MySQL 可选的索引。</p>
+<p>如果此列为 <code>NULL</code>，表示 MySQL 没有可选的索引。此时，可以检查 <code>WHERE</code> 子句是否引用了某些适合建立索引的列，建立索引以提升查询性能。</p>
+<h2 id="key"><a href="#key" class="headerlink" title="key"></a>key</h2><p>表示 MySQL <strong>实际选择的索引</strong>。</p>
+<ul>
+<li>如果此列为 <code>NULL</code>，表示 MySQL 没有找到可用于提高查询性能的索引。</li>
+<li>如果 <code>possible_keys NOT NULL</code>，但 <code>key NULL</code>，可能是因为表中数据不多，MySQL 认为索引对此查询帮助不大，选择了全表扫描。</li>
+</ul>
+<p>如需强制 MySQL 使用或忽略 <code>possible_keys</code> 中列出的索引，可以在查询中使用 <code>FORCE INDEX</code>、<code>USE INDEX</code> 或 <code>IGNORE INDEX</code>。</p>
+<h2 id="key-len"><a href="#key-len" class="headerlink" title="key_len"></a>key_len</h2><p>表示 MySQL 实际选择的索引长度，单位为 Byte。如果该索引为联合索引，可用于判断 MySQL 实际使用了联合索引中的多少个字段。如果 <code>key</code> 列为 <code>NULL</code>，<code>key_len</code> 列也为 <code>NULL</code>。</p>
+<p><code>key_len</code> 计算规则如下：</p>
+<ul>
+<li><p>使用 <code>NULL</code> 需要额外增加 1 Byte 记录是否为 <code>NULL</code>。并且进行比较和计算时要对 <code>NULL</code> 值做特别的处理，因此尽可能把所有列定义为 <code>NOT NULL</code>。</p>
+</li>
+<li><p>各个类型：</p>
+<ul>
+<li><p>整数类型</p>
+<ul>
+<li><code>TINYINT</code> 1 Byte</li>
+<li><code>SMALLINT</code> 2 Bytes</li>
+<li><code>MEDIUMINT</code> 3 Bytes</li>
+<li><code>INT</code> 4 Bytes</li>
+<li><code>BIGINT</code> 8 Bytes</li>
+</ul>
+</li>
+<li><p>日期与时间类型</p>
+<ul>
+<li><code>DATE</code> 3 Bytes</li>
+<li><code>TIMESTAMP</code> 4 Bytes</li>
+<li><code>DATETIME</code> 8 Bytes</li>
+</ul>
+</li>
+<li><p>字符串类型，实际字节存储长度取决于使用的字符集</p>
+<table>
+<thead>
+<tr>
+<th>字符集（Character encoding）</th>
+<th><code>M</code></th>
+<th><code>L</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>latin1</code></td>
+<td>1 Char</td>
+<td>1 Byte</td>
+</tr>
+<tr>
+<td><code>gbk</code></td>
+<td>1 Char</td>
+<td>2 Bytes</td>
+</tr>
+<tr>
+<td><code>utf8</code></td>
+<td>1 Char</td>
+<td>3 Bytes</td>
+</tr>
+<tr>
+<td><code>utf8mb4</code></td>
+<td>1 Char</td>
+<td>4 Bytes</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><code>CHAR(M)</code>：如果字符集为 <code>utf8</code>，则<strong>长度为 3 * M Bytes</strong>(取最长情况)</p>
+</li>
+<li><p><code>VARCHAR(M)</code>：如果字符集为 <code>utf8</code>，则长度为 3 * M Bytes + 1 or 2 Bytes。额外 1 or 2 Byte(s) 用于存储长度。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>创建索引的时候可以指定索引的长度，例如：<code>alter table test add index idx_username (username(30));</code>。长度 30 指的是字符的个数。</p>
+</li>
+<li><p><code>InnoDB</code> 索引==最大长度为 767 Bytes==，引自<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/create-table.html">官方文档</a>：</p>
+<blockquote>
+<p><em>key_part</em>:<br><em>col_name</em> [(<em>length</em>)] [ASC | DESC]</p>
+<p><em>index_type</em>:<br>USING {BTREE | HASH}</p>
+<blockquote>
+<p>Prefixes, defined by the <em>length</em> attribute, can be up to 767 bytes long for <code>InnoDB</code> tables or 3072 bytes if the <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html#sysvar_innodb_large_prefix"><code>innodb_large_prefix</code></a> option is enabled. For <code>MyISAM</code> tables, the prefix length limit is 1000 bytes.</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+<p>举个例子，在字符集为 <code>utf8</code> 的情况下，<code>n</code> 最大只能为 <code>(767 - 2 (存储长度)) / 3 = 765 / 3 = 255 个字符</code>。因此当字符串过长时，MySQL 最多会将开头 255 个字符串<strong>截取出来作为索引</strong>。一个例子：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>student<span class="token punctuation">`</span> <span class="token punctuation">(</span>
+  <span class="token punctuation">`</span>id<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>username<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">256</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token punctuation">`</span>password<span class="token punctuation">`</span> <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>idx_username<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>username<span class="token punctuation">`</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">USING</span> <span class="token keyword">BTREE</span><span class="token punctuation">,</span>
+  <span class="token keyword">KEY</span> <span class="token punctuation">`</span>idx_password<span class="token punctuation">`</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>password<span class="token punctuation">`</span><span class="token punctuation">)</span> <span class="token keyword">USING</span> <span class="token keyword">BTREE</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
+
+<span class="token comment">-- key_len: 255 * 3 + 2 + 1 = 768 Bytes (额外增加 1 Byte 记录是否为 NULL)</span>
+mysql<span class="token operator">></span> <span class="token keyword">explain</span> <span class="token keyword">select</span> username <span class="token keyword">from</span> student <span class="token keyword">where</span> username <span class="token operator">=</span> <span class="token string">'pete'</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+---------+------+---------------+--------------+---------+-------+------+-------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span>   <span class="token operator">|</span> <span class="token keyword">type</span> <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>          <span class="token operator">|</span> key_len <span class="token operator">|</span> ref   <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> Extra       <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+---------+------+---------------+--------------+---------+-------+------+-------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> student <span class="token operator">|</span> ref  <span class="token operator">|</span> idx_username  <span class="token operator">|</span> idx_username <span class="token operator">|</span> <span class="token number">768</span>     <span class="token operator">|</span> const <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+---------+------+---------------+--------------+---------+-------+------+-------------+</span>
+
+<span class="token comment">-- key_len: 1 * 3 + 2 + 1 = 6 Bytes</span>
+mysql<span class="token operator">></span> <span class="token keyword">explain</span> <span class="token keyword">select</span> password <span class="token keyword">from</span> student <span class="token keyword">where</span> password <span class="token operator">=</span> <span class="token string">'pete'</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+---------+------+---------------+--------------+---------+-------+------+--------------------------+</span>
+<span class="token operator">|</span> id <span class="token operator">|</span> select_type <span class="token operator">|</span> <span class="token keyword">table</span>   <span class="token operator">|</span> <span class="token keyword">type</span> <span class="token operator">|</span> possible_keys <span class="token operator">|</span> <span class="token keyword">key</span>          <span class="token operator">|</span> key_len <span class="token operator">|</span> ref   <span class="token operator">|</span> <span class="token keyword">rows</span> <span class="token operator">|</span> Extra                    <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+---------+------+---------------+--------------+---------+-------+------+--------------------------+</span>
+<span class="token operator">|</span>  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">SIMPLE</span>      <span class="token operator">|</span> student <span class="token operator">|</span> ref  <span class="token operator">|</span> idx_password  <span class="token operator">|</span> idx_password <span class="token operator">|</span> <span class="token number">6</span>       <span class="token operator">|</span> const <span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">Using</span> <span class="token keyword">where</span><span class="token punctuation">;</span> <span class="token keyword">Using</span> <span class="token keyword">index</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">----+-------------+---------+------+---------------+--------------+---------+-------+------+--------------------------+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>如果使用过长的索引，例如修改了字符串编码类型、增加联合索引列，则报错如下：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token punctuation">[</span>Err<span class="token punctuation">]</span> <span class="token number">1071</span> <span class="token operator">-</span> Specified <span class="token keyword">key</span> was too long<span class="token punctuation">;</span> max <span class="token keyword">key</span> length <span class="token operator">is</span> <span class="token number">767</span> bytes<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="ref-1"><a href="#ref-1" class="headerlink" title="ref"></a>ref</h2><p><code>ref</code> 显示与 <code>key</code> 列（实际选择的索引）比较的内容，可选值：</p>
+<ul>
+<li>列名（例：<code>t1.id</code>）</li>
+<li><code>const</code>：常量值</li>
+<li><code>func</code>：值为某些函数的结果</li>
+<li><code>NULL</code>：范围查询（<code>type=range</code>）</li>
+</ul>
+<p>简单来说，<code>ref</code>列展示的就是与索引列作等值匹配的值什么，比如只是一个常数或者是某个列。</p>
+<h2 id="rows"><a href="#rows" class="headerlink" title="rows"></a>rows</h2><p>表示 MySQL 认为执行查询必须扫描的行数。</p>
+<p>对于 InnoDB 表，此数字是估计值，可能并<strong>不总是准确</strong>。</p>
+<p>当 <code>prossible_keys</code> 存在多个可选索引时，优化器会选择一个认为最优的执行方案，以最小的代价去执行语句。其中，这个扫描行数就是影响执行代价的因素之一。扫描的行数越少，意味着访问磁盘数据的 IO 次数越少，消耗的 CPU 资源也越少。</p>
+<p>当然，扫描行数并不是唯一的判断标准，优化器还会结合是否使用临时表、是否排序等因素进行综合判断。</p>
+<p>所以在实践中，如果你发现 explain 的结果预估的 <code>rows</code> 值跟实际情况差距比较大，可以采用执行 <code>analyze table</code> 重新统计信息。</p>
+<blockquote>
+<p>在数据库的慢查询日志中看到一个 rows_examined 的字段，表示这个语句执行过程中扫描了多少行。这个值就是在<strong>执行器每次调用引擎获取数据行</strong>的时候累加的。</p>
+<p>在有些场景下，执行器调用一次，在引擎内部则扫描了多行，因此引擎扫描行数跟 rows_examined 并不是完全相同的。</p>
+</blockquote>
+<h2 id="Extra"><a href="#Extra" class="headerlink" title="Extra"></a>Extra</h2><p>这一列显示的是额外信息。如果想要查询越快越好，需要特别留意 <code>Extra</code> 列是否出现以下情况：</p>
+<table>
+<thead>
+<tr>
+<th>Extra</th>
+<th>缓冲区</th>
+<th>大小配置</th>
+<th>数据结构</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Using filesort</code></td>
+<td><code>sort_buffer</code></td>
+<td><code>sort_buffer_size</code></td>
+<td>有序数组</td>
+<td>使用了“外部排序”（全字段排序或 rowid 排序）</td>
+</tr>
+<tr>
+<td><code>Using join buffer (Block Nested Loop)</code></td>
+<td><code>join_buffer</code></td>
+<td><code>join_buffer_size</code></td>
+<td>无序数组</td>
+<td>使用了“基于块的嵌套循环连接”算法（Block Nested-Loop Join（BNL））</td>
+</tr>
+<tr>
+<td><code>Using temporary</code></td>
+<td>临时表</td>
+<td>小于 <code>tmp_table_size</code> 为内存临时表，否则为磁盘临时表（可以使用 <code>SQL_BIG_RESULT</code> 直接指定）</td>
+<td>二维表结构（类似于 Map，Key-Value）</td>
+<td>如果执行逻辑需要用到二维表特性，就会优先考虑使用临时表。例如：<code>DISTINCT</code>、<code>GROUP BY</code>、<code>UNION</code></td>
+</tr>
+</tbody></table>
+<p>这三个数据结构都是用来存放 <code>SELECT</code> 语句执行过程中的中间数据，以辅助 SQL 语句的执行的。==这些情况通常都能通过索引优化==。</p>
+<p>各种常见的重要值如下：</p>
+<h3 id="Using-index"><a href="#Using-index" class="headerlink" title="Using index"></a>Using index</h3><p>使用了覆盖索引。</p>
+<h3 id="Using-where"><a href="#Using-where" class="headerlink" title="Using where"></a>Using where</h3><p>使用 <code>WHERE</code> 条件过滤结果，但查询的列未被索引覆盖。</p>
+<h3 id="Using-index-condition"><a href="#Using-index-condition" class="headerlink" title="Using index condition"></a>Using index condition</h3><p>查询的列不完全被索引覆盖。</p>
+<p>例如：<strong>索引下推优化（ICP）</strong></p>
+<p>查询 ICP 是否开启：<code>SELECT @@GLOBAL.optimizer_switch</code>，注意 <code>index_condition_pushdown</code> 标记：</p>
+<h3 id="Using-temporary"><a href="#Using-temporary" class="headerlink" title="Using temporary"></a>Using temporary</h3><p>MySQL 需要创建一张临时表来处理查询。通常发生于查询包含 <code>DISTINCT</code>、<code>GROUP BY</code> 或 <code>ORDER BY</code> 子句等需要数据去重的场景。出现这种情况一般是要进行优化的，首先想到的是用索引进行优化。</p>
+<h3 id="Using-join-buffer"><a href="#Using-join-buffer" class="headerlink" title="Using join buffer"></a>Using join buffer</h3><p>使用 BNL 算法（<strong>分段</strong>处理,一块一块的加载到内存中）进行表连接。这种情况下一般考虑使用<strong>索引</strong>对<strong>被驱动表</strong>的表连接字段进行优化，以使用更高效的 NLJ（Index Nested-Loop Join）算法。</p>
+<h3 id="Using-filesort"><a href="#Using-filesort" class="headerlink" title="Using filesort"></a>Using filesort</h3><p>将用外部排序而不是索引排序，数据较少时从内存排序，否则需要在磁盘完成排序。这种情况下一般考虑使用索引进行优化。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html">MySQL 5.7 Reference Manual :: 8.8.2 EXPLAIN Output Format</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/twTghH8wTA_0uZghOdawkw">最完整的Explain总结，SQL优化不再困难</a></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">DestiNation</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://li-zhenhua.github.io/2021/05/25/mysql-zhi-xing-ji-hua/">https://li-zhenhua.github.io/2021/05/25/mysql-zhi-xing-ji-hua/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">DestiNation</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/MySql/">
+                                    <span class="chip bg-color">MySql</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92/">
+                                    <span class="chip bg-color">执行计划</span>
+                                </a>
+                            
+                                <a href="/tags/Explain/">
+                                    <span class="chip bg-color">Explain</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/06/02/cun-chu-guo-cheng/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="存储过程">
+                        
+                        <span class="card-title">存储过程</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-06-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/MySQL/" class="post-category">
+                                    MySQL
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/">
+                        <span class="chip bg-color">存储过程</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/04/25/jvm-lei-jia-zai-ji-zhi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Java类加载机制">
+                        
+                        <span class="card-title">Java类加载机制</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-04-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
+                    </a>
+                    
+                    <a href="/tags/ClassLoader/">
+                        <span class="chip bg-color">ClassLoader</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">
+                        <span class="chip bg-color">类加载机制</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+    });
+</script>
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <a href="/about" target="_blank">DestiNation</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">121k</span>
+            
+            
+            
+                
+            
+			
+			
+				<span id="busuanzi_container_site_pv" style='display:none'>
+					<i class="fa fa-heart-o"></i>
+					本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+				</span>
+			
+			
+				<span id="busuanzi_container_site_uv" style='display:none'>
+					人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+				</span>
+			
+
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+						window.setTimeout("calcSiteTime()", 1000);
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2021";
+                        var startMonth = "1";
+                        var startDate = "21";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+						var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours); 
+						var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes); 
+						var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天' + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";;
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天' + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";;
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/Li-Zhenhua" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:610136437@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=610136437" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 610136437" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<script>
+    $(document).ready(function () {
+
+        var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+        var pvcountOffset = 986;  // 初始化首次数据
+        var uvcountOffset = 264;
+
+        function fixCount() {
+            if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + pvcountOffset);
+                clearInterval(int);
+            }
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + uvcountOffset); // 加上初始数据 
+                clearInterval(int); // 停止检测
+            }
+        }
+    });
+</script>
+
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+    
+    <script type="text/javascript" size="150" alpha='0.6'
+        zIndex="-1" src="/libs/background/ribbon-refresh.min.js" async="async"></script>
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "Σ(っ °Д °;)っ别走呀！", clearTimeout(st)) : (document.title = "φ(゜▽゜*)♪嘿嘿，你终于回来了！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) })
+    </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+
+</html>

@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css">
+	<link rel="stylesheet" type="text/css" href="/css/loading.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
@@ -46,7 +47,28 @@
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -119,7 +141,7 @@
     <ul class="sub-nav menus_item_child ">
       
       <li>
-        <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system">
+        <a href="https://li-zhenhua.github.io/operating_system">
           
           <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
           
@@ -145,6 +167,15 @@
       <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
       
       <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
     </a>
     
   </li>
@@ -230,7 +261,7 @@
               
                 <li>
 
-                  <a target="_blank" rel="noopener" href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
 				  
 				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
 			      
@@ -257,6 +288,17 @@
 			    <i class="fa-fw fas fa-user-circle"></i>
 			
 			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
 		</a>
           
         </li>
@@ -335,20 +377,29 @@
                 
                 
                 
-                <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" title="分布式: 2">
+                <a href="/categories/Java/" title="Java: 10">
                     <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #F9EBEA;">分布式
-                        <span class="tag-length">2</span>
+                             chip-active "
+                            style="background-color: #F9EBEA;">Java
+                        <span class="tag-length">10</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/Java/" title="Java: 7">
+                <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" title="分布式: 3">
                     <span class="chip center-align waves-effect waves-light
-                             chip-active "
-                            style="background-color: #F5EEF8;">Java
-                        <span class="tag-length">7</span>
+                             chip-default "
+                            style="background-color: #F5EEF8;">分布式
+                        <span class="tag-length">3</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/SpringBoot/" title="SpringBoot: 3">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #D5F5E3;">SpringBoot
+                        <span class="tag-length">3</span>
                     </span>
                 </a>
                 
@@ -356,17 +407,17 @@
                 <a href="/categories/Docker/" title="Docker: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D5F5E3;">Docker
+                            style="background-color: #E8F8F5;">Docker
                         <span class="tag-length">1</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/Git/" title="Git: 1">
+                <a href="/categories/Git/" title="Git: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #E8F8F5;">Git
-                        <span class="tag-length">1</span>
+                            style="background-color: #FEF9E7;">Git
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -374,7 +425,7 @@
                 <a href="/categories/Golang/" title="Golang: 4">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #FEF9E7;">Golang
+                            style="background-color: #F8F9F9;">Golang
                         <span class="tag-length">4</span>
                     </span>
                 </a>
@@ -383,7 +434,25 @@
                 <a href="/categories/IDEA/" title="IDEA: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8F9F9;">IDEA
+                            style="background-color: #82E0AA;">IDEA
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/MySQL/" title="MySQL: 5">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #D7BDE2;">MySQL
+                        <span class="tag-length">5</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/Mybatis/" title="Mybatis: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #A3E4D7;">Mybatis
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -392,8 +461,17 @@
                 <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" title="中间件: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #82E0AA;">中间件
+                            style="background-color: #85C1E9;">中间件
                         <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/Spring/" title="Spring: 3">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #F8C471;">Spring
+                        <span class="tag-length">3</span>
                     </span>
                 </a>
                 
@@ -401,7 +479,7 @@
                 <a href="/categories/%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8/" title="工程应用: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D7BDE2;">工程应用
+                            style="background-color: #F9E79F;">工程应用
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -410,17 +488,17 @@
                 <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" title="数据结构与算法: 3">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #A3E4D7;">数据结构与算法
+                            style="background-color: #FFF;">数据结构与算法
                         <span class="tag-length">3</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="操作系统: 1">
+                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="操作系统: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #85C1E9;">操作系统
-                        <span class="tag-length">1</span>
+                            style="background-color: #F8F9F9;">操作系统
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -428,7 +506,7 @@
                 <a href="/categories/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="Java多线程: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8C471;">Java多线程
+                            style="background-color: #F8F9F9;">Java多线程
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -438,6 +516,24 @@
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
                             style="background-color: #F9E79F;">数据库
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/%E9%AB%98%E5%B9%B6%E5%8F%91/" title="高并发: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #F5EEF8;">高并发
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/Linux/" title="Linux: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #E8F8F5;">Linux
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -498,56 +594,6 @@
                         
                         <a href="/tags/%E5%A4%9A%E6%80%81/">
                             <span class="chip bg-color">多态</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2022/06/03/completablefuture-xue-xi/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="CompletableFuture学习">
-                            
-                            <span class="card-title">CompletableFuture学习</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                前言最近实习用TypeScript多了之后，学js/ts异步编程Promise或者async/await，隐约记得当时学习多线程的时候Java也有一个Future类用于异步编程，这次便想着系统地学习整理一下关于Future的用法以及基本原理
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-03
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Java/" class="post-category">
-                                    Java
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/CompletableFuture/">
-                            <span class="chip bg-color">CompletableFuture</span>
-                        </a>
-                        
-                        <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">
-                            <span class="chip bg-color">异步编程</span>
                         </a>
                         
                     </div>
@@ -722,63 +768,6 @@ try &#123;
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/11/09/shuang-qin-wei-pai-ji-zhi/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="双亲委派机制">
-                            
-                            <span class="card-title">双亲委派机制</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                类加载器从Java虚拟机的角度上讲，其实只存在两种不同的类加载器，一是启动类加载器（Bootstrap ClassLoader），其为虚拟机的一部分，二是其他所有的类加载器。
-但是从开发人员的角度上说，类加载器可以分得更为细致。
-
-一般认为
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-09
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Java/" class="post-category">
-                                    Java
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/JVM/">
-                            <span class="chip bg-color">JVM</span>
-                        </a>
-                        
-                        <a href="/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
-                            <span class="chip bg-color">双亲委派机制</span>
-                        </a>
-                        
-                        <a href="/tags/ClassLoader/">
-                            <span class="chip bg-color">ClassLoader</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
                     <a href="/2021/11/08/java-dui-xiang-de-da-xiao-ji-suan/">
                         <div class="card-image tag-image">
                             
@@ -830,6 +819,278 @@ Mark Word: 用于存储对象自身的运行时数据
                 </div>
             </div>
             
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/04/25/jvm-lei-jia-zai-ji-zhi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Java类加载机制">
+                            
+                            <span class="card-title">Java类加载机制</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                类加载子系统内存结构图
+如果自己想手写一个 Java 虚拟机的话，主要考虑哪些结构呢？
+
+类加载器
+执行引擎
+
+2.2. 类加载器与类的加载过程类加载器子系统作用
+
+
+类加载器子系统负责从文件系统或者网络中加载 Class 文件，class
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-04-25
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/JVM/">
+                            <span class="chip bg-color">JVM</span>
+                        </a>
+                        
+                        <a href="/tags/ClassLoader/">
+                            <span class="chip bg-color">ClassLoader</span>
+                        </a>
+                        
+                        <a href="/tags/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">
+                            <span class="chip bg-color">类加载机制</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/01/30/jdk8-xin-te-xing/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="JDK8新特性">
+                            
+                            <span class="card-title">JDK8新特性</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                一、Lambda 表达式1. Lamdba 表达式概述Lambda 是一个匿名函数，可以把 Lambda 表达式理解为是一段可以传递的代码（将代码像数据一样进行传递）。使用它可以写出更简洁、更灵活的代码。作为一种更紧凑的代码风格，使 Jav
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-30
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/JDK8/">
+                            <span class="chip bg-color">JDK8</span>
+                        </a>
+                        
+                        <a href="/tags/lambda/">
+                            <span class="chip bg-color">lambda</span>
+                        </a>
+                        
+                        <a href="/tags/optional%E7%B1%BB/">
+                            <span class="chip bg-color">optional类</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/01/26/shuang-qin-wei-pai-ji-zhi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="双亲委派机制">
+                            
+                            <span class="card-title">双亲委派机制</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                类加载器从Java虚拟机的角度上讲，其实只存在两种不同的类加载器，一是启动类加载器（Bootstrap ClassLoader），其为虚拟机的一部分，二是其他所有的类加载器。
+但是从开发人员的角度上说，类加载器可以分得更为细致。
+
+一般认为
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-26
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/JVM/">
+                            <span class="chip bg-color">JVM</span>
+                        </a>
+                        
+                        <a href="/tags/ClassLoader/">
+                            <span class="chip bg-color">ClassLoader</span>
+                        </a>
+                        
+                        <a href="/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">
+                            <span class="chip bg-color">双亲委派机制</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/01/25/java-chang-yong-lei/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="Java常用类">
+                            
+                            <span class="card-title">Java常用类</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                一、String类（一）概述String:字符串，使用一对””引起来表示。
+
+String声明为final的，不可被继承
+
+String 实现了 Serializable 接口：表示字符串是支持序列化的。 实现了  Comparable 接
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-25
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Java%E5%B8%B8%E7%94%A8%E7%B1%BB/">
+                            <span class="chip bg-color">Java常用类</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/01/22/java-fan-she/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="Java反射">
+                            
+                            <span class="card-title">Java反射</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                一、反射的概述1. 反射的简介
+Reflection（反射)是被视为动态语言的关键，反射机制允许程序在执行期借助于 Reflection API 取得任何类的内部信息，并能直接操作任意对象的内部属性及方法。
+加载完类之后，在堆内存的方法区中
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-22
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Java%E5%8F%8D%E5%B0%84/">
+                            <span class="chip bg-color">Java反射</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
         </div>
     </article>
 </main>
@@ -853,7 +1114,7 @@ Mark Word: 用于存储对象自身的运行时数据
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.6k</span>
+                        class="white-color">121k</span>
             
             
             
@@ -887,8 +1148,8 @@ Mark Word: 用于存储对象自身的运行时数据
                         var years = days * 365;
                         var today = new Date();
                         var startYear = "2021";
-                        var startMonth = "10";
-                        var startDate = "30";
+                        var startMonth = "1";
+                        var startDate = "21";
                         var startHour = "0";
                         var startMinute = "0";
                         var startSecond = "0";
