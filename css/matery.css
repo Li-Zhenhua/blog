@@ -219,6 +219,10 @@ dfn {
     font-style: italic;
 }
 
+em {
+    color: #e51baf;
+}
+
 small {
     font-size: 85%;
 }
@@ -228,7 +232,7 @@ cite {
 }
 
 mark {
-    background-color: #fcf8e3;
+    background-color: #ebdd9a;
     padding: .2em;
 }
 
