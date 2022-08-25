@@ -1,4 +1,529 @@
-<!DOCTYPE HTML><html lang="zh-CN"><head><meta charset="utf-8"><meta name="keywords" content="kill的执行过程, Hyouda"><meta name="description" content="当执行kill -9 PID时系统发生了什么最近在逛牛客的时候，突然看到一个面试题，说kill的执行过程是怎么样的？还别说，平常就只是知道用kill杀死进程，具体的原理确实不咋知道（也有可能因为底层是c没深入去学哈哈😂），这次就引用别人的"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><meta name="renderer" content="webkit|ie-stand|ie-comp"><meta name="mobile-web-app-capable" content="yes"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="referrer" content="no-referrer-when-downgrade"><title>kill的执行过程 | Hyouda</title><link rel="icon" type="image/png" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/favicon.png"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/awesome/css/all.min.css"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.css"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.css"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/animate/animate.min.css"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/css/lightgallery.min.css"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/css/matery.css"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/css/my.css"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/css/loading.css"><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/jquery/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"></head><style>body{background-image:url(https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/images/wallhaven-1kom71.jpg);background-repeat:no-repeat;background-size:100% 100%;background-attachment:fixed}</style><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>window.addEventListener("load",(function(){document.body.style.overflow="auto",document.getElementById("loading-box").classList.add("loaded")}),!1)</script><header class="navbar-fixed"><nav id="headNav" class="bg-color nav-transparent"><div id="navContainer" class="nav-wrapper container"><div class="brand-logo"><a href="/" class="waves-effect waves-light"><div><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img" alt="LOGO"> <span class="logo-span">Hyouda</span></div></a></div><a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a><ul class="right nav-menu"><li class="hide-on-med-and-down nav-item"><a href="/" class="waves-effect waves-light"><i class="fas fa-home" style="zoom:0.6"></i> <span>首页</span></a></li><li class="hide-on-med-and-down nav-item"><a href="/tags" class="waves-effect waves-light"><i class="fas fa-tags" style="zoom:0.6"></i> <span>标签</span></a></li><li class="hide-on-med-and-down nav-item"><a href="/categories" class="waves-effect waves-light"><i class="fas fa-bookmark" style="zoom:0.6"></i> <span>分类</span></a></li><li class="hide-on-med-and-down nav-item"><a href="/archives" class="waves-effect waves-light"><i class="fas fa-archive" style="zoom:0.6"></i> <span>归档</span></a></li><li class="hide-on-med-and-down nav-item"><a href="" class="waves-effect waves-light"><i class="fas fa-list" style="zoom:0.6"></i> <span>学习笔记</span> <i class="fas fa-chevron-down" aria-hidden="true" style="zoom:0.6"></i></a><ul class="sub-nav menus_item_child"><li><a href="https://li-zhenhua.github.io/operating_system"><i class="fas fa-book" style="margin-top:-20px;zoom:0.6"></i> <span>操作系统</span></a></li><li><a href="/"><span>加紧整理中...</span></a></li></ul></li><li class="hide-on-med-and-down nav-item"><a href="/about" class="waves-effect waves-light"><i class="fas fa-user-circle" style="zoom:0.6"></i> <span>关于</span></a></li><li class="hide-on-med-and-down nav-item"><a href="/goodArticle" class="waves-effect waves-light"><span>好文链接</span></a></li><li><a href="#searchModal" class="modal-trigger waves-effect waves-light"><i id="searchIcon" class="fas fa-search" title="搜索" style="zoom:0.85"></i></a></li></ul><div id="mobile-nav" class="side-nav sidenav"><div class="mobile-head bg-color"><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img circle responsive-img"><div class="logo-name">Hyouda</div><div class="logo-desc">Never really desperate, only the lost of the soul.</div></div><ul class="menu-list mobile-menu-list"><li class="m-nav-item"><a href="/" class="waves-effect waves-light"><i class="fa-fw fas fa-home"></i> 首页</a></li><li class="m-nav-item"><a href="/tags" class="waves-effect waves-light"><i class="fa-fw fas fa-tags"></i> 标签</a></li><li class="m-nav-item"><a href="/categories" class="waves-effect waves-light"><i class="fa-fw fas fa-bookmark"></i> 分类</a></li><li class="m-nav-item"><a href="/archives" class="waves-effect waves-light"><i class="fa-fw fas fa-archive"></i> 归档</a></li><li class="m-nav-item"><a href="javascript:;"><i class="fa-fw fas fa-list"></i> 学习笔记 <span class="m-icon"><i class="fas fa-chevron-right"></i></span></a><ul><li><a href="https://li-zhenhua.github.io/operating_system" style="margin-left:75px"><i class="fa fas fa-book" style="position:absolute;left:50px"></i> <span>操作系统</span></a></li><li><a href="/" style="margin-left:75px"><span>加紧整理中...</span></a></li></ul></li><li class="m-nav-item"><a href="/about" class="waves-effect waves-light"><i class="fa-fw fas fa-user-circle"></i> 关于</a></li><li class="m-nav-item"><a href="/goodArticle" class="waves-effect waves-light"><i class="fas fa-fw fa-link"></i> 好文链接</a></li></ul></div></div></nav></header><div class="bg-cover pd-header post-cover" style="background-image:url('https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/7.jpg')"><div class="container" style="right:0;left:0"><div class="row"><div class="col s12 m12 l12"><div class="brand"><h1 class="description center-align post-title">kill的执行过程</h1></div></div></div></div></div><main class="post-container content"><link rel="stylesheet" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.css"><style>#articleContent h1::before,#articleContent h2::before,#articleContent h3::before,#articleContent h4::before,#articleContent h5::before,#articleContent h6::before{display:block;content:" ";height:100px;margin-top:-100px;visibility:hidden}#articleContent :focus{outline:0}.toc-fixed{position:fixed;top:64px}.toc-widget{width:345px;padding-left:20px}.toc-widget .toc-title{padding:35px 0 15px 17px;font-size:1.5rem;font-weight:700;line-height:1.5rem}.toc-widget ol{padding:0;list-style:none}#toc-content{padding-bottom:30px;overflow:auto}#toc-content ol{padding-left:10px}#toc-content ol li{padding-left:10px}#toc-content .toc-link:hover{color:#42b983;font-weight:700;text-decoration:underline}#toc-content .toc-link::before{background-color:transparent;max-height:25px;position:absolute;right:23.5vw;display:block}#toc-content .is-active-link{color:#42b983}#floating-toc-btn{position:fixed;right:15px;bottom:76px;padding-top:15px;margin-bottom:0;z-index:998}#floating-toc-btn .btn-floating{width:48px;height:48px}#floating-toc-btn .btn-floating i{line-height:48px;font-size:1.4rem}</style><div class="row"><div id="main-content" class="col s12 m12 l9"><div id="artDetail"><div class="card"><div class="card-content article-info"><div class="row tag-cate"><div class="col s7"><div class="article-tag"><a href="/tags/kill%E5%91%BD%E4%BB%A4/"><span class="chip bg-color">kill命令</span></a></div></div><div class="col s5 right-align"><div class="post-cate"><i class="fas fa-bookmark fa-fw icon-category"></i> <a href="/categories/Linux/" class="post-category">Linux</a></div></div></div><div class="post-info"><div class="post-date info-break-policy"><i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2021-10-06</div><div class="info-break-policy"><i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 2.7k</div><div class="info-break-policy"><i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp; 10 分</div></div></div><hr class="clearfix"><link rel="stylesheet" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/prism/prism.css"><div class="card-content article-card-content"><div id="articleContent"><h1 id="当执行kill-9-PID时系统发生了什么"><a href="#当执行kill-9-PID时系统发生了什么" class="headerlink" title="当执行kill -9 PID时系统发生了什么"></a>当执行kill -9 PID时系统发生了什么</h1><p>最近在逛牛客的时候，突然看到一个面试题，说<strong>kill的执行过程是怎么样的？</strong>还别说，平常就只是知道用kill杀死进程，具体的原理确实不咋知道（也有可能因为底层是c没深入去学哈哈😂），这次就引用别人的文章并在文中做了一些笔记，来大致学习一下相关的流程</p><p><em>以下是原文内容</em></p><hr><p>我们时常遇到这样的需求：要杀死一个正在运行运行的进程。这时候可以在终端输入</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">kill</span> -9 <span class="token operator">&lt;</span>PID<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>（其中9的意思是SIGKILL，完整的linux信号请看<a target="_blank" rel="noopener" href="http://www.comptechdoc.org/os/linux/programming/linux_pgsignals.html">这里</a>）之后你再用ps查看进程的时候，会发现那个进程已经被杀掉了。</p><p>本文将说明在LINUX系统下，用户在终端输入<code>kill -9 &lt;PID&gt;</code>之后，整个系统到底发生了什么，我们将深入到内核代码。一开始我在想这个问题的时候遇到了一些问题，比如进程是怎么知道自己收到信号的？在执行进程工作代码的同时还要不断轮询有没有新到的信号吗？代价也太大了吧？那是不是基于什么异步通知的方案呢？在说明LINUX是怎么做的之前，先解释一点基础的概念。</p><h2 id="什么是信号（SIGNAL）"><a href="#什么是信号（SIGNAL）" class="headerlink" title="什么是信号（SIGNAL）"></a>什么是信号（SIGNAL）</h2><p>我自己的理解：<strong>信号之于进程，就好比中断之于CPU，是一种信息传递的方式</strong>。官方的解释是A signal is an asynchronous notification sent to a process or to a specific thread within the same process in order to notify it of an event that occurred. 一个程序在运行的时候，你可以发各种信号给这个进程，进程对这个信号做出响应。比如你发个SIGKILL给一个进程，该进程就知道用户要杀死它，然后就会终止进程。 一个更常见的例子，你在终端运行一个进程以后，如果是非后台进程，它会在console输出一些log，这时候shell也不能接受输入了，这时候你按下<code>control+c</code>，进程就被终止了，在这个过程中你就给这个进程发送了一个信号（SIGINT，interrupt signal），在默认情况下，是终止改进程。 那什么时候是非默认情况呢？这里需要引入信号处理器（signal handler）的概念，你可以为一部分信号编写特定的处理函数，比如在默认情况下，SIGINT是结束进程，你可以修改这个默认行为使它什么都不做（即一个空函数），但是有些信号的行为是无法修改的，比如SIGKILL。</p><h2 id="kill-命令"><a href="#kill-命令" class="headerlink" title="kill 命令"></a>kill 命令</h2><p>在LINUX下有一个<code>kill</code>的命令，第一次用的同学会以为这是一个“杀死”某个进程的命令，其实并不是很准确。<strong>这个命令的作用就是给指定PID的进程发送信号</strong>，到底发送什么信号也是由参数指定的，如果不指定信号，默认是发送SIGTERM（对应序号为15），它的默认行为是正常终止进程。其实<code>kill</code>也是个程序，它内部会调用system call的kill来发起真正信号传递过程。 更详细的介绍请<code>man 2 kill</code></p><h2 id="shell-fork进程"><a href="#shell-fork进程" class="headerlink" title="shell fork进程"></a>shell fork进程</h2><p>当你敲下命令，按下回车，程序就执行了，其实这里也是个很复杂的过程。涉及到了shell的运行原理，每一个shell的实现都不一样，但核心原理是不变的：<code>fork</code>一个子进程，再调用<code>execve</code>那一系列系统调用。想了解一个shell是怎么写的，我觉得最好的资料是《Unix/Linux编程实践教程》第八章。本文不会详细解释<code>shell/fork/execve</code>，我会在另一篇博客里详细解释当你执行<code>fork</code>时，系统发生了什么。</p><p>好了，基础知识差不多介绍完了，下面我们进入下一阶段。</p><h2 id="kill-9-PID"><a href="#kill-9-PID" class="headerlink" title="kill -9 PID"></a>kill -9 PID</h2><p>我们先讲原理再深入实现细节。所有内核代码都基于3.16.3，本文出现的所有内核代码是我删除了一些错误处理，加锁，临界判断后的结果，所以是比较核心的代码。</p><p>执行<code>kill -9 &lt;PID&gt;</code>，进程是怎么知道自己被发送了一个信号的？首先要产生信号，执行kill程序需要一个pid，根据这个pid找到这个进程的<strong>task_struct（这个是Linux下表示进程/线程的结构）</strong>，然后在这个结构体的特定的成员变量里记下这个信号。 这时候信号产生了但还没有被特定的进程处理，叫做<strong>Pending signal。</strong> 等到下一次CPU调度到这个进程的时候，内核会保证先执行<code>do\_signal</code>这个函数看看有没有需要被处理的信号，若有，则处理；若没有，那么就直接继续执行该进程。所以我们看到，在Linux下，信号并不像中断那样有异步行为，而是每次调度到这个进程都是检查一下有没有未处理的信号。</p><p>当然信号的产生不仅仅在终端kill的时候才产生的。总结起来，大概有如下三种产生方式：</p><ul><li><strong>硬件异常</strong>：比如除0</li><li><strong>软件通知</strong>：比如当你往一个已经被对方关闭的管道中写数据的时候，会发生SIGPIPE</li><li><strong>终端信号</strong>：你输入<code>kill -9 &lt;PID&gt;</code>，或者<code>control+c</code>就是这种类型</li></ul><p>大概原理就是这个样子的，接下来我们来看一看内核的实现。</p><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>首先，你在shell里输入<code>kill</code>这个命令，它本身就是个程序，是有源代码的，它的代码可以在Linux的<a target="_blank" rel="noopener" href="http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/">coreutils</a>里找到。代码很长，我就不全复制过来了，有兴趣的可以去仔细看看。它的核心代码是长这样的：</p><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">send_signals</span> <span class="token punctuation">(</span><span class="token keyword">int</span> signum<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token keyword">const</span> <span class="token operator">*</span>argv<span class="token punctuation">)</span>
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="keywords" content="kill的执行过程, Hyouda">
+    <meta name="description" content="当执行kill -9 PID时系统发生了什么最近在逛牛客的时候，突然看到一个面试题，说kill的执行过程是怎么样的？还别说，平常就只是知道用kill杀死进程，具体的原理确实不咋知道（也有可能因为底层是c没深入去学哈哈😂），这次就引用别人的">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>kill的执行过程 | Hyouda</title>
+    <link rel="icon" type="image/png" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/my.css">
+	<link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/loading.css">
+
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+
+   <style>
+    body{
+       background-image: url(https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/images/wallhaven-1kom71.jpg);
+       background-repeat:no-repeat;
+       background-size: 100% 100%;
+       background-attachment:fixed;
+    }
+</style>
+
+
+
+<body>
+	
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading-box">
+    <div class="loading-left-bg"></div>
+    <div class="loading-right-bg"></div>
+    <div class="spinner-box">
+        <div class="configure-border-1">
+            <div class="configure-core"></div>
+        </div>
+        <div class="configure-border-2">
+            <div class="configure-core"></div>
+        </div>
+        <div class="loading-word">加载中...</div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        document.body.style.overflow = 'auto';
+        document.getElementById('loading-box').classList.add("loaded")
+    }, false)
+</script>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+					<div>
+						
+						<img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+						
+						<span class="logo-span">Hyouda</span>
+					</div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>学习笔记</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="https://li-zhenhua.github.io/operating_system">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>操作系统</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/">
+          
+          <span>加紧整理中...</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/goodArticle" class="waves-effect waves-light">
+      
+      <span>好文链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Hyouda</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			学习笔记
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>
+
+                  <a href="https://li-zhenhua.github.io/operating_system " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>操作系统</span>
+                  </a>
+                </li>
+              
+                <li>
+
+                  <a href="/ " style="margin-left:75px">
+				  
+		          <span>加紧整理中...</span>
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/goodArticle" class="waves-effect waves-light">
+			
+				<i class="fas fa-fw fa-link"></i>
+			
+			好文链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/7.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">kill的执行过程</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/kill%E5%91%BD%E4%BB%A4/">
+                                <span class="chip bg-color">kill命令</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Linux/" class="post-category">
+                                Linux
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-10-06
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    10 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="当执行kill-9-PID时系统发生了什么"><a href="#当执行kill-9-PID时系统发生了什么" class="headerlink" title="当执行kill -9 PID时系统发生了什么"></a>当执行kill -9 PID时系统发生了什么</h1><p>最近在逛牛客的时候，突然看到一个面试题，说<strong>kill的执行过程是怎么样的？</strong>还别说，平常就只是知道用kill杀死进程，具体的原理确实不咋知道（也有可能因为底层是c没深入去学哈哈😂），这次就引用别人的文章并在文中做了一些笔记，来大致学习一下相关的流程</p>
+<p><em>以下是原文内容</em></p>
+<hr>
+<p>我们时常遇到这样的需求：要杀死一个正在运行运行的进程。这时候可以在终端输入</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">kill</span> -9 <span class="token operator">&lt;</span>PID<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>（其中9的意思是SIGKILL，完整的linux信号请看<a target="_blank" rel="noopener" href="http://www.comptechdoc.org/os/linux/programming/linux_pgsignals.html">这里</a>）之后你再用ps查看进程的时候，会发现那个进程已经被杀掉了。</p>
+<p>本文将说明在LINUX系统下，用户在终端输入<code>kill -9 &lt;PID&gt;</code>之后，整个系统到底发生了什么，我们将深入到内核代码。一开始我在想这个问题的时候遇到了一些问题，比如进程是怎么知道自己收到信号的？在执行进程工作代码的同时还要不断轮询有没有新到的信号吗？代价也太大了吧？那是不是基于什么异步通知的方案呢？在说明LINUX是怎么做的之前，先解释一点基础的概念。</p>
+<h2 id="什么是信号（SIGNAL）"><a href="#什么是信号（SIGNAL）" class="headerlink" title="什么是信号（SIGNAL）"></a>什么是信号（SIGNAL）</h2><p>我自己的理解：<strong>信号之于进程，就好比中断之于CPU，是一种信息传递的方式</strong>。官方的解释是A signal is an asynchronous notification sent to a process or to a specific thread within the same process in order to notify it of an event that occurred. 一个程序在运行的时候，你可以发各种信号给这个进程，进程对这个信号做出响应。比如你发个SIGKILL给一个进程，该进程就知道用户要杀死它，然后就会终止进程。 一个更常见的例子，你在终端运行一个进程以后，如果是非后台进程，它会在console输出一些log，这时候shell也不能接受输入了，这时候你按下<code>control+c</code>，进程就被终止了，在这个过程中你就给这个进程发送了一个信号（SIGINT，interrupt signal），在默认情况下，是终止改进程。 那什么时候是非默认情况呢？这里需要引入信号处理器（signal handler）的概念，你可以为一部分信号编写特定的处理函数，比如在默认情况下，SIGINT是结束进程，你可以修改这个默认行为使它什么都不做（即一个空函数），但是有些信号的行为是无法修改的，比如SIGKILL。</p>
+<h2 id="kill-命令"><a href="#kill-命令" class="headerlink" title="kill 命令"></a>kill 命令</h2><p>在LINUX下有一个<code>kill</code>的命令，第一次用的同学会以为这是一个“杀死”某个进程的命令，其实并不是很准确。<strong>这个命令的作用就是给指定PID的进程发送信号</strong>，到底发送什么信号也是由参数指定的，如果不指定信号，默认是发送SIGTERM（对应序号为15），它的默认行为是正常终止进程。其实<code>kill</code>也是个程序，它内部会调用system call的kill来发起真正信号传递过程。 更详细的介绍请<code>man 2 kill</code></p>
+<h2 id="shell-fork进程"><a href="#shell-fork进程" class="headerlink" title="shell fork进程"></a>shell fork进程</h2><p>当你敲下命令，按下回车，程序就执行了，其实这里也是个很复杂的过程。涉及到了shell的运行原理，每一个shell的实现都不一样，但核心原理是不变的：<code>fork</code>一个子进程，再调用<code>execve</code>那一系列系统调用。想了解一个shell是怎么写的，我觉得最好的资料是《Unix/Linux编程实践教程》第八章。本文不会详细解释<code>shell/fork/execve</code>，我会在另一篇博客里详细解释当你执行<code>fork</code>时，系统发生了什么。</p>
+<p>好了，基础知识差不多介绍完了，下面我们进入下一阶段。</p>
+<h2 id="kill-9-PID"><a href="#kill-9-PID" class="headerlink" title="kill -9 PID"></a>kill -9 PID</h2><p>我们先讲原理再深入实现细节。所有内核代码都基于3.16.3，本文出现的所有内核代码是我删除了一些错误处理，加锁，临界判断后的结果，所以是比较核心的代码。</p>
+<p>执行<code>kill -9 &lt;PID&gt;</code>，进程是怎么知道自己被发送了一个信号的？首先要产生信号，执行kill程序需要一个pid，根据这个pid找到这个进程的<strong>task_struct（这个是Linux下表示进程/线程的结构）</strong>，然后在这个结构体的特定的成员变量里记下这个信号。 这时候信号产生了但还没有被特定的进程处理，叫做<strong>Pending signal。</strong> 等到下一次CPU调度到这个进程的时候，内核会保证先执行<code>do\_signal</code>这个函数看看有没有需要被处理的信号，若有，则处理；若没有，那么就直接继续执行该进程。所以我们看到，在Linux下，信号并不像中断那样有异步行为，而是每次调度到这个进程都是检查一下有没有未处理的信号。</p>
+<p>当然信号的产生不仅仅在终端kill的时候才产生的。总结起来，大概有如下三种产生方式：</p>
+<ul>
+<li><strong>硬件异常</strong>：比如除0</li>
+<li><strong>软件通知</strong>：比如当你往一个已经被对方关闭的管道中写数据的时候，会发生SIGPIPE</li>
+<li><strong>终端信号</strong>：你输入<code>kill -9 &lt;PID&gt;</code>，或者<code>control+c</code>就是这种类型</li>
+</ul>
+<p>大概原理就是这个样子的，接下来我们来看一看内核的实现。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>首先，你在shell里输入<code>kill</code>这个命令，它本身就是个程序，是有源代码的，它的代码可以在Linux的<a target="_blank" rel="noopener" href="http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/">coreutils</a>里找到。代码很长，我就不全复制过来了，有兴趣的可以去仔细看看。它的核心代码是长这样的：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">send_signals</span> <span class="token punctuation">(</span><span class="token keyword">int</span> signum<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token keyword">const</span> <span class="token operator">*</span>argv<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
     <span class="token function">kill</span> <span class="token punctuation">(</span>pid<span class="token punctuation">,</span> signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -10,7 +535,10 @@
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
     <span class="token function">send_signals</span> <span class="token punctuation">(</span>signum<span class="token punctuation">,</span> argv <span class="token operator">+</span> optind<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>我们看到最后调用了系统调用<code>kill</code>，其代码在Linux内核<code>linux-3.16.3/kernel/signal.c</code>中实现。在看kill源码之前，先把这个函数最终要操作的结构体看一下，这个struct很长，只列出了信号相关的部分：</p><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token punctuation">&#123;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>我们看到最后调用了系统调用<code>kill</code>，其代码在Linux内核<code>linux-3.16.3/kernel/signal.c</code>中实现。在看kill源码之前，先把这个函数最终要操作的结构体看一下，这个struct很长，只列出了信号相关的部分：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token punctuation">&#123;</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
 <span class="token comment">/* signal handlers */</span>
   <span class="token keyword">struct</span> <span class="token class-name">signal_struct</span> <span class="token operator">*</span>signal<span class="token punctuation">;</span> <span class="token comment">/* 一个进程所有线程共享一个signal */</span>
@@ -20,7 +548,10 @@
   sigset_t saved_sigmask<span class="token punctuation">;</span> <span class="token comment">/* restored if set_restore_sigmask() was used */</span>
   <span class="token keyword">struct</span> <span class="token class-name">sigpending</span> pending<span class="token punctuation">;</span> <span class="token comment">/* 进程中的多个线程有各自的pending */</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>继续看kill系统调用，我将核心代码列在了下面，想看完整版的点<a target="_blank" rel="noopener" href="http://lxr.free-electrons.com/source/kernel/signal.c#L2893">这里</a>。为了方便理解，我给核心逻辑增加了注释。</p><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">SYSCALL_DEFINE2</span><span class="token punctuation">(</span>kill<span class="token punctuation">,</span> pid_t<span class="token punctuation">,</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> sig<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>继续看kill系统调用，我将核心代码列在了下面，想看完整版的点<a target="_blank" rel="noopener" href="http://lxr.free-electrons.com/source/kernel/signal.c#L2893">这里</a>。为了方便理解，我给核心逻辑增加了注释。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">SYSCALL_DEFINE2</span><span class="token punctuation">(</span>kill<span class="token punctuation">,</span> pid_t<span class="token punctuation">,</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> sig<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
     <span class="token keyword">return</span> <span class="token function">kill_something_info</span><span class="token punctuation">(</span>sig<span class="token punctuation">,</span> <span class="token operator">&amp;</span>info<span class="token punctuation">,</span> pid<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -58,7 +589,10 @@
   <span class="token punctuation">&#125;</span>
 
   <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>因为这个<code>kill_something_info</code>函数会根据pid的正负来决定是发给特定的进程还是一个进程组，我们下面主要来看发给一个特定进程的情况，即调用<code>kill_pid_info</code>：</p><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">kill_pid_info</span><span class="token punctuation">(</span><span class="token keyword">int</span> sig<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">siginfo</span> <span class="token operator">*</span>info<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">pid</span> <span class="token operator">*</span>pid<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>因为这个<code>kill_something_info</code>函数会根据pid的正负来决定是发给特定的进程还是一个进程组，我们下面主要来看发给一个特定进程的情况，即调用<code>kill_pid_info</code>：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">kill_pid_info</span><span class="token punctuation">(</span><span class="token keyword">int</span> sig<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">siginfo</span> <span class="token operator">*</span>info<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">pid</span> <span class="token operator">*</span>pid<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
   <span class="token keyword">int</span> error <span class="token operator">=</span> <span class="token operator">-</span>ESRCH<span class="token punctuation">;</span>
   <span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token operator">*</span>p<span class="token punctuation">;</span>
@@ -69,7 +603,10 @@
   <span class="token punctuation">&#125;</span>
 
   <span class="token keyword">return</span> error<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>注意这个函数，出现了我们上文提到的<code>task_strcut</code>，这个是Linux下表示每个进程/线程的结构体，根据<code>struct pid</code>找到这个结构后，就调用了<code>group_send_sig_info</code>：</p><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">group_send_sig_info</span><span class="token punctuation">(</span><span class="token keyword">int</span> sig<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">siginfo</span> <span class="token operator">*</span>info<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token operator">*</span>p<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>注意这个函数，出现了我们上文提到的<code>task_strcut</code>，这个是Linux下表示每个进程/线程的结构体，根据<code>struct pid</code>找到这个结构后，就调用了<code>group_send_sig_info</code>：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">group_send_sig_info</span><span class="token punctuation">(</span><span class="token keyword">int</span> sig<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">siginfo</span> <span class="token operator">*</span>info<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token operator">*</span>p<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
   <span class="token keyword">int</span> ret<span class="token punctuation">;</span>
 
@@ -139,7 +676,12 @@ out_set<span class="token operator">:</span>
 ret<span class="token operator">:</span>
   <span class="token function">trace_signal_generate</span><span class="token punctuation">(</span>sig<span class="token punctuation">,</span> info<span class="token punctuation">,</span> t<span class="token punctuation">,</span> group<span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>可以看到，最终调用到<code>__send_signal</code>，设置信号的数据结构，wake up需要处理信号的进程，整个信号传递的过程就结束了。这时候信号还没有被进程处理，还是一个pending signal。</p><h2 id="信号的处理"><a href="#信号的处理" class="headerlink" title="信号的处理"></a>信号的处理</h2><p>内核调度到该进程时，会调用<code>do_notify_resume</code>来处理信号队列中的信号，之后这个函数又会调用<code>do_signal</code>，再调用<code>handle_signal</code>，具体过程就不用代码说明了，最后会找到每一个信号的处理函数，问题是这个怎么找到？</p><p>还记得在上文提到的task_struct吗，里面有一个成员变量<code>sighand_struct</code>就是用来存储每个信号的处理函数的。</p><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">struct</span> <span class="token class-name">sighand_struct</span> <span class="token punctuation">&#123;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看到，最终调用到<code>__send_signal</code>，设置信号的数据结构，wake up需要处理信号的进程，整个信号传递的过程就结束了。这时候信号还没有被进程处理，还是一个pending signal。</p>
+<h2 id="信号的处理"><a href="#信号的处理" class="headerlink" title="信号的处理"></a>信号的处理</h2><p>内核调度到该进程时，会调用<code>do_notify_resume</code>来处理信号队列中的信号，之后这个函数又会调用<code>do_signal</code>，再调用<code>handle_signal</code>，具体过程就不用代码说明了，最后会找到每一个信号的处理函数，问题是这个怎么找到？</p>
+<p>还记得在上文提到的task_struct吗，里面有一个成员变量<code>sighand_struct</code>就是用来存储每个信号的处理函数的。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">struct</span> <span class="token class-name">sighand_struct</span> <span class="token punctuation">&#123;</span>
   atomic_t        count<span class="token punctuation">;</span>  <span class="token comment">/* 引用计数 */</span>
   <span class="token keyword">struct</span> <span class="token class-name">k_sigaction</span>  action<span class="token punctuation">[</span>_NSIG<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">/* 存储处理函数的结构 */</span>
   spinlock_t      siglock<span class="token punctuation">;</span>    <span class="token comment">/* 自旋锁 */</span>
@@ -155,4 +697,703 @@ ret<span class="token operator">:</span>
   __sighandler_t  sa_handler<span class="token punctuation">;</span>
   <span class="token keyword">unsigned</span> <span class="token keyword">long</span>   sa_flags<span class="token punctuation">;</span>
   sigset_t    sa_mask<span class="token punctuation">;</span>    <span class="token comment">/* mask last for extensibility */</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>其中<code>sa_handler</code>就指向了信号的处理程序。</p><h2 id="为某个信号注册处理函数"><a href="#为某个信号注册处理函数" class="headerlink" title="为某个信号注册处理函数"></a>为某个信号注册处理函数</h2><p>Linux提供了修改信号的处理函数的system call，具体如何使用这些system call不是本文的重点，如果你有兴趣可以参考《Computer System: A programmer’s perspective》8.5节或者参考资料[6]，里面提供了非常详细的例子。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章基于Linux 3.16.3讲述了从shell敲下<code>kill -9 &lt;PID&gt;</code>后整个系统发生了什么。主要涉及从用户态的shell程序开始，执行coreutils中kill，之后陷入到内核代码，分析了相关的数据结构，信号产生和传递的原理以及核心代码。</p><h2 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h2><p><a target="_blank" rel="noopener" href="http://zyearn.com/blog/2015/03/22/what-happens-when-you-kill-a-process/">当执行kill -9 PID时系统发生了什么</a></p></div><hr><div class="reprint" id="reprint-statement"><div class="reprint__author"><span class="reprint-meta" style="font-weight:700"><i class="fas fa-user">文章作者: </i></span><span class="reprint-info"><a href="/about" rel="external nofollow noreferrer">DestiNation</a></span></div><div class="reprint__type"><span class="reprint-meta" style="font-weight:700"><i class="fas fa-link">文章链接: </i></span><span class="reprint-info"><a href="https://li-zhenhua.github.io/2021/10/06/kill-de-zhi-xing-guo-cheng/">https://li-zhenhua.github.io/2021/10/06/kill-de-zhi-xing-guo-cheng/</a></span></div><div class="reprint__notice"><span class="reprint-meta" style="font-weight:700"><i class="fas fa-copyright">版权声明: </i></span><span class="reprint-info">本博客所有文章除特別声明外，均采用 <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a> 许可协议。转载请注明来源 <a href="/about" target="_blank">DestiNation</a> !</span></div></div><script async defer>function navToReprintStatement(){$("html, body").animate({scrollTop:$("#reprint-statement").offset().top-80},800)}document.addEventListener("copy",(function(t){M.toast({html:'<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>'})}))</script><div class="tag_share" style="display:block"><div class="post-meta__tag-list" style="display:inline-block"><div class="article-tag"><a href="/tags/kill%E5%91%BD%E4%BB%A4/"><span class="chip bg-color">kill命令</span></a></div></div><div class="post_share" style="zoom:80%;width:fit-content;display:inline-block;float:right;margin:-.15rem 0"><link rel="stylesheet" type="text/css" href="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/css/share.min.css"><div id="article-share"><div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/js/social-share.min.js"></script></div></div></div></div></div><article id="prenext-posts" class="prev-next articles"><div class="row article-row"><div class="article col s12 m6" data-aos="fade-up"><div class="article-badge left-badge text-color"><i class="fas fa-chevron-left"></i>&nbsp;上一篇</div><div class="card"><a href="/2021/10/30/han-shu-diao-yong-zhan-fen-xi/"><div class="card-image"><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="函数调用栈分析"> <span class="card-title">函数调用栈分析</span></div></a><div class="card-content article-content"><div class="summary block-with-text"></div><div class="publish-info"><span class="publish-date"><i class="far fa-clock fa-fw icon-date"></i>2021-10-30 </span><span class="publish-author"><i class="fas fa-bookmark fa-fw icon-category"></i> <a href="/categories/Golang/" class="post-category">Golang</a></span></div></div><div class="card-action article-tags"><a href="/tags/Golang%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90/"><span class="chip bg-color">Golang底层分析</span> </a><a href="/tags/%E5%87%BD%E6%95%B0/"><span class="chip bg-color">函数</span></a></div></div></div><div class="article col s12 m6" data-aos="fade-up"><div class="article-badge right-badge text-color">下一篇&nbsp;<i class="fas fa-chevron-right"></i></div><div class="card"><a href="/2021/09/29/xue-hua-suan-fa/"><div class="card-image"><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/5.jpg" class="responsive-img" alt="雪花算法"> <span class="card-title">雪花算法</span></div></a><div class="card-content article-content"><div class="summary block-with-text"></div><div class="publish-info"><span class="publish-date"><i class="far fa-clock fa-fw icon-date"></i>2021-09-29 </span><span class="publish-author"><i class="fas fa-bookmark fa-fw icon-category"></i> <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">分布式</a></span></div></div><div class="card-action article-tags"><a href="/tags/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/"><span class="chip bg-color">雪花算法</span></a></div></div></div></div></article></div><script type="text/javascript" src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeBlockFuction.js"></script><script type="text/javascript" src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeLang.js"></script><script type="text/javascript" src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeCopy.js"></script><script type="text/javascript" src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeShrink.js"></script></div><div id="toc-aside" class="expanded col l3 hide-on-med-and-down"><div class="toc-widget card" style="background-color:#fff"><div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div><div id="toc-content"></div></div></div></div><div id="floating-toc-btn" class="hide-on-med-and-down"><a class="btn-floating btn-large bg-color"><i class="fas fa-list-ul"></i></a></div><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.min.js"></script><script>$((function(){tocbot.init({tocSelector:"#toc-content",contentSelector:"#articleContent",headingsOffset:-(.4*$(window).height()-45),collapseDepth:Number("0"),headingSelector:"h1, h2, h3, h4"});let t=0,e="toc-heading-";$("#toc-content a").each((function(){$(this).attr("href","#"+e+ ++t)})),t=0,$("#articleContent").children("h1, h2, h3, h4").each((function(){$(this).attr("id",e+ ++t)}));let n=parseInt(.4*$(window).height()-64),o=$(".toc-widget");$(window).scroll((function(){$(window).scrollTop()>n?o.addClass("toc-fixed"):o.removeClass("toc-fixed")}));const i="expanded";let c=$("#toc-aside"),l=$("#main-content");$("#floating-toc-btn .btn-floating").click((function(){c.hasClass(i)?(c.removeClass(i).hide(),l.removeClass("l9")):(c.addClass(i).show(),l.addClass("l9")),function(t,e){let n=$("#"+t);if(0===n.length)return;let o=n.width();o+=o>=450?21:o>=350&&o<450?18:o>=300&&o<350?16:14,$("#"+e).width(o)}("artDetail","prenext-posts")}))}))</script></main><script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>MathJax.Hub.Config({tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]]}})</script><footer class="page-footer bg-color"><div class="container row center-align" style="margin-bottom:15px!important"><div class="col s12 m8 l8 copy-right">Copyright&nbsp;&copy; <span id="year">2021-2022</span> <a href="/about" target="_blank">DestiNation</a> |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a> |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a><br>&nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">129.2k</span> <span id="busuanzi_container_site_pv" style="display:none"><i class="fa fa-heart-o"></i> 本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span> </span><span id="busuanzi_container_site_uv" style="display:none">人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.</span><br><span id="sitetime">Loading ...</span><script>var calcSiteTime=function(){window.setTimeout("calcSiteTime()",1e3);var e=6e4,t=36e5,n=864e5,i=new Date,a="2021",r=i.getFullYear(),o=i.getMonth()+1,s=i.getDate(),l=i.getHours(),m=i.getMinutes(),d=i.getSeconds(),g=Date.UTC(a,"1","21","0","0","0"),c=Date.UTC(r,o,s,l,m,d)-g,T=Math.floor(c/31536e6),u=Math.floor(c/n-365*T),M=Math.floor((c-(365*T+u)*n)/t),h=Math.floor((c-(365*T+u)*n-M*t)/e),f=Math.floor((c-(365*T+u)*n-M*t-h*e)/1e3);if(a===String(r)){document.getElementById("year").innerHTML=r;var y="This site has been running for "+u+" days";y="本站已运行 "+u+" 天"+M+" 小时 "+h+" 分钟 "+f+" 秒",document.getElementById("sitetime").innerHTML=y}else{document.getElementById("year").innerHTML="2021 - "+r;var H="This site has been running for "+T+" years and "+u+" days";H="本站已运行 "+T+" 年 "+u+" 天"+M+" 小时 "+h+" 分钟 "+f+" 秒",document.getElementById("sitetime").innerHTML=H}};calcSiteTime()</script><br></div><div class="col s12 m4 l4 social-link social-statis"><a href="https://github.com/Li-Zhenhua" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50"><i class="fab fa-github"></i> </a><a href="mailto:610136437@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50"><i class="fas fa-envelope-open"></i> </a><a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=610136437" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 610136437" data-position="top" data-delay="50"><i class="fab fa-qq"></i></a></div></div></footer><script>$(document).ready((function(){var e=setInterval((function(){"none"!=document.getElementById("busuanzi_container_site_pv").style.display&&($("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html())+986),clearInterval(e));"none"!=$("#busuanzi_container_site_pv").css("display")&&($("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html())+264),clearInterval(e))}),50)}))</script><div class="progress-bar"></div><div id="searchModal" class="modal"><div class="modal-content"><div class="search-header"><span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span> <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字" class="search-input"></div><div id="searchResult"></div></div></div><script type="text/javascript">$((function(){!function(t,e,n){"use strict";$.ajax({url:"https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io"+t,dataType:"xml",success:function(t){var r=$("entry",t).map((function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}})).get(),i=document.getElementById(e),a=document.getElementById(n);i.addEventListener("input",(function(){var t='<ul class="search-result-list">',e=this.value.trim().toLowerCase().split(/[\s\-]+/);a.innerHTML="",this.value.trim().length<=0||(r.forEach((function(n){var r=!0,i=n.title.trim().toLowerCase(),a=n.content.trim().replace(/<[^>]+>/g,"").toLowerCase(),s=n.url;s=0===s.indexOf("/")?n.url:"/"+s;var c=-1,l=-1,u=-1;if(""!==i&&""!==a&&e.forEach((function(t,e){c=i.indexOf(t),l=a.indexOf(t),c<0&&l<0?r=!1:(l<0&&(l=0),0===e&&(u=l))})),r){t+="<li><a href='"+s+"' class='search-result-title'>"+i+"</a>";var o=n.content.trim().replace(/<[^>]+>/g,"");if(u>=0){var h=u-20,f=u+80;h<0&&(h=0),0===h&&(f=100),f>o.length&&(f=o.length);var m=o.substr(h,f);e.forEach((function(t){var e=new RegExp(t,"gi");m=m.replace(e,'<em class="search-keyword">'+t+"</em>")})),t+='<p class="search-result">'+m+"...</p>"}t+="</li>"}})),t+="</ul>",a.innerHTML=t)}))}})}("/search.xml","searchInput","searchResult")}))</script><div id="backTop" class="top-scroll"><a class="btn-floating btn-large waves-effect waves-light" href="#!"><i class="fas fa-arrow-up"></i></a></div><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.js"></script><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/masonry/masonry.pkgd.min.js"></script><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.js"></script><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/scrollprogress/scrollProgress.min.js"></script><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/js/matery.js"></script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/clicklove.js" async></script><script async src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/busuanzi.pure.mini.js"></script><script type="text/javascript" color="0,0,255" pointcolor="0,0,255" opacity="0.7" zindex="-1" count="99" src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/canvas-nest.js"></script><script type="text/javascript" size="150" alpha="0.6" zindex="-1" src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-refresh.min.js" async></script><script type="text/javascript" src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-dynamic.js" async></script><script src="https://gcore.jsdelivr.net/gh/Li-Zhenhua/li-zhenhua.github.io/libs/instantpage/instantpage.js" type="module"></script><script type="text/javascript">var st,OriginTitile=document.title;document.addEventListener("visibilitychange",(function(){document.hidden?(document.title="Σ(っ °Д °;)っ别走呀！",clearTimeout(st)):(document.title="φ(゜▽゜*)♪嘿嘿，你终于回来了！",st=setTimeout((function(){document.title=OriginTitile}),3e3))}))</script><script>window.imageLazyLoadSetting={isSPA:!1,preloadRatio:1,processImages:null}</script><script>window.addEventListener("load",(function(){var a=/\.(gif|jpg|jpeg|tiff|png)$/i,e=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach((function(t){var r=t.parentNode;"A"===r.tagName&&(r.href.match(a)||r.href.match(e))&&(r.href=t.dataset.original)}))}))</script><script>!function(t){t.imageLazyLoadSetting.processImages=i;var e=t.imageLazyLoadSetting.isSPA,n=(t.imageLazyLoadSetting.preloadRatio,Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));function i(){e&&(n=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var i,o=0;o<n.length;o++)0<=(i=(i=n[o]).getBoundingClientRect()).bottom&&0<=i.left&&i.top<=(t.innerHeight+500||document.documentElement.clientHeight+500)&&function(){var t,e,i,a,r=n[o];t=r,e=function(){n=n.filter((function(t){return r!==t}))},i=new Image,a=t.getAttribute("data-original"),i.onload=function(){t.src=a,e&&e()},t.src!==a&&(i.src=a)}()}i(),t.addEventListener("scroll",(function(){var e,n;e=i,n=t,clearTimeout(e.tId),e.tId=setTimeout((function(){e.call(n)}),500)}))}(this)</script></body></html>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中<code>sa_handler</code>就指向了信号的处理程序。</p>
+<h2 id="为某个信号注册处理函数"><a href="#为某个信号注册处理函数" class="headerlink" title="为某个信号注册处理函数"></a>为某个信号注册处理函数</h2><p>Linux提供了修改信号的处理函数的system call，具体如何使用这些system call不是本文的重点，如果你有兴趣可以参考《Computer System: A programmer’s perspective》8.5节或者参考资料[6]，里面提供了非常详细的例子。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章基于Linux 3.16.3讲述了从shell敲下<code>kill -9 &lt;PID&gt;</code>后整个系统发生了什么。主要涉及从用户态的shell程序开始，执行coreutils中kill，之后陷入到内核代码，分析了相关的数据结构，信号产生和传递的原理以及核心代码。</p>
+<h2 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h2><p><a target="_blank" rel="noopener" href="http://zyearn.com/blog/2015/03/22/what-happens-when-you-kill-a-process/">当执行kill -9 PID时系统发生了什么</a></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">DestiNation</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://li-zhenhua.github.io/2021/10/06/kill-de-zhi-xing-guo-cheng/">https://li-zhenhua.github.io/2021/10/06/kill-de-zhi-xing-guo-cheng/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">DestiNation</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/kill%E5%91%BD%E4%BB%A4/">
+                                    <span class="chip bg-color">kill命令</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/10/30/han-shu-diao-yong-zhan-fen-xi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="函数调用栈分析">
+                        
+                        <span class="card-title">函数调用栈分析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-30
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Golang/" class="post-category">
+                                    Golang
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Golang%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">Golang底层分析</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%87%BD%E6%95%B0/">
+                        <span class="chip bg-color">函数</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/09/29/xue-hua-suan-fa/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/5.jpg" class="responsive-img" alt="雪花算法">
+                        
+                        <span class="card-title">雪花算法</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-29
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
+                                    分布式
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">雪花算法</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+    });
+</script>
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <a href="/about" target="_blank">DestiNation</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">137.2k</span>
+            
+            
+            
+                
+            
+			
+			
+				<span id="busuanzi_container_site_pv" style='display:none'>
+					<i class="fa fa-heart-o"></i>
+					本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+				</span>
+			
+			
+				<span id="busuanzi_container_site_uv" style='display:none'>
+					人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+				</span>
+			
+
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+						window.setTimeout("calcSiteTime()", 1000);
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2021";
+                        var startMonth = "1";
+                        var startDate = "21";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+						var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours); 
+						var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes); 
+						var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天' + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";;
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天' + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";;
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/Li-Zhenhua" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:610136437@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=610136437" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 610136437" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<script>
+    $(document).ready(function () {
+
+        var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+        var pvcountOffset = 986;  // 初始化首次数据
+        var uvcountOffset = 264;
+
+        function fixCount() {
+            if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + pvcountOffset);
+                clearInterval(int);
+            }
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + uvcountOffset); // 加上初始数据 
+                clearInterval(int); // 停止检测
+            }
+        }
+    });
+</script>
+
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            //url: path,
+			url: "https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io" + path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.js"></script>
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+    
+    <script type="text/javascript" size="150" alpha='0.6'
+        zIndex="-1" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-refresh.min.js" async="async"></script>
+    
+
+    
+    <script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "Σ(っ °Д °;)っ别走呀！", clearTimeout(st)) : (document.title = "φ(゜▽゜*)♪嘿嘿，你终于回来了！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) })
+    </script>
+
+<script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=(n.imageLazyLoadSetting.preloadRatio,Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight+500||document.documentElement.clientHeight+500)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},t.src!==i&&(n.src=i)}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body>
+
+</html>
