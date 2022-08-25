@@ -4,9 +4,12 @@
 
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-    <meta name="keywords" content="Netty的ByteBuf, Hyouda">
-    <meta name="description" content="前言最近面试的时候，面试官问了一些关于netty内存泄漏的问题，虽然之前学过netty，但是长时间不看了还是忘了很多，听到这个问题的时候直接懵逼了，现在回来回顾总结一些关于ByteBuf的一些知识
-ByteBuf前置：创建一个util类，新">
+    <meta name="keywords" content="Hyouda">
+    <meta name="description" content="title: Netty的ByteBuftop: falsecover: falsetoc: truemathjax: truetags:
+
+Netty
+ByteBufcategories:
+Nettydate: 2022-08-15 19">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,19 +21,19 @@ ByteBuf前置：创建一个util类，新">
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Netty的ByteBuf | Hyouda</title>
-    <link rel="icon" type="image/png" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/favicon.png">
+    <title>Hyouda</title>
+    <link rel="icon" type="image/png" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/favicon.png">
 
-    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/awesome/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.css">
-    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/animate/animate.min.css">
-    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/css/lightgallery.min.css">
-    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/matery.css">
-    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/my.css">
-	<link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/loading.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/my.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/css/loading.css">
 
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/jquery/jquery.min.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/jquery/jquery.min.js"></script>
 
 <meta name="generator" content="Hexo 5.4.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
@@ -76,7 +79,7 @@ ByteBuf前置：创建一个util类，新">
                 <a href="/" class="waves-effect waves-light">
 					<div>
 						
-						<img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+						<img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img" alt="LOGO">
 						
 						<span class="logo-span">Hyouda</span>
 					</div>
@@ -195,7 +198,7 @@ ByteBuf前置：创建一个util类，新">
 
     <div class="mobile-head bg-color">
         
-        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/logo.png" class="logo-img circle responsive-img">
         
         <div class="logo-name">Hyouda</div>
         <div class="logo-desc">
@@ -322,12 +325,12 @@ ByteBuf前置：创建一个util类，新">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Netty的ByteBuf</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -340,7 +343,7 @@ ByteBuf前置：创建一个util类，新">
 <main class="post-container content">
 
     
-    <link rel="stylesheet" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.css">
 <style>
     #articleContent h1::before,
     #articleContent h2::before,
@@ -441,29 +444,12 @@ ByteBuf前置：创建一个util类，新">
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/Netty/">
-                                <span class="chip bg-color">Netty</span>
-                            </a>
-                        
-                            <a href="/tags/ByteBuf/">
-                                <span class="chip bg-color">ByteBuf</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/Netty/" class="post-category">
-                                Netty
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -472,7 +458,7 @@ ByteBuf前置：创建一个util类，新">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-08-15
+                    2022-08-21
                 </div>
                 
 
@@ -499,14 +485,20 @@ ByteBuf前置：创建一个util类，新">
 
         
         <!-- 是否加载使用自带的 prismjs. -->
-        <link rel="stylesheet" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/prism/prism.css">
+        <link rel="stylesheet" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/prism/prism.css">
         
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近面试的时候，面试官问了一些关于netty内存泄漏的问题，虽然之前学过netty，但是长时间不看了还是忘了很多，听到这个问题的时候直接懵逼了，现在回来回顾总结一些关于ByteBuf的一些知识</p>
+                <p>title: Netty的ByteBuf<br>top: false<br>cover: false<br>toc: true<br>mathjax: true<br>tags:</p>
+<ul>
+<li>Netty</li>
+<li>ByteBuf<br>categories:</li>
+<li>Netty<br>date: 2022-08-15 19:20:11<br>summary:</li>
+</ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近面试的时候，面试官问了一些关于netty内存泄漏的问题，虽然之前学过netty，但是长时间不看了还是忘了很多，听到这个问题的时候直接懵逼了，现在回来回顾总结一些关于ByteBuf的一些知识</p>
 <h2 id="ByteBuf"><a href="#ByteBuf" class="headerlink" title="ByteBuf"></a>ByteBuf</h2><p>前置：创建一个util类，新建一个<strong>调试工具方法</strong></p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">log</span><span class="token punctuation">(</span><span class="token class-name">ByteBuf</span> buffer<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">int</span> length <span class="token operator">=</span> buffer<span class="token punctuation">.</span><span class="token function">readableBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -619,7 +611,7 @@ ByteBuf前置：创建一个util类，新">
 </ul>
 </li>
 </ul>
-<p><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="E:/%E6%A0%A1%E6%8B%9B%E5%87%86%E5%A4%87/%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/blog/source/_posts/imgs/20210423143030.png" alt="img"></p>
+<p><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://cdn.casecori.top/gh/Li-Zhenhua/blogpicture@main/img/b2d1e57d2a.png"></p>
 <h3 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h3><p>常用方法如下</p>
 <table>
 <thead>
@@ -905,7 +897,7 @@ ByteBuf前置：创建一个util类，新">
 <h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>ByteBuf切片是【零拷贝】的体现之一，对原始 ByteBuf 进行切片成多个 ByteBuf，<strong>切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存</strong>，切片后的 ByteBuf 维护独立的 read，write 指针</p>
 <p>得到分片后的buffer后，要调用其retain方法，使其内部的引用计数加一。避免原ByteBuf释放，导致切片buffer无法使用</p>
 <p>修改原ByteBuf中的值，也会影响切片后得到的ByteBuf</p>
-<p><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="E:/%E6%A0%A1%E6%8B%9B%E5%87%86%E5%A4%87/%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/blog/source/_posts/imgs/20210423154059.png" alt="img">](http</p>
+<p><img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://cdn.casecori.top/gh/Li-Zhenhua/blogpicture@main/img/1aa30eb470.png"></p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestSlice</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
         <span class="token comment">// 创建ByteBuf</span>
@@ -995,7 +987,7 @@ ByteBuf前置：创建一个util类，新">
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://li-zhenhua.github.io/2022/08/15/netty-de-bytebuf/">https://li-zhenhua.github.io/2022/08/15/netty-de-bytebuf/</a>
+                    <a href="https://li-zhenhua.github.io/2022/08/21/netty-de-bytebuf/">https://li-zhenhua.github.io/2022/08/21/netty-de-bytebuf/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1032,25 +1024,17 @@ ByteBuf前置：创建一个util类，新">
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/Netty/">
-                                    <span class="chip bg-color">Netty</span>
-                                </a>
-                            
-                                <a href="/tags/ByteBuf/">
-                                    <span class="chip bg-color">ByteBuf</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
                 <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
-                    <link rel="stylesheet" type="text/css" href="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/css/share.min.css">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/css/share.min.css">
 <div id="article-share">
 
     
     <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/js/social-share.min.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/share/js/social-share.min.js"></script>
     
 
     
@@ -1089,13 +1073,13 @@ ByteBuf前置：创建一个util类，新">
                 <i class="far fa-dot-circle"></i>&nbsp;本篇
             </div>
             <div class="card">
-                <a href="/2022/08/15/netty-de-bytebuf/">
+                <a href="/2022/08/21/netty-de-bytebuf/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="Netty的ByteBuf">
+                        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">Netty的ByteBuf</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1106,33 +1090,17 @@ ByteBuf前置：创建一个util类，新">
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-08-15
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-08-21
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Netty/" class="post-category">
-                                    Netty
-                                </a>
-                            
+                            <i class="fas fa-user fa-fw"></i>
+                            DestiNation
                             
                         </span>
                     </div>
                 </div>
 
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Netty/">
-                        <span class="chip bg-color">Netty</span>
-                    </a>
-                    
-                    <a href="/tags/ByteBuf/">
-                        <span class="chip bg-color">ByteBuf</span>
-                    </a>
-                    
-                </div>
                 
             </div>
         </div>
@@ -1147,7 +1115,7 @@ ByteBuf前置：创建一个util类，新">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="SQL语句简析">
+                        <img src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/loading.gif" data-original="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="SQL语句简析">
                         
                         <span class="card-title">SQL语句简析</span>
                     </div>
@@ -1194,21 +1162,21 @@ ByteBuf前置：创建一个util类，新">
 
 
 <!-- 代码块功能依赖 -->
-<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+<script type="text/javascript" src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeBlockFuction.js"></script>
 
 <!-- 代码语言 -->
 
-<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeLang.js"></script>
+<script type="text/javascript" src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeLang.js"></script>
 
 
 <!-- 代码块复制 -->
 
-<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeCopy.js"></script>
+<script type="text/javascript" src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeCopy.js"></script>
 
 
 <!-- 代码块收缩 -->
 
-<script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeShrink.js"></script>
+<script type="text/javascript" src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/codeBlock/codeShrink.js"></script>
 
 
     </div>
@@ -1229,7 +1197,7 @@ ByteBuf前置：创建一个util类，新">
 </div>
 
 
-<script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.min.js"></script>
+<script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/tocbot/tocbot.min.js"></script>
 <script>
     $(function () {
         tocbot.init({
@@ -1309,13 +1277,6 @@ ByteBuf前置：创建一个util类，新">
 
 </main>
 
-
-<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script>
-    MathJax.Hub.Config({
-        tex2jax: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
-    });
-</script>
 
 
 
@@ -1588,12 +1549,12 @@ $(function () {
 </div>
 
 
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.js"></script>
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/masonry/masonry.pkgd.min.js"></script>
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.js"></script>
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/js/matery.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/js/matery.js"></script>
 
     
 
@@ -1624,10 +1585,10 @@ $(function () {
 </script>
 
     
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/clicklove.js" async="async"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/clicklove.js" async="async"></script>
     
     
-    <script async src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    <script async src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/others/busuanzi.pure.mini.js"></script>
     
 
     
@@ -1640,21 +1601,21 @@ $(function () {
     <script type="text/javascript" color="0,0,255"
         pointColor="0,0,255" opacity='0.7'
         zIndex="-1" count="99"
-        src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/canvas-nest.js"></script>
+        src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/canvas-nest.js"></script>
     
 
     
     
     <script type="text/javascript" size="150" alpha='0.6'
-        zIndex="-1" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-refresh.min.js" async="async"></script>
+        zIndex="-1" src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-refresh.min.js" async="async"></script>
     
 
     
-    <script type="text/javascript" src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    <script type="text/javascript" src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
     
 
     
-    <script src="https://jsdelivr.pai233.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    <script src="https://cdn.casecori.top/gh/Li-Zhenhua/li-zhenhua.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
 
 	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "Σ(っ °Д °;)っ别走呀！", clearTimeout(st)) : (document.title = "φ(゜▽゜*)♪嘿嘿，你终于回来了！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) })
